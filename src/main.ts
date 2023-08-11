@@ -1,7 +1,6 @@
-import './styles.scss'
+import { bootstrapApplication } from '@angular/platform-browser';
+import { appConfig } from './app/app.config';
+import { AppComponent } from './app/app.component';
 
-document.querySelector<HTMLDivElement>('#app')!.innerHTML = `
-    <div class="container h-screen flex ha-c">
-        <img src="/favicon.svg" alt="team 30 logo" class="w-10 h-auto">
-    </div>
-`
+bootstrapApplication(AppComponent, appConfig)
+  .catch((err) => console.error(err));
