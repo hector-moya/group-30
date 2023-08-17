@@ -1,4 +1,4 @@
-import { TETROMINOS, EXT_TETROMINOS, Tetromino } from "../defs";
+import { TETROMINOS, Tetromino } from "../defs.d";
 
 export class Piece {
 
@@ -18,7 +18,7 @@ export class Piece {
 
     getTestromino(): Tetromino {
         const tetrominoKeys = Object.keys(TETROMINOS);
-        const firstTetrominoKey = tetrominoKeys[0];
+        const firstTetrominoKey = tetrominoKeys[2];
         const firstTetromino = TETROMINOS[firstTetrominoKey];
         return firstTetromino;
     }

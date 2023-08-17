@@ -1,4 +1,4 @@
-import { Config } from "../defs";
+import { Config } from "../defs.d";
 
 export class GameConfig {
 

@@ -27,5 +27,5 @@ const ctx = setup.getCanvasContext();
  */
 let board = new Board(ctx);
 
-
+board.piece.render();
 
