@@ -1,4 +1,4 @@
-import { TETROMINOS, Tetromino } from "../defs.d";
+import { TETROMINOS, Tetromino, EXT_TETROMINOS } from "../defs.d";
 
 export class Piece {
 
@@ -11,38 +11,37 @@ export class Piece {
 
     constructor(public ctx: CanvasRenderingContext2D) {
         this.ctx = ctx;
-        this.RandomTetromino = this.getTestromino();
+        this.RandomTetromino = this.getRandomTetromino();
         this.shape = this.RandomTetromino.matrix;
         this.color = this.RandomTetromino.color;
     }
 
-    getTestromino(): Tetromino {
+    /**
+     * Method to get a random tetromino
+     * @returns Tetromino
+     */
+
+    // getTestromino(): Tetromino {
+    //     const tetrominoKeys = Object.keys(TETROMINOS);
+    //     const firstTetrominoKey = tetrominoKeys[0];
+    //     const firstTetromino = TETROMINOS[firstTetrominoKey];
+    //     return firstTetromino;
+    // }
+
+    /**
+     * Method to get a random tetromino
+     * @returns Tetromino
+     */
+    getRandomTetromino(extended: boolean = true): Tetromino {
         const tetrominoKeys = Object.keys(TETROMINOS);
-        const firstTetrominoKey = tetrominoKeys[0];
-        const firstTetromino = TETROMINOS[firstTetrominoKey];
-        return firstTetromino;
+        if (extended) {
+            console.log('extended');
+            tetrominoKeys.push(...Object.keys(EXT_TETROMINOS));
+        }
+        const randomTetrominoKey = tetrominoKeys[Math.floor(Math.random() * tetrominoKeys.length)];
+        const randomTetromino = extended ? (TETROMINOS[randomTetrominoKey] || EXT_TETROMINOS[randomTetrominoKey]) : TETROMINOS[randomTetrominoKey];
+        return randomTetromino;
     }
-
-
-    // /**
-    //  * Get a random tetromino
-    //  * @returns Tetromino
-    //  */
-    // getRandomTetromino(): Tetromino {
-    //     const tetrominoes = Object.keys(TETROMINOS);
-    //     const randomTetromino = tetrominoes[Math.floor(Math.random() * tetrominoes.length)];
-    //     return TETROMINOS[randomTetromino];
-    // }
-
-    // /**
-    //  * Get the available Tetromino shapes based on the game mode
-    //  *
-    //  * @param {boolean} extended - Whether to include extended Tetrominos
-    //  * @returns {Object.<string, Tetromino>} An object containing the available Tetromino shapes
-    //  */
-    // private getGameShapes(extended: boolean): { [key: string]: Tetromino } {
-    //     return extended ? { ...TETROMINOS, ...EXT_TETROMINOS } : { ...TETROMINOS };
-    // }
 
     /**
      * 
@@ -50,10 +49,10 @@ export class Piece {
      * @param piece 
      */
     move(piece: Piece): void {
+        this.clear();
         this.x = piece.x;
         this.y = piece.y;
         this.shape = piece.shape; // update matrix with new orientation
-        this.clear();
         this.render();
     }
 
@@ -61,7 +60,14 @@ export class Piece {
      * Clear the piece from the board
      */
     clear() {
-        this.ctx.clearRect(0, 0, this.ctx.canvas.width, this.ctx.canvas.height);
+        // Clear only the area occupied by the piece
+        this.shape.forEach((row, y) => {
+            row.forEach((value, x) => {
+                if (value > 0) {
+                    this.ctx.clearRect(this.x + x, this.y + y, 1, 1);
+                }
+            });
+        });
     }
 
     /**

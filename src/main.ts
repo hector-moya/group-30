@@ -85,17 +85,19 @@ function reset() {
 
 let interval: number | undefined; // Variable to hold the interval
 
-let pieces: Piece[] = []; // Array to hold the pieces
 function handleInterval(time: number = 500) {
     if (isPlaying) {
         interval = setInterval(() => {
             let p = moves['ArrowDown'](board.piece);
-            if (!board.isPieceOutOfBounds(p)) {
+            if (!board.isPieceOutOfBounds(p)) {                
+                board.drawStatic();
                 board.piece.move(p);
             } else {
-                pieces.push(board.piece);
+                board.merge(board.piece);
+                board.clearLines();
                 board.piece = new Piece(ctx);
             }
+            
         }, time);
     }
 }
