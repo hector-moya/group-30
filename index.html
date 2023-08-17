@@ -5,11 +5,29 @@
     <meta charset="UTF-8" />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>TETRIS - Team 30 - 3815ICT</title>
+    <title>TETRIS</title>
 </head>
 
 <body>
-    <div id="app"></div>
+    <div class="container flex flex-start items-start ha-c gg-2 py-5">
+        <canvas id="board" class="bdr-red bdr-3"></canvas>
+        <div>
+            <div class="flex-col fg0">
+                <div id="reset" class="btn blue txt-upper">Select Random Piece</div>
+            </div>
+            <div>
+                <div class="grid cols-2 mt">
+                    <div id="play" class="btn pink">Play</div>
+                    <div id="pause" class="btn yellow">Pause</div>
+                </div>
+                <hr>
+                <div class="grid cols-2 mt">
+                    <div id="current-matrix" class="m-auto tac bx"></div>
+                    <div id="transposed-matrix" class="m-auto tac bx"></div>
+                </div>
+            </div>
+        </div>
+    </div>
     <script type="module" src="/src/main.ts"></script>
 </body>
 

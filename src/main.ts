@@ -4,13 +4,6 @@ import { GameConfig } from './app/GameConfig'
 import { Piece } from './app/Piece';
 import './styles.scss'
 
-document.querySelector<HTMLDivElement>('#app')!.innerHTML = `
-    <div class="container flex flex-start items-start ha-c gg-2 py-5">
-    <canvas id="board" class="bdr-red bdr-3"></canvas>
-        <div id="play" class="btn primary">Play</div>	
-    </div>
-`
-
 /**
  * Game configuration
  */
@@ -22,16 +15,15 @@ const setup = new GameConfig({ columns: 10, rows: 20, blockSize: 30 });
 const ctx = setup.getCanvasContext();
 
 
+let isPlaying = false;
+document.getElementById('play')!.addEventListener('click', play);
+document.getElementById('pause')!.addEventListener('click', pause);
+
 /**
  * Create a new board passing the canvas context
  */
 let board = new Board(ctx);
 
-board.piece.render();
-
-/**
- * Event listener for the play button
- */
 
 /**
  * Game movement controls
@@ -59,6 +51,77 @@ function handleMove(event: KeyboardEvent) {
 }
 
 /**
- * Event listener for the game movement
+ * Method to handle the game play
  */
-document.addEventListener('keydown', handleMove);
+
+function play() {
+    if (isPlaying) {
+        stopInterval();
+        reset();
+        document.getElementById('play')!.textContent = 'Play'; // Change the text to "Play"
+    } else {
+        isPlaying = true;
+        board.piece.render();
+        document.addEventListener('keydown', handleMove);
+        document.getElementById('play')!.textContent = 'Reset'; // Change the text to "Reset"
+        handleInterval();
+    }
+
+}
+
+/**
+ * Method to reset the game
+ */
+function reset() {
+    isPlaying = false;
+    board.piece.clear();
+    board = new Board(ctx); // Create a new Board object
+}
+
+/**
+ * Method to handle the interval
+ * @param interval The interval
+ */
+
+let interval: number | undefined; // Variable to hold the interval
+
+let pieces: Piece[] = []; // Array to hold the pieces
+function handleInterval(time: number = 500) {
+    if (isPlaying) {
+        interval = setInterval(() => {
+            let p = moves['ArrowDown'](board.piece);
+            if (!board.isPieceOutOfBounds(p)) {
+                board.piece.move(p);
+            } else {
+                pieces.push(board.piece);
+                board.piece = new Piece(ctx);
+            }
+        }, time);
+    }
+}
+
+/**
+ * Method to stop the interval
+ */
+
+function stopInterval() {
+    if (interval) {
+        clearInterval(interval);
+        interval = undefined;
+    }
+    
+}
+
+/**
+ * Method to handle stopping the game if `pause` is clicked
+ */
+function pause() {
+    console.log('pause');
+    stopInterval();
+    reset();
+    document.removeEventListener('keydown', handleMove);
+}
+
+
+
+
