@@ -6,7 +6,6 @@ export class GameConfig {
 
     constructor(public config: Config) {
         this.setupGameBoard();
-        // console.log(config);
 
     }
 
@@ -14,18 +13,19 @@ export class GameConfig {
      * Sets up the canvas element and its rendering context.
      */
     setupGameBoard(): void {
-        // Find the canvas element
+
+        // Get the canvas element
         const canvas = document.querySelector<HTMLCanvasElement>('#board');
 
-        // Check if the canvas element exists
+        // If the canvas element is not found, throw an error
         if (!canvas) {
             throw new Error("Canvas element not found.");
         } 
 
-        // Get the 2D rendering context of the canvas
+        // Get the rendering context
         this.ctx = canvas.getContext('2d');
 
-        // If the context is available, configure the canvas properties
+        // If the rendering context is not found, throw an error else set the canvas width, height and scale
         if (this.ctx) {
             this.ctx.canvas.width = this.config.columns * this.config.blockSize;
             this.ctx.canvas.height = this.config.rows * this.config.blockSize;
@@ -41,7 +41,7 @@ export class GameConfig {
      */
     getCanvasContext(): CanvasRenderingContext2D {
         if (!this.ctx) {
-            throw new Error("Canvas context not found.");
+            throw new Error("Canvas rendering context not found.");
         }
         return this.ctx;
     }

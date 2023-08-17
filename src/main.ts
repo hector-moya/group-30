@@ -1,6 +1,7 @@
 
 import { Board } from './app/Board';
 import { GameConfig } from './app/GameConfig'
+import { Piece } from './app/Piece';
 import './styles.scss'
 
 document.querySelector<HTMLDivElement>('#app')!.innerHTML = `
@@ -10,12 +11,21 @@ document.querySelector<HTMLDivElement>('#app')!.innerHTML = `
     </div>
 `
 
-
+/**
+ * Game configuration
+ */
 const setup = new GameConfig({ columns: 10, rows: 20, blockSize: 30});
 
+/**
+ * Get the canvas context
+ */
 const ctx = setup.getCanvasContext();
 
-const board = new Board(ctx);
+
+/**
+ * Create a new board passing the canvas context
+ */
+let board = new Board(ctx);
 
 
 
