@@ -14,7 +14,7 @@ document.querySelector<HTMLDivElement>('#app')!.innerHTML = `
 /**
  * Game configuration
  */
-const setup = new GameConfig({ columns: 10, rows: 20, blockSize: 30});
+const setup = new GameConfig({ columns: 10, rows: 20, blockSize: 30 });
 
 /**
  * Get the canvas context
@@ -29,3 +29,36 @@ let board = new Board(ctx);
 
 board.piece.render();
 
+/**
+ * Event listener for the play button
+ */
+
+/**
+ * Game movement controls
+ * 
+ */
+const moves: any = {
+    ArrowLeft: (p: Piece) => ({ ...p, x: p.x - 1 }),
+    ArrowRight: (p: Piece) => ({ ...p, x: p.x + 1 }),
+    ArrowDown: (p: Piece) => ({ ...p, y: p.y + 1 }),
+    ArrowUp: (p: Piece) => board.rotate(p)
+}
+
+/**
+ * Method to handle the game movement events
+ * @param event The event object
+ */
+function handleMove(event: KeyboardEvent) {
+    if (moves[event.key]) {
+        event.preventDefault();
+        let p = moves[event.key](board.piece);
+        if (!board.isPieceOutOfBounds(p)) {
+            board.piece.move(p);
+        }
+    }
+}
+
+/**
+ * Event listener for the game movement
+ */
+document.addEventListener('keydown', handleMove);

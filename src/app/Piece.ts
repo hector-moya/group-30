@@ -18,7 +18,7 @@ export class Piece {
 
     getTestromino(): Tetromino {
         const tetrominoKeys = Object.keys(TETROMINOS);
-        const firstTetrominoKey = tetrominoKeys[2];
+        const firstTetrominoKey = tetrominoKeys[0];
         const firstTetromino = TETROMINOS[firstTetrominoKey];
         return firstTetromino;
     }
