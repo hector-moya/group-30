@@ -1,14 +1,24 @@
 import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterOutlet } from '@angular/router';
+import { BoardComponent } from './board/board.component';
+import { GameConfigService } from './services/game-config.service';
 
 @Component({
     selector: 'app-root',
     standalone: true,
-    imports: [CommonModule, RouterOutlet],
+    imports: [CommonModule, RouterOutlet, BoardComponent],
     templateUrl: './app.component.html',
     styles: []
 })
 export class AppComponent {
-    title = '3815_tetris_team_30';
+
+    constructor(private configService: GameConfigService) {
+        this.init();
+    }
+
+    init() {
+        this.configService.updateConfig({ columns: 15, rows: 25, blockSize: 40, extended: true });
+    }
+
 }
