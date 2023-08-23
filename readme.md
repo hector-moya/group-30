@@ -1,19 +1,21 @@
 # 3815 Tetris Team 30
 
+## First Phase Checklist
 
-## Start up page
+### Start up page
 
 The video should show a startup page when the game starts, displaying the following:
 
-1. [ ] The title of Tetris
-2. [ ] The year and course code
-3. [ ] The list of all students in your group.
-5. [ ] An exit button to exit the program. *******
-7. [ ] A score button to get into top score page. ***
-8. [ ] A configure button get into configure page. ***
-9. [ ] Click the exit button will exit the prototype *******
+1. [x] The title of Tetris
+2. [x] The year and course code
+3. [x] The list of all students in your group.
+4. [x] An exit button to exit the program.
+5. [x] A score button to get into top score page.
+6. [x] A configure button get into configure page.
+7. [x] Click the exit button will exit the prototype.
+    - [x] Redirect to a page that says "Thanks for playing"
 
-## Top Scores Page
+### Top Scores Page
 
 1. [ ] To click the score button in the start up page pop up the top score page ****
 2. [ ] The top score page will display 10 best scores and the users (The data can be fake in the
@@ -21,7 +23,7 @@ The video should show a startup page when the game starts, displaying the follow
 3. [ ] A close button in the page, when player click that button, the top score page will be closed
    and return to start up page *****
 
-## Configure page
+### Configure page
 
 1. [ ] To click the configure button in the start up page pop up the configure page.  *****
 2. [ ] The configure page shows following configure items. (in the prototype, you only need to
@@ -33,7 +35,7 @@ The video should show a startup page when the game starts, displaying the follow
 3. [ ] A close button in the page, when player click that button, the top score page will be
    closed and return to start up page
 
-## Prototype
+### Prototype
 
 1. [ ] Clicking the play button in the start-up page opens the game page.
 2. [ ] The game page should display the following items:
@@ -50,3 +52,16 @@ The video should show a startup page when the game starts, displaying the follow
    block reaches the bottom of the field, it should stop. No other features are required.
 5. [ ] Pressing the Esc key should bring up a dialog box asking whether to end the game. Clicking
    "Yes" should return to the start-up page, "No" should continue the game.
+
+
+## Future work:
+
+Wire up:
+
+1. [ ] Play button to load game screen and begin game;
+2. [ ] Configuration to load modal and inject the configuration component
+3. [ ] High scores button to load modal and inject the high scores component
+
+
+### Game Logic
+1. [ ] Get the tetromino to start in the middle of the screen and fall
