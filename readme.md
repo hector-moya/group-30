@@ -1,1 +1,52 @@
 # 3815 Tetris Team 30
+
+
+## Start up page
+
+The video should show a startup page when the game starts, displaying the following:
+
+1. [ ] The title of Tetris
+2. [ ] The year and course code
+3. [ ] The list of all students in your group.
+5. [ ] An exit button to exit the program. *******
+7. [ ] A score button to get into top score page. ***
+8. [ ] A configure button get into configure page. ***
+9. [ ] Click the exit button will exit the prototype *******
+
+## Top Scores Page
+
+1. [ ] To click the score button in the start up page pop up the top score page ****
+2. [ ] The top score page will display 10 best scores and the users (The data can be fake in the
+   prototype) *****
+3. [ ] A close button in the page, when player click that button, the top score page will be closed
+   and return to start up page *****
+
+## Configure page
+
+1. [ ] To click the configure button in the start up page pop up the configure page.  *****
+2. [ ] The configure page shows following configure items. (in the prototype, you only need to
+   display following settings, functions of those settings are not asked) *****
+    - Size of the field
+    - Game level
+    - Normal or extended game
+    - Player or AI game mode
+3. [ ] A close button in the page, when player click that button, the top score page will be
+   closed and return to start up page
+
+## Prototype
+
+1. [ ] Clicking the play button in the start-up page opens the game page.
+2. [ ] The game page should display the following items:
+    - Game field and a dropping block.
+    - Your group number.
+    - Current score of the session.
+    - Number of lines eliminated in the session.
+    - Current level.
+    - Extended or normal game.
+    - Player or AI mode.
+    - Next block (the shape of the next dropping block when the current one reaches the bottom).
+3. [ ] The dropping block should be seen dropping.
+4. [ ] The player should be able to move the dropping block left, right, and turn it. When the
+   block reaches the bottom of the field, it should stop. No other features are required.
+5. [ ] Pressing the Esc key should bring up a dialog box asking whether to end the game. Clicking
+   "Yes" should return to the start-up page, "No" should continue the game.
