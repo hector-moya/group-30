@@ -1,4 +1,4 @@
-import { Tetromino } from "./defs";
+import { Tetromino, Point, HighScore } from "./defs";
 
 /**
  * default tetrominos each with 4 squares for `normal` game
@@ -20,3 +20,31 @@ export const EXT_TETROMINOS: { [key: string]: Tetromino } = {
     IE: { matrix: [[0, 0, 0, 0], [8, 8, 8, 0], [0, 0, 0, 0], [0, 0, 0, 0]], color: 'sky' },
     LE: { matrix: [[9, 0, 0], [9, 9, 0], [0, 0, 0]], color: 'pink' }
 };
+
+/**
+ * points allocation for clearing lines
+ */
+export const POINTS: Point = {
+    1: 100,
+    2: 300,
+    3: 600,
+    4: 1000
+};
+
+
+/**
+ * Dummy high scores
+ */
+export const HIGH_SCORES: HighScore[] = [
+    { playerName: 'Luna', score: 48000 },
+    { playerName: 'Nova', score: 52000 },
+    { playerName: 'Aria', score: 45000 },
+    { playerName: 'Finn', score: 43000 },
+    { playerName: 'Ella', score: 47000 },
+    { playerName: 'Leo', score: 49000 },
+    { playerName: 'Mia', score: 44000 },
+    { playerName: 'Owen', score: 51000 },
+    { playerName: 'Zoe', score: 46000 },
+    { playerName: 'Aiden', score: 50000 },
+    { playerName: 'Eli', score: 47000 },
+];
