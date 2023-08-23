@@ -2,12 +2,45 @@ import { Injectable } from '@angular/core';
 import { TETROMINOS, EXT_TETROMINOS } from '../data';
 import { Tetromino } from '../defs';
 import { Piece } from '../models/Piece';
+import { BehaviorSubject } from 'rxjs/internal/BehaviorSubject';
+import { Observable } from 'rxjs';
 
 @Injectable({
     providedIn: 'root'
 })
 
 export class PieceService {
+
+
+    /**
+     * BehaviorSubject to hold and broadcast the current Piece
+     * @private
+     */
+    private pieceSubject: BehaviorSubject<Piece | null> = new BehaviorSubject<Piece | null>(this.piece!)
+
+    /**
+     * The current piece instance
+     */
+    private piece?: Piece;
+
+    /**
+     * Get the observable that emits the current Piece
+     * 
+     * @returns {Observable<Piece | null>} An observable of the current Piece
+     */
+    getPieceObservable(): Observable<Piece | null> {
+        return this.pieceSubject.asObservable();
+    }
+
+    /**
+     * Set the current Piece and notify subscribers
+     * 
+     * @param piece 
+     */
+    setCurrentPiece(piece: Piece): void {
+        this.piece = piece;
+        this.pieceSubject.next(piece);
+    }
 
     /**
        * Generates a new Piece with a random Tetromino and returns it.
@@ -26,7 +59,7 @@ export class PieceService {
       * @param {boolean} extended - Whether to include extended Tetrominos
       * @returns {Tetromino} A randomly selected Tetromino object
       */
-    getRandomTetromino(extended: boolean = false): Tetromino {
+    private getRandomTetromino(extended: boolean = false): Tetromino {
         const shapes = this.getGameShapes(extended);
         const shapeKeys = Object.keys(shapes);
         const randomIndex = Math.floor(Math.random() * shapeKeys.length);

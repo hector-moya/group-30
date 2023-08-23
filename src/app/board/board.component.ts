@@ -28,7 +28,7 @@ export class BoardComponent implements OnInit {
     ngOnInit(): void {
         this.subscribeToConfig();
         this.currentPiece = this.pieceService.getPiece(this.ctx!);
-    }
+    };
 
     /**
      * Subscribe to the configuration updates from the GameConfigService.
@@ -40,6 +40,18 @@ export class BoardComponent implements OnInit {
             this.gameConfig = config;
             this.setupGameBoard();
         });
+    }
+
+    /**
+     * Subscribe to the Piece updates from the PieceService.
+     * When the Piece changes, the callback function is triggered.
+     * This is where we will render the Piece.
+     * 
+     */
+    subscribeToPiece(): void {
+        this.pieceService.getPieceObservable().subscribe((piece: Piece | null) => {
+            this.currentPiece = piece;
+        })
     }
 
     /**
