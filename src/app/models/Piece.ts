@@ -1,4 +1,4 @@
-import { Tetromino } from "../defs";
+import { GameConfig, Tetromino } from "../defs";
 
 export class Piece {
 
@@ -7,16 +7,17 @@ export class Piece {
     private x: number = 3; // start at middle
     private y: number = 0; // start at top
 
+    private gameConfig!: GameConfig;
     private stepInterval: ReturnType<typeof setInterval> | undefined;
 
-    constructor(private ctx: CanvasRenderingContext2D, tetromino: Tetromino) {
+    constructor(private ctx: CanvasRenderingContext2D, tetromino: Tetromino, gameConfig: GameConfig) {
         this.ctx = ctx;
         this.shape = tetromino.matrix;
         this.color = tetromino.color;
+        this.gameConfig = gameConfig;
         // this.startInterval();
         this.render();
     }
-
 
     // this will not live here, it is just for testing
     render() {
@@ -50,24 +51,9 @@ export class Piece {
     }
 
     moveDown() {
-        // Check if the piece is at the bottom of the canvas
-        if (this.y + this.shape.length >= this.ctx.canvas.height) {
-            this.stopInterval();
-            return; // Exit the method to prevent further movement
-        }
         this.y += 1;
         this.clear();
         this.render();
-    }
-
-    isOutOfBounds(rows: number, columns: number, dx: number, dy: number): boolean {
-        return this.shape.some((row, y) => {
-            return row.some((value, x) => {
-                const newX = this.x + x + dx;
-                const newY = this.y + y + dy;
-                return value && (newX < 0 || newX >= columns || newY >= rows);
-            });
-        });
     }
 
     /**
@@ -102,6 +88,42 @@ export class Piece {
             clearInterval(this.stepInterval);
             this.stepInterval = undefined; // Reset the interval ID
         }
+    }
+
+    /**
+     * Determine if a tetromino is allowed to move
+     *
+     * @param {Piece} piece The tetromino object to be checked.
+     * @returns {boolean} The movable state
+     */
+    canMove(piece: Piece): boolean {
+        // `matrix.every` checks if every row of the shape meets the conditions
+        return piece.shape.every((row, rowIndex) => {
+            // `row.every` checks if every value (cell) in the row meets the conditions.
+            return row.every((value, columnIndex) => {
+                // Calculate the actual x and y position on the board for the current cell.
+                let x = piece.x + columnIndex;
+                let y = piece.y + rowIndex;
+
+                return value === 0 || this.isInBoundary(x, y);
+            });
+        });
+    }
+
+    /**
+     * Check if the piece is within the boundary of the canvas
+     * @param x The x position of the piece
+     * @param y The y position of the piece
+     * @returns True if the piece is within the boundary, false otherwise
+     */
+    private isInBoundary(x: number, y: number): boolean {
+        // NK!! there is a problem with this logic because it is working form
+        // where the values are and now where they will be. I have just made
+        // it work but we will need to make sure it is getting the correct
+        // values dynamically
+        return (x - 1) >= 0
+            && (x + 1) < this.gameConfig.columns
+            && (y + 1) < this.gameConfig.rows;
     }
 
 }
