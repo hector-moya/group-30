@@ -1,4 +1,4 @@
-import { Component, ElementRef, OnInit, ViewChild, inject } from '@angular/core';
+import { Component, ElementRef, HostListener, OnInit, ViewChild, inject } from '@angular/core';
 import { GameConfigService } from '../services/game-config.service';
 import { CommonModule } from '@angular/common';
 import { GameConfig } from '../defs';
@@ -15,7 +15,7 @@ import { PieceService } from '../services/piece.service';
         <button (click)="moveLeft()" class="btn blue">Left</button>
         <button (click)="moveRight()" class="btn blue">Right</button>
         <button (click)="moveDown()" class="btn blue">Down</button>
-        <button class="btn blue" disabled>Rotate</button>
+        <button (click)="moveUp()"class="btn blue">Rotate</button>
     </div>
     `,
     styles: []
@@ -51,8 +51,36 @@ export class BoardComponent implements OnInit {
         this.pieceService.moveDown();
     }
 
+    moveUp() {
+        this.pieceService.moveUp();
+    }
+
     getCurrentPiece(): void {
         this.currentPiece = this.pieceService.getPiece(this.ctx!);
+        this.pieceService.setCurrentPiece(this.currentPiece); // Set the current piece in the service
+    }
+
+    /**
+     * Handle keyboard events
+     * @param event 
+     */
+    @HostListener('window:keydown', ['$event'])
+    handleKeyboardEvent(event: KeyboardEvent): void {
+        switch (event.code) {
+            case 'ArrowLeft':
+                this.moveLeft();
+                break;
+            case 'ArrowRight':
+                this.moveRight();
+                break;
+            case 'ArrowDown':
+                this.moveDown();
+                break;
+            case 'ArrowUp':
+                this.moveUp();
+                break;
+            // Additional cases for other keys if needed
+        }
     }
 
     /**

@@ -55,6 +55,25 @@ export class Piece {
         this.render();
     }
 
+    /**
+     * Rotate the piece clockwise
+     */
+    rotate(): void {
+        // Transpose the matrix
+        for (let y = 0; y < this.shape.length; ++y) {
+            for (let x = 0; x < y; ++x) {
+                [this.shape[x][y], this.shape[y][x]] = [this.shape[y][x], this.shape[x][y]];
+            }
+        }
+
+        // Reverse each row
+        this.shape.forEach((row) => row.reverse());
+
+        // Re-render the piece
+        this.clear();
+        this.render();
+    }
+
     startInterval(time: number = 1000) {
         if (!this.stepInterval) {
             this.stepInterval = setInterval(() => {

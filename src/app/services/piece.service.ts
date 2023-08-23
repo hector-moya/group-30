@@ -65,6 +65,10 @@ export class PieceService {
         this.piece!.moveDown();
     }
 
+    moveUp(): void {
+        this.piece!.rotate();
+    }
+
     /**
       * Get a random Tetromino object
       *
