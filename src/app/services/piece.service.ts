@@ -29,7 +29,7 @@ export class PieceService {
 
     /**
      * Get the observable that emits the current Piece
-     * 
+     *
      * @returns {Observable<Piece | null>} An observable of the current Piece
      */
     getPieceObservable(): Observable<Piece | null> {
@@ -38,8 +38,8 @@ export class PieceService {
 
     /**
      * Set the current Piece and notify subscribers
-     * 
-     * @param piece 
+     *
+     * @param piece
      */
     setCurrentPiece(piece: Piece): void {
         this.piece = piece;
@@ -57,47 +57,28 @@ export class PieceService {
         return new Piece(ctx, randomTetromino);
     }
 
-    moveLeft(): void {
-        this.move('left', -1, 0);
-      }
-    
-      moveRight(): void {
-        this.move('right', 1, 0);
-      }
-    
-      moveDown(): void {
-        this.move('down', 0, 1);
-      }
-
     moveUp(): void {
         this.piece!.rotate();
     }
 
-    /**
-     * Move the current piece in the specified direction
-     * Get the current game configuration and check if the piece is out of bounds
-     * @param direction 
-     * @param dx 
-     * @param dy 
-     */
-    private move(direction: 'left' | 'right' | 'down', dx: number, dy: number): void {
-        this.gameConfigService.getConfigObservable().subscribe((config) => {
-          if (this.piece && !this.piece.isOutOfBounds(config.rows, config.columns, dx, dy)) {
-            switch (direction) {
-              case 'left': this.piece.moveLeft(); break;
-              case 'right': this.piece.moveRight(); break;
-              case 'down': this.piece.moveDown(); break;
-            }
-          }
-        });
-      }
+    moveLeft(): void {
+        this.piece!.moveLeft();
+    }
+
+    moveRight(): void {
+        this.piece!.moveRight();
+    }
+
+    moveDown(): void {
+        this.piece!.moveDown();
+    }
 
     /**
-      * Get a random Tetromino object
-      *
-      * @param {boolean} extended - Whether to include extended Tetrominos
-      * @returns {Tetromino} A randomly selected Tetromino object
-      */
+    * Get a random Tetromino object
+    *
+    * @param {boolean} extended - Whether to include extended Tetrominos
+    * @returns {Tetromino} A randomly selected Tetromino object
+    */
     private getRandomTetromino(extended: boolean = false): Tetromino {
         const shapes = this.getGameShapes(extended);
         const shapeKeys = Object.keys(shapes);

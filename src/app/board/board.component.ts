@@ -70,7 +70,7 @@ export class BoardComponent implements OnInit {
 
     /**
      * Handle keyboard events
-     * @param event 
+     * @param event
      */
     @HostListener('window:keydown', ['$event'])
     handleKeyboardEvent(event: KeyboardEvent): void {
@@ -107,7 +107,7 @@ export class BoardComponent implements OnInit {
      * Subscribe to the Piece updates from the PieceService.
      * When the Piece changes, the callback function is triggered.
      * This is where we will render the Piece.
-     * 
+     *
      */
     subscribeToPiece(): void {
         this.pieceService.getPieceObservable().subscribe((piece: Piece | null) => {
