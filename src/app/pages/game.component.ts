@@ -1,16 +1,17 @@
-import { GameConfigService } from './services/game-config.service';
-import { RouterLink, RouterOutlet } from '@angular/router';
+import { GameConfigService } from '../services/game-config.service';
+import { BoardComponent } from '../board/board.component';
 import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
 
 @Component({
-    selector: 'app-root',
-    standalone: true,
-    imports: [CommonModule, RouterOutlet, RouterLink],
-    templateUrl: './app.component.html',
-    styles: []
+  selector: 'app-game',
+  standalone: true,
+  imports: [CommonModule, BoardComponent],
+  templateUrl: './game.component.html',
+  styles: [
+  ]
 })
-export class AppComponent {
+export class GameComponent {
 
     constructor(private configService: GameConfigService) {
         this.init();
@@ -20,5 +21,4 @@ export class AppComponent {
         this.configService.updateConfig({ columns: 15, rows: 25, blockSize: 20, extended: true, startLevel: 1 });
 
     }
-
 }

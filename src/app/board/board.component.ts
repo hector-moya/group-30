@@ -35,7 +35,8 @@ export class BoardComponent implements OnInit {
 
     ngOnInit(): void {
         this.subscribeToConfig();
-        this.currentPiece = this.pieceService.getPiece(this.ctx!);
+        this.getCurrentPiece();
+        this.subscribeToPiece();
     }
 
     moveLeft() {
@@ -48,6 +49,10 @@ export class BoardComponent implements OnInit {
 
     moveDown() {
         this.pieceService.moveDown();
+    }
+
+    getCurrentPiece(): void {
+        this.currentPiece = this.pieceService.getPiece(this.ctx!);
     }
 
     /**
