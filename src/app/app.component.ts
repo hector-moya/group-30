@@ -19,6 +19,7 @@ export class AppComponent {
 
     init() {
         this.configService.updateConfig({ columns: 15, rows: 25, blockSize: 20, extended: true, startLevel: 1 });
+
     }
 
 }

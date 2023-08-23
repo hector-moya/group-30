@@ -9,7 +9,15 @@ import { PieceService } from '../services/piece.service';
     selector: 'app-board',
     standalone: true,
     imports: [CommonModule],
-    template: `<canvas #board class="bdr-red bdr-3"></canvas>`,
+    template: `
+    <canvas #board class="bdr-red bdr-3"></canvas>
+    <div class="grid cols-2 mt">
+        <button (click)="moveLeft()" class="btn blue">Left</button>
+        <button (click)="moveRight()" class="btn blue">Right</button>
+        <button (click)="moveDown()" class="btn blue">Down</button>
+        <button class="btn blue" disabled>Rotate</button>
+    </div>
+    `,
     styles: []
 })
 
@@ -28,7 +36,19 @@ export class BoardComponent implements OnInit {
     ngOnInit(): void {
         this.subscribeToConfig();
         this.currentPiece = this.pieceService.getPiece(this.ctx!);
-    };
+    }
+
+    moveLeft() {
+        this.pieceService.moveLeft();
+    }
+
+    moveRight() {
+        this.pieceService.moveRight();
+    }
+
+    moveDown() {
+        this.pieceService.moveDown();
+    }
 
     /**
      * Subscribe to the configuration updates from the GameConfigService.

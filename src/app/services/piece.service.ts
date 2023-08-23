@@ -52,6 +52,18 @@ export class PieceService {
         const randomTetromino = this.getRandomTetromino(false);
         return new Piece(ctx, randomTetromino);
     }
+ 
+    moveLeft(): void {
+        this.piece!.moveLeft();
+    }
+
+    moveRight(): void {
+        this.piece!.moveRight();
+    }
+
+    moveDown(): void {
+        this.piece!.moveDown();
+    }
 
     /**
       * Get a random Tetromino object

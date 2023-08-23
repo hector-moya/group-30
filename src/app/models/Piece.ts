@@ -2,21 +2,24 @@ import { Tetromino } from "../defs";
 
 export class Piece {
 
-    shape: number[][];
-    color: string;
-    x: number = 3; // start at middle
-    y: number = 0; // start at top
+    private shape: number[][];
+    private color: string;
+    private x: number = 3; // start at middle
+    private y: number = 0; // start at top
+
+    private stepInterval: ReturnType<typeof setInterval> | undefined;
 
     constructor(private ctx: CanvasRenderingContext2D, tetromino: Tetromino) {
         this.ctx = ctx;
         this.shape = tetromino.matrix;
         this.color = tetromino.color;
+        // this.startInterval();
         this.render();
     }
 
-    
-     // this will not live here, it is just for testing
-     render() {
+
+    // this will not live here, it is just for testing
+    render() {
         this.ctx!.fillStyle = this.color;
         this.shape.forEach((row, y) => {
             row.forEach((value, x) => {
@@ -25,6 +28,46 @@ export class Piece {
                 }
             });
         });
+    }
+
+    /**
+     * Clear the entire canvas (only clears the current piece)
+     */
+    private clear() {
+        this.ctx.clearRect(0, 0, this.ctx.canvas.width, this.ctx.canvas.height)
+    }
+
+    moveLeft() {
+        this.x -= 1;
+        this.clear();
+        this.render();
+    }
+
+    moveRight() {
+        this.x += 1;
+        this.clear();
+        this.render();
+    }
+
+    moveDown() {
+        this.y += 1;
+        this.clear();
+        this.render();
+    }
+
+    startInterval(time: number = 1000) {
+        if (!this.stepInterval) {
+            this.stepInterval = setInterval(() => {
+                this.moveDown();
+            }, time);
+        }
+    }
+
+    stopInterval() {
+        if (this.stepInterval) {
+            clearInterval(this.stepInterval);
+            this.stepInterval = undefined; // Reset the interval ID
+        }
     }
 
 }
