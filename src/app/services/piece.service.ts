@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { TETROMINOS, EXT_TETROMINOS } from '../data';
-import { Tetromino } from '../defs';
+import { GameConfig, Tetromino } from '../defs';
 import { Piece } from '../models/Piece';
 import { BehaviorSubject } from 'rxjs/internal/BehaviorSubject';
 import { Observable } from 'rxjs';
@@ -11,7 +11,6 @@ import { GameConfigService } from './game-config.service';
 })
 
 export class PieceService {
-
 
     /**
      * BehaviorSubject to hold and broadcast the current Piece
@@ -24,8 +23,22 @@ export class PieceService {
      */
     private piece?: Piece;
 
-    // Inject the GameConfigService
-    constructor(private gameConfigService: GameConfigService) { }
+    private gameConfig!: GameConfig;
+
+    constructor(private configService: GameConfigService) {
+        this.subscribeToConfig();
+    }
+
+    /**
+     * Subscribe to the configuration updates from the GameConfigService.
+     * When the configuration changes, the callback function is triggered.
+     */
+    subscribeToConfig(): void {
+        // Subscribe to the getConfigObservable() method of the GameConfigService
+        this.configService.getConfigObservable().subscribe((config: GameConfig) => {
+            this.gameConfig = config;
+        });
+    }
 
     /**
      * Get the observable that emits the current Piece
@@ -54,23 +67,31 @@ export class PieceService {
        */
     getPiece(ctx: CanvasRenderingContext2D): Piece {
         const randomTetromino = this.getRandomTetromino(false);
-        return new Piece(ctx, randomTetromino);
+        return new Piece(ctx, randomTetromino, this.gameConfig);
     }
 
     moveUp(): void {
-        this.piece!.rotate();
+        if (this.piece?.canMove(this.piece)) {
+            this.piece!.rotate();
+        }
     }
 
     moveLeft(): void {
-        this.piece!.moveLeft();
+        if (this.piece?.canMove(this.piece)) {
+            this.piece!.moveLeft();
+        }
     }
 
     moveRight(): void {
-        this.piece!.moveRight();
+        if (this.piece?.canMove(this.piece)) {
+            this.piece!.moveRight();
+        }
     }
 
     moveDown(): void {
-        this.piece!.moveDown();
+        if (this.piece?.canMove(this.piece)) {
+            this.piece!.moveDown();
+        }
     }
 
     /**
