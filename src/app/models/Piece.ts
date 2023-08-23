@@ -50,6 +50,11 @@ export class Piece {
     }
 
     moveDown() {
+        // Check if the piece is at the bottom of the canvas
+        if (this.y + this.shape.length >= this.ctx.canvas.height) {
+            this.stopInterval();
+            return; // Exit the method to prevent further movement
+        }
         this.y += 1;
         this.clear();
         this.render();

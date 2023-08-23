@@ -60,6 +60,14 @@ export class BoardComponent implements OnInit {
         this.pieceService.setCurrentPiece(this.currentPiece); // Set the current piece in the service
     }
 
+    startGame(): void {
+        this.currentPiece?.startInterval();
+    }
+
+    pauseGame(): void {
+        this.currentPiece?.stopInterval();
+    }
+
     /**
      * Handle keyboard events
      * @param event 
