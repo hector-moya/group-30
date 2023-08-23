@@ -23,25 +23,11 @@ export class BoardComponent implements OnInit {
     private configService = inject(GameConfigService);
     private pieceService = inject(PieceService);
 
-    private piece: Piece | null = null;
+    private currentPiece: Piece | null = null;
 
     ngOnInit(): void {
         this.subscribeToConfig();
-        this.setupGameBoard();
-        this.piece = this.pieceService.getPiece(this.ctx!);
-        this.render();
-    }
-     // this will not live here, it is just for testing
-     render() {
-        let matrix = this.piece!.shape;
-        this.ctx!.fillStyle = this.piece!.color;
-        matrix.forEach((row, y) => {
-            row.forEach((value, x) => {
-                if (value > 0) {
-                    this.ctx!.fillRect(this.piece!.x + x, this.piece!.y + y, 1, 1);
-                }
-            });
-        });
+        this.currentPiece = this.pieceService.getPiece(this.ctx!);
     }
 
     /**
@@ -52,6 +38,7 @@ export class BoardComponent implements OnInit {
         // Subscribe to the getConfigObservable() method of the GameConfigService
         this.configService.getConfigObservable().subscribe((config: GameConfig) => {
             this.gameConfig = config;
+            this.setupGameBoard();
         });
     }
 

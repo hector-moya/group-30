@@ -11,6 +11,20 @@ export class Piece {
         this.ctx = ctx;
         this.shape = tetromino.matrix;
         this.color = tetromino.color;
+        this.render();
+    }
+
+    
+     // this will not live here, it is just for testing
+     render() {
+        this.ctx!.fillStyle = this.color;
+        this.shape.forEach((row, y) => {
+            row.forEach((value, x) => {
+                if (value > 0) {
+                    this.ctx!.fillRect(this.x + x, this.y + y, 1, 1);
+                }
+            });
+        });
     }
 
 }
