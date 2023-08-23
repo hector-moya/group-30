@@ -4,6 +4,7 @@ import { Tetromino } from '../defs';
 import { Piece } from '../models/Piece';
 import { BehaviorSubject } from 'rxjs/internal/BehaviorSubject';
 import { Observable } from 'rxjs';
+import { GameConfigService } from './game-config.service';
 
 @Injectable({
     providedIn: 'root'
@@ -22,6 +23,9 @@ export class PieceService {
      * The current piece instance
      */
     private piece?: Piece;
+
+    // Inject the GameConfigService
+    constructor(private gameConfigService: GameConfigService) { }
 
     /**
      * Get the observable that emits the current Piece
@@ -52,22 +56,41 @@ export class PieceService {
         const randomTetromino = this.getRandomTetromino(false);
         return new Piece(ctx, randomTetromino);
     }
- 
+
     moveLeft(): void {
-        this.piece!.moveLeft();
-    }
-
-    moveRight(): void {
-        this.piece!.moveRight();
-    }
-
-    moveDown(): void {
-        this.piece!.moveDown();
-    }
+        this.move('left', -1, 0);
+      }
+    
+      moveRight(): void {
+        this.move('right', 1, 0);
+      }
+    
+      moveDown(): void {
+        this.move('down', 0, 1);
+      }
 
     moveUp(): void {
         this.piece!.rotate();
     }
+
+    /**
+     * Move the current piece in the specified direction
+     * Get the current game configuration and check if the piece is out of bounds
+     * @param direction 
+     * @param dx 
+     * @param dy 
+     */
+    private move(direction: 'left' | 'right' | 'down', dx: number, dy: number): void {
+        this.gameConfigService.getConfigObservable().subscribe((config) => {
+          if (this.piece && !this.piece.isOutOfBounds(config.rows, config.columns, dx, dy)) {
+            switch (direction) {
+              case 'left': this.piece.moveLeft(); break;
+              case 'right': this.piece.moveRight(); break;
+              case 'down': this.piece.moveDown(); break;
+            }
+          }
+        });
+      }
 
     /**
       * Get a random Tetromino object

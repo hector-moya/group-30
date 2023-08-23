@@ -55,6 +55,16 @@ export class Piece {
         this.render();
     }
 
+    isOutOfBounds(rows: number, columns: number, dx: number, dy: number): boolean {
+        return this.shape.some((row, y) => {
+            return row.some((value, x) => {
+                const newX = this.x + x + dx;
+                const newY = this.y + y + dy;
+                return value && (newX < 0 || newX >= columns || newY >= rows);
+            });
+        });
+    }
+
     /**
      * Rotate the piece clockwise
      */
