@@ -23,6 +23,9 @@ export class PieceService {
      */
     private piece?: Piece;
 
+    // The next piece instance; For testing purposes
+    private nextPiece?: Piece;
+
     private gameConfig!: GameConfig;
 
     constructor(private configService: GameConfigService) {
@@ -59,6 +62,12 @@ export class PieceService {
         this.pieceSubject.next(piece);
     }
 
+
+    // Set the next Piece and notify subscribers; For testig purposes
+    setNextPiece(piece: Piece): void {
+        this.nextPiece = piece;
+    }
+
     /**
        * Generates a new Piece with a random Tetromino and returns it.
        *
@@ -67,7 +76,13 @@ export class PieceService {
        */
     getPiece(ctx: CanvasRenderingContext2D): Piece {
         const randomTetromino = this.getRandomTetromino(false);
-        return new Piece(ctx, randomTetromino, this.gameConfig);
+        return new Piece(ctx, randomTetromino, this.gameConfig, false);
+    }
+
+    // Generates a new Piece with a random Tetromino and returns it; For testing purposes
+    getNextPiece(ctx: CanvasRenderingContext2D): Piece {
+        const randomTetromino = this.getRandomTetromino(false);
+        return new Piece(ctx, randomTetromino, this.gameConfig, true);
     }
 
     moveUp(): void {
