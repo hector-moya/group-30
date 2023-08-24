@@ -19,12 +19,17 @@
         <div class="space-x mt-5">
             <button (click)="playGame()" class="btn blue w-8">Play</button>
             <button (click)="exitGame()" class="btn danger outline w-8">Exit</button>
-            <button class="btn warning outline w-8" disabled>Configuration</button>
+            <button (click)="openConfig('Game Configuration')" class="btn warning outline w-8">Configuration</button>
             <button (click)="openModal('High Scores')" class="btn success outline w-8">High Scores</button>
         </div>
 
         <modal>
-            <app-high-score />
+            <ng-container *ngIf="modalType === 'High Scores'">
+                <app-high-score></app-high-score>
+            </ng-container>
+            <ng-container *ngIf="modalType === 'Game Configuration'">
+                <app-config></app-config>
+            </ng-container>
         </modal>
 
     </div>
