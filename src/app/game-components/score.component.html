@@ -1,0 +1,28 @@
+<div class="bx dark">
+
+    <div class="txt-xl flex">
+        <span class="fg1">Score:</span> <span>{{ gameStats.score }}</span>
+    </div>
+
+    <div class="txt-xl flex">
+        <span class="fg1">Lines:</span> <span>{{ gameStats.lines }}</span>
+    </div>
+
+    <div class="txt-xl flex">
+        <span class="fg1">Level:</span> <span>{{ gameStats.level }}</span>
+    </div>
+
+    <hr>
+
+    <div class="txt-sm tac">
+        Click button to increment score and line count
+    </div>
+
+    <div class="grid cols-4 mt">
+        <button (click)="clear(1)" class="btn sm teal">1</button>
+        <button (click)="clear(2)" class="btn sm teal">2</button>
+        <button (click)="clear(3)" class="btn sm teal">3</button>
+        <button (click)="clear(4)" class="btn sm teal">4</button>
+    </div>
+
+</div>

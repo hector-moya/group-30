@@ -1,12 +1,12 @@
-import { GameConfigService } from '../services/game-config.service';
+import { ScoreComponent } from '../game-components/score.component';
 import { BoardComponent } from '../board/board.component';
-import { CommonModule } from '@angular/common';
 import { Component, ViewChild } from '@angular/core';
+import { CommonModule } from '@angular/common';
 
 @Component({
     selector: 'app-game',
     standalone: true,
-    imports: [CommonModule, BoardComponent],
+    imports: [CommonModule, BoardComponent, ScoreComponent],
     templateUrl: './game.component.html',
     styles: [
     ]
