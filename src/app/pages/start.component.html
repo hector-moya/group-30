@@ -20,8 +20,12 @@
             <button (click)="playGame()" class="btn blue w-8">Play</button>
             <button (click)="exitGame()" class="btn danger outline w-8">Exit</button>
             <button class="btn warning outline w-8" disabled>Configuration</button>
-            <button class="btn success outline w-8" disabled>High Scores</button>
+            <button (click)="openModal('High Scores')" class="btn success outline w-8">High Scores</button>
         </div>
+
+        <modal>
+            <app-high-score />
+        </modal>
 
     </div>
 
