@@ -39,16 +39,16 @@ The video should show a startup page when the game starts, displaying the follow
 
 1. [ ] Clicking the play button in the start-up page opens the game page.
 2. [ ] The game page should display the following items:
-    - Game field and a dropping block.
-    - Your group number.
-    - Current score of the session.
-    - Number of lines eliminated in the session.
-    - Current level.
-    - Extended or normal game.
-    - Player or AI mode.
-    - Next block (the shape of the next dropping block when the current one reaches the bottom).
-3. [ ] The dropping block should be seen dropping.
-4. [ ] The player should be able to move the dropping block left, right, and turn it. When the
+    - [x] Game field and a dropping block.
+    - [ ] Your group number.
+    - [x] Current score of the session.
+    - [x] Number of lines eliminated in the session.
+    - [x] Current level.
+    - [ ] Extended or normal game.
+    - [ ] Player or AI mode.
+    - [ ] Next block (the shape of the next dropping block when the current one reaches the bottom).
+3. [x] The dropping block should be seen dropping.
+4. [x] The player should be able to move the dropping block left, right, and turn it. When the
    block reaches the bottom of the field, it should stop. No other features are required.
 5. [ ] Pressing the Esc key should bring up a dialog box asking whether to end the game. Clicking
    "Yes" should return to the start-up page, "No" should continue the game.
