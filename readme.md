@@ -38,15 +38,15 @@ The video should show a startup page when the game starts, displaying the follow
 ### Prototype
 
 1. [ ] Clicking the play button in the start-up page opens the game page.
-2. [ ] The game page should display the following items:
+2. [x] The game page should display the following items:
     - [x] Game field and a dropping block.
-    - [ ] Your group number.
+    - [x] Your group number.
     - [x] Current score of the session.
     - [x] Number of lines eliminated in the session.
     - [x] Current level.
-    - [ ] Extended or normal game.
-    - [ ] Player or AI mode.
-    - [ ] Next block (the shape of the next dropping block when the current one reaches the bottom).
+    - [x] Extended or normal game.
+    - [x] Player or AI mode.
+    - [x] Next block (the shape of the next dropping block when the current one reaches the bottom).
 3. [x] The dropping block should be seen dropping.
 4. [x] The player should be able to move the dropping block left, right, and turn it. When the
    block reaches the bottom of the field, it should stop. No other features are required.
