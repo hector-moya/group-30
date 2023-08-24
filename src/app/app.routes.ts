@@ -1,17 +1,21 @@
 import { Routes } from '@angular/router';
 
 export const routes: Routes = [
-    // {
-    //     path: '',
-    //     redirectTo: 'login',
-    //     pathMatch: 'full'
-    // },
+    {
+        path: '',
+        redirectTo: 'start',
+        pathMatch: 'full'
+    },
     {
         path: 'start', loadComponent: () => import('./pages/start.component')
             .then(mod => mod.StartComponent)
     },
     {
-        path: 'game', loadComponent: () => import('./pages/game.component')
+        path: 'play-game', loadComponent: () => import('./pages/game.component')
             .then(mod => mod.GameComponent)
+    },
+    {
+        path: 'goodbye', loadComponent: () => import('./pages/goodbye.component')
+            .then(mod => mod.GoodbyeComponent)
     },
 ];
