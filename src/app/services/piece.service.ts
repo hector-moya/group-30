@@ -71,27 +71,27 @@ export class PieceService {
     }
 
     moveUp(): void {
-        if (this.piece?.canMove(this.piece)) {
-            this.piece!.rotate();
-        }
+        // if (this.piece?.canMove(this.piece)) {
+            this.piece!.move('rotate');
+        // }
     }
 
     moveLeft(): void {
-        if (this.piece?.canMove(this.piece)) {
-            this.piece!.moveLeft();
-        }
+        // if (this.piece?.canMove(this.piece)) {
+            this.piece!.move('left');
+        // }
     }
 
     moveRight(): void {
-        if (this.piece?.canMove(this.piece)) {
-            this.piece!.moveRight();
-        }
+        // if (this.piece?.canMove(this.piece)) {
+            this.piece!.move('right');
+        // }
     }
 
     moveDown(): void {
-        if (this.piece?.canMove(this.piece)) {
-            this.piece!.moveDown();
-        }
+        // if (this.piece?.canMove(this.piece)) {
+            this.piece!.move('down');
+        // }
     }
 
     /**
