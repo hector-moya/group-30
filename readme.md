@@ -25,14 +25,14 @@ The video should show a startup page when the game starts, displaying the follow
 
 ### Configure page
 
-1. [ ] To click the configure button in the start up page pop up the configure page.  *****
-2. [ ] The configure page shows following configure items. (in the prototype, you only need to
-   display following settings, functions of those settings are not asked) *****
-    - Size of the field
-    - Game level
-    - Normal or extended game
-    - Player or AI game mode
-3. [ ] A close button in the page, when player click that button, the top score page will be
+1. [x] To click the configure button in the start up page pop up the configure page.
+2. [x] The configure page shows following configure items. (in the prototype, you only need to
+   display following settings, functions of those settings are not asked)
+    - [x] Size of the field
+    - [x] Game level
+    - [x] Normal or extended game
+    - [x] Player or AI game mode
+3. [x] A close button in the page, when player click that button, the top score page will be
    closed and return to start up page
 
 ### Prototype
