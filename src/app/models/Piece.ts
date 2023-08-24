@@ -109,6 +109,7 @@ export class Piece {
             this.render();
         }
     }
+    
 
     /**
      * Determine if a tetromino is allowed to move
@@ -161,6 +162,7 @@ export class Piece {
      * @param rotatedShape 
      * @returns 
      */
+
     private isRotationAllowed(rotatedShape: number[][]): boolean {
         // Check if every cell of the rotated shape meets the conditions
         return rotatedShape.every((row, rowIndex) => {
@@ -172,5 +174,4 @@ export class Piece {
             });
         });
     }
-
 }
