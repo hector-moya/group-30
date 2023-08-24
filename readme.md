@@ -17,11 +17,11 @@ The video should show a startup page when the game starts, displaying the follow
 
 ### Top Scores Page
 
-1. [ ] To click the score button in the start up page pop up the top score page ****
-2. [ ] The top score page will display 10 best scores and the users (The data can be fake in the
-   prototype) *****
-3. [ ] A close button in the page, when player click that button, the top score page will be closed
-   and return to start up page *****
+1. [x] To click the score button in the start up page pop up the top score page
+2. [x] The top score page will display 10 best scores and the users (The data can be fake in the
+   prototype)
+3. [x] A close button in the page, when player click that button, the top score page will be closed
+   and return to start up page
 
 ### Configure page
 
@@ -53,14 +53,13 @@ The video should show a startup page when the game starts, displaying the follow
 5. [ ] Pressing the Esc key should bring up a dialog box asking whether to end the game. Clicking
    "Yes" should return to the start-up page, "No" should continue the game.
 
-
 ## Future work:
 
 Wire up:
 
 1. [ ] Play button to load game screen and begin game;
 2. [ ] Configuration to load modal and inject the configuration component
-3. [ ] High scores button to load modal and inject the high scores component
+3. [x] High scores button to load modal and inject the high scores component
 
 
 ### Game Logic

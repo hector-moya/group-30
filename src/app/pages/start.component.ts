@@ -1,14 +1,15 @@
+import { HighScoreComponent } from '../game-components/high-score.component';
 import { ModalComponent } from '../components/modal.component';
 import { LogoComponent } from '../components/logo.component';
+import { ModalService } from '../services/modal.service';
 import { Component, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
-import { ModalService } from '../services/modal.service';
 
 @Component({
     selector: 'app-start',
     standalone: true,
-    imports: [CommonModule, LogoComponent, ModalComponent],
+    imports: [CommonModule, LogoComponent, ModalComponent, HighScoreComponent],
     templateUrl: './start.component.html',
     styles: [
     ]
@@ -26,7 +27,7 @@ export class StartComponent {
         this.router.navigate(['/goodbye']);
     }
 
-    openModal(): void {
-        this.modalService.openModal();
+    openModal(title: string): void {
+        this.modalService.openModal(title);
     }
 }

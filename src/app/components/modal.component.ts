@@ -1,5 +1,5 @@
 import { ModalService } from '../services/modal.service';
-import { Component, inject } from '@angular/core';
+import { Component, Input, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 
 @Component({
@@ -8,7 +8,8 @@ import { CommonModule } from '@angular/common';
     imports: [CommonModule],
     template: `
     <div class="overlay flex" *ngIf="showModal">
-        <div class="maxw-400 mxy-auto bx">
+        <div class="minw-300 mxy-auto bx">
+            <div class="bx-title">{{ title}}</div>
             <div class="bx-content">
                 <ng-content></ng-content>
             </div>
@@ -22,12 +23,14 @@ import { CommonModule } from '@angular/common';
 export class ModalComponent {
 
     showModal: boolean = false;
+    title: string = '';
 
     private modalService = inject(ModalService);
 
     ngOnInit() {
-        this.modalService.getShowModal().subscribe(showModal => {
-            this.showModal = showModal;
+        this.modalService.getShowModal().subscribe(data => {
+            this.showModal = data.isOpen;
+            this.title = data.title ?? '';
         });
     }
 
