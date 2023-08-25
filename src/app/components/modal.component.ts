@@ -15,11 +15,11 @@ import { Router } from '@angular/router';
                 <ng-content></ng-content>
             </div>
             <div class="bx-footer tar">
-                <ng-container *ngIf="endGame">
+                <ng-container *ngIf="endGame; else elseBlock">
                     <div class="space-x">
                         <button class="btn btn-primary danger" (click)="closeRedirect()">Yes</button>
                         <button class="btn btn-primary success" (click)="closeModal()">No</button>
-                  </div>
+                    </div>
                 </ng-container>
                 <ng-template #elseBlock>
                     <button class="btn btn-primary danger" (click)="closeModal()">Close</button>
