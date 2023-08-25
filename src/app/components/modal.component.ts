@@ -17,8 +17,8 @@ import { Router } from '@angular/router';
             <div class="bx-footer tar">
                 <ng-container *ngIf="endGame">
                     <div class="space-x">
-                        <button class="btn btn-primary danger" (click)="closeRedirect()">Exit Game</button>
-                        <button class="btn btn-primary success" (click)="closeModal()">Continue</button>
+                        <button class="btn btn-primary danger" (click)="closeRedirect()">Yes</button>
+                        <button class="btn btn-primary success" (click)="closeModal()">No</button>
                   </div>
                 </ng-container>
                 <ng-template #elseBlock>

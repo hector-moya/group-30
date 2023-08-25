@@ -50,7 +50,7 @@ The video should show a startup page when the game starts, displaying the follow
 3. [x] The dropping block should be seen dropping.
 4. [x] The player should be able to move the dropping block left, right, and turn it. When the
    block reaches the bottom of the field, it should stop. No other features are required.
-5. [ ] Pressing the Esc key should bring up a dialog box asking whether to end the game. Clicking
+5. [x] Pressing the Esc key should bring up a dialog box asking whether to end the game. Clicking
    "Yes" should return to the start-up page, "No" should continue the game.
 
 ## Future work:
