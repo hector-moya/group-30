@@ -1,6 +1,7 @@
 import { ModalService } from '../services/modal.service';
 import { Component, Input, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { Router } from '@angular/router';
 
 @Component({
     selector: 'modal',
@@ -14,18 +15,30 @@ import { CommonModule } from '@angular/common';
                 <ng-content></ng-content>
             </div>
             <div class="bx-footer tar">
-                <button class="btn btn-primary danger" (click)="closeModal()">Close</button>
+                <ng-container *ngIf="endGame">
+                    <div class="space-x">
+                        <button class="btn btn-primary danger" (click)="closeRedirect()">Exit Game</button>
+                        <button class="btn btn-primary success" (click)="closeModal()">Continue</button>
+                  </div>
+                </ng-container>
+                <ng-template #elseBlock>
+                    <button class="btn btn-primary danger" (click)="closeModal()">Close</button>
+                </ng-template>
             </div>
         </div>
     </div>
   `
 })
+
 export class ModalComponent {
+
+    @Input() endGame: boolean = false;
 
     showModal: boolean = false;
     title: string = '';
 
     private modalService = inject(ModalService);
+    private router = inject(Router);
 
     ngOnInit() {
         this.modalService.getShowModal().subscribe(data => {
@@ -35,6 +48,11 @@ export class ModalComponent {
     }
 
     closeModal(): void {
+        this.modalService.closeModal();
+    }
+
+    closeRedirect(): void {
+        this.router.navigate(['/start']);
         this.modalService.closeModal();
     }
 }

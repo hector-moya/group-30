@@ -1,22 +1,26 @@
 import { Component, ElementRef, HostListener, OnInit, ViewChild, inject } from '@angular/core';
 import { GameConfigService } from '../services/game-config.service';
-import { CommonModule } from '@angular/common';
-import { GameConfig } from '../defs';
-import { Piece } from '../models/Piece';
+import { ModalComponent } from '../components/modal.component';
 import { PieceService } from '../services/piece.service';
+import { ModalService } from '../services/modal.service';
+import { CommonModule } from '@angular/common';
+import { Piece } from '../models/Piece';
+import { GameConfig } from '../defs';
 
 @Component({
     selector: 'app-board',
     standalone: true,
-    imports: [CommonModule],
+    imports: [CommonModule, ModalComponent],
     template: `
-    <canvas #board class="bdr-red bdr-3"></canvas>
-    <div class="grid cols-2 mt">
-        <button (click)="moveLeft()" class="btn blue">Left</button>
-        <button (click)="moveRight()" class="btn blue">Right</button>
-        <button (click)="moveDown()" class="btn blue">Down</button>
-        <button (click)="moveUp()"class="btn blue">Rotate</button>
-    </div>
+        <canvas #board class="bdr-red bdr-3"></canvas>
+        <div class="grid cols-2 mt">
+            <button (click)="moveLeft()" class="btn blue">Left</button>
+            <button (click)="moveRight()" class="btn blue">Right</button>
+            <button (click)="moveDown()" class="btn blue">Down</button>
+            <button (click)="moveUp()"class="btn blue">Rotate</button>
+        </div>
+
+        <modal [endGame]="true"></modal>
     `,
     styles: []
 })
@@ -30,6 +34,7 @@ export class BoardComponent implements OnInit {
 
     private configService = inject(GameConfigService);
     private pieceService = inject(PieceService);
+    private modalService = inject(ModalService);
 
     private currentPiece: Piece | null = null;
 
@@ -87,8 +92,15 @@ export class BoardComponent implements OnInit {
             case 'ArrowUp':
                 this.moveUp();
                 break;
-            // Additional cases for other keys if needed
+            case 'Escape':
+                this.handleEscape();
+                break;
         }
+    }
+
+    // this code will not live here
+    handleEscape(): void {
+        this.modalService.openModal('Do you want to end the game?');
     }
 
     /**
