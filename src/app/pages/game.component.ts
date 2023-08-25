@@ -32,6 +32,7 @@ export class GameComponent {
         this.subscribeToConfig();
         this.setupNextPieceBoard();
         this.getNextPiece();
+        this.play();
     }
 
     /**
@@ -46,8 +47,13 @@ export class GameComponent {
         });
     }
 
+    // I have put a time out in because the board component is not ready when
+    // the game component is initialised, this may be better in a service
     play(): void {
-        this.boardComponent.startGame();
+        setTimeout(() => {
+            console.log("Play button clicked.");
+            this.boardComponent.startGame();
+        }, 500);
     }
 
     pause(): void {

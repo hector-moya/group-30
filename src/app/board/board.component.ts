@@ -66,7 +66,7 @@ export class BoardComponent implements OnInit {
     }
 
     startGame(): void {
-        this.currentPiece?.startInterval(300);
+        this.currentPiece?.startInterval(600);
     }
 
     pauseGame(): void {
