@@ -1,6 +1,8 @@
-import { Component, ElementRef, ViewChild } from '@angular/core';
+import { Component, ElementRef, ViewChild, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Canvas } from 'src/app/models/Canvas';
+import { PieceService } from 'src/app/services/piece.service';
+import { Piece } from 'src/app/models/Piece';
 
 
 @Component({
@@ -17,20 +19,32 @@ export class NextPieceComponent {
 
   nextPiece?: Canvas;
   ctx: CanvasRenderingContext2D | null = null;
+  private pieceService = inject(PieceService);
+  private piece: Piece | null = null;
 
   ngOnInit(): void {
-      this.nextPieceInit();
-      this.draw();
+      this.init();
+      this.getPiece();
   }
 
-  nextPieceInit(): void {
+  init(): void {
       this.nextPiece = new Canvas(10, 5, this.nextPieceRef.nativeElement, 30);
       this.ctx = this.nextPiece.getContext();
-  }
+  }  
 
-  draw() {
-      this.ctx!.fillStyle = 'blue';
-      this.ctx!.fillRect(2, 2, 2, 2);
+  getPiece(): void {
+    this.piece = this.pieceService.getNextPiece(this.ctx!);
+}
+  /**
+   * Subscribe to the Piece updates from the PieceService.
+   * When the Piece changes, the callback function is triggered.
+   * This is where we will render the Piece.
+   *
+   */
+  subscribeToPiece(): void {
+      this.pieceService.getPieceObservable().subscribe((piece: Piece | null) => {
+          this.piece = piece;
+      })
   }
 
 }
