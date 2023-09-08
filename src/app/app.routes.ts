@@ -11,7 +11,7 @@ export const routes: Routes = [
             .then(mod => mod.StartComponent)
     },
     {
-        path: 'play-game', loadComponent: () => import('./controllers/game/game.component')
+        path: 'play-game', loadComponent: () => import('./controllers/pages/game.component')
             .then(mod => mod.GameComponent)
     },
     {
