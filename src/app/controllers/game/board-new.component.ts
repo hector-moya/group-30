@@ -7,20 +7,13 @@ import { Canvas } from 'src/app/models/Canvas';
     selector: 'app-board-new',
     standalone: true,
     imports: [CommonModule, AppLayout],
-    template: `
-    <app-layout [width]="'sm'">
-        <div class="flex gg-2">
-            <canvas #board class="bdr bdr-red"></canvas>
-        </div>
-    </app-layout>
-    `
+    template: `<canvas #canvas class="bdr bdr-red"></canvas>`,
 })
 export class BoardNewComponent {
 
-    @ViewChild('board', { static: true }) boardRef!: ElementRef;
+    @ViewChild('canvas', { static: true }) boardRef!: ElementRef;
 
     board?: Canvas;
-    next?: Canvas;
     ctx: CanvasRenderingContext2D | null = null;
 
     ngOnInit(): void {

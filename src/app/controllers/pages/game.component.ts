@@ -8,11 +8,12 @@ import { PieceService } from '../../services/piece.service';
 import { CommonModule } from '@angular/common';
 import { Piece } from '../../models/Piece';
 import { GameConfig } from '../../defs';
+import { NextPieceComponent } from '../game/next-piece.component';
 
 @Component({
     selector: 'app-game',
     standalone: true,
-    imports: [CommonModule, BoardComponent, ScoreComponent, LogoComponent, BoardNewComponent],
+    imports: [CommonModule, BoardComponent, ScoreComponent, LogoComponent, BoardNewComponent, NextPieceComponent],
     templateUrl: './game.component.html',
     styles: [
     ]
