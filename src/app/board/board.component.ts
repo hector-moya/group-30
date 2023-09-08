@@ -39,6 +39,8 @@ export class BoardComponent implements OnInit {
     private currentPiece: Piece | null = null;
 
     ngOnInit(): void {
+        console.log('hey');
+
         this.subscribeToConfig();
         this.getCurrentPiece();
         this.subscribeToPiece();

@@ -1,12 +1,12 @@
 import { Component, ElementRef, ViewChild, inject } from '@angular/core';
-import { GameConfigService } from '../services/game-config.service';
-import { ScoreComponent } from '../game-components/score.component';
-import { BoardComponent } from '../board/board.component';
-import { PieceService } from '../services/piece.service';
+import { GameConfigService } from '../../services/game-config.service';
+import { ScoreComponent } from '../../game-components/score.component';
+import { LogoComponent } from '../../components/logo.component';
+import { BoardComponent } from '../../board/board.component';
+import { PieceService } from '../../services/piece.service';
 import { CommonModule } from '@angular/common';
-import { Piece } from '../models/Piece';
-import { GameConfig } from '../defs';
-import { LogoComponent } from '../components/logo.component';
+import { Piece } from '../../models/Piece';
+import { GameConfig } from '../../defs';
 
 @Component({
     selector: 'app-game',
