@@ -17,6 +17,7 @@ export class PieceService {
      * @private
      */
     private pieceSubject: BehaviorSubject<Piece | null> = new BehaviorSubject<Piece | null>(this.piece!)
+    private nextPieceSubject: BehaviorSubject<Piece | null> = new BehaviorSubject<Piece | null>(this.nextPiece!)
 
     /**
      * The current piece instance
@@ -52,20 +53,27 @@ export class PieceService {
         return this.pieceSubject.asObservable();
     }
 
+    // Get the observable that emits the next Piece; For testing purposes
+    getNextPieceObservable(): Observable<Piece | null> {
+        return this.nextPieceSubject.asObservable();
+    }
+
     /**
      * Set the current Piece and notify subscribers
      *
      * @param piece
      */
-    setCurrentPiece(piece: Piece): void {
+    setCurrentPiece(piece: Piece, type: string = 'current'): void {
+        if (type === 'current') 
+        {            
         this.piece = piece;
         this.pieceSubject.next(piece);
-    }
-
-
-    // Set the next Piece and notify subscribers; For testig purposes
-    setNextPiece(piece: Piece): void {
-        this.nextPiece = piece;
+        }
+        else if ( type === 'next') 
+        {
+            this.nextPiece = piece;
+            this.nextPieceSubject.next(piece);
+        }
     }
 
     /**
@@ -76,14 +84,16 @@ export class PieceService {
        */
     getPiece(ctx: CanvasRenderingContext2D, isExtended: boolean = false): Piece {
         const randomTetromino = this.getRandomTetromino(isExtended);
+        console.log('Calling current piece');
         return new Piece(ctx, randomTetromino, this.gameConfig);
     }
 
-    // // Generates a new Piece with a random Tetromino and returns it; For testing purposes
-    // getNextPiece(ctx: CanvasRenderingContext2D): Piece {
-    //     const randomTetromino = this.getRandomTetromino(false);
-    //     return new Piece(ctx, randomTetromino, this.gameConfig);
-    // }
+    // Generates a new Piece with a random Tetromino and returns it; For testing purposes
+    getNextPiece(ctx: CanvasRenderingContext2D): Piece {
+        const randomTetromino = this.getRandomTetromino(false);
+        console.log('Calling next piece');
+        return new Piece(ctx, randomTetromino, this.gameConfig);
+    }
 
     moveUp(): void {
         // if (this.piece?.canMove(this.piece)) {

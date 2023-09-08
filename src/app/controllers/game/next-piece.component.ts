@@ -25,6 +25,7 @@ export class NextPieceComponent {
   ngOnInit(): void {
       this.init();
       this.getPiece();
+      this.pieceService.moveDown();
   }
 
   init(): void {
@@ -34,6 +35,7 @@ export class NextPieceComponent {
 
   getPiece(): void {
     this.piece = this.pieceService.getPiece(this.ctx!);
+    this.pieceService.setCurrentPiece(this.piece, 'next'); // Set the current piece in the service
 }
   /**
    * Subscribe to the Piece updates from the PieceService.
@@ -42,9 +44,9 @@ export class NextPieceComponent {
    *
    */
   subscribeToPiece(): void {
-      this.pieceService.getPieceObservable().subscribe((piece: Piece | null) => {
-          this.piece = piece;
-      })
-  }
+      this.pieceService.getNextPieceObservable().subscribe((piece: Piece | null) => {
+        this.piece = piece; 
+      });
+    }
 
 }
