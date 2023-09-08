@@ -40,7 +40,7 @@ export class Piece {
     startInterval(time: number = 1000) {
         if (!this.stepInterval) {
             this.stepInterval = setInterval(() => {
-                console.log('moving down');
+                // console.log('moving down');
                 this.move('down');
             }, time);
         }
@@ -87,34 +87,34 @@ export class Piece {
 
     /**
      * Rotate the piece clockwise as long as there is no collision
-     * 
+     *
      * @returns {void}
      */
     private rotate(): void {
         // Create a temporary copy of the shape
         const tempShape = this.shape.map(row => row.slice());
-    
+
         // Transpose the temporary matrix (rotate 90 degrees)
         for (let y = 0; y < tempShape.length; ++y) {
             for (let x = 0; x < y; ++x) {
                 [tempShape[x][y], tempShape[y][x]] = [tempShape[y][x], tempShape[x][y]];
             }
         }
-    
+
         // Reverse each row of the temporary matrix
         tempShape.forEach(row => row.reverse());
-    
+
         // Check if the rotated shape is within the boundary
         if (this.isRotationAllowed(tempShape)) {
             // Update the actual shape with the rotated version
             this.shape = tempShape;
-            
+
             // Re-render the piece
             this.clear();
             this.render();
         }
     }
-    
+
 
     /**
      * Determine if a tetromino is allowed to move
@@ -163,9 +163,9 @@ export class Piece {
     /**
      * Check if the rotated shape is within the boundary and does not collide with other pieces
      * Return a boolean value indicating whether the rotation is allowed
-     * 
-     * @param rotatedShape 
-     * @returns 
+     *
+     * @param rotatedShape
+     * @returns
      */
 
     private isRotationAllowed(rotatedShape: number[][]): boolean {
@@ -174,7 +174,7 @@ export class Piece {
             return row.every((value, columnIndex) => {
                 let x = this.x + columnIndex;
                 let y = this.y + rowIndex;
-    
+
                 return value === 0 || this.isInBoundary(x, y);
             });
         });

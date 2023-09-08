@@ -1,3 +1,4 @@
+import { BoardComponent as NewBoard } from 'src/app/board/board.component';
 import { Component, ElementRef, ViewChild, inject } from '@angular/core';
 import { GameConfigService } from '../../services/game-config.service';
 import { ScoreComponent } from '../../game-components/score.component';
@@ -22,13 +23,20 @@ export class GameComponent {
     private ctxNext: CanvasRenderingContext2D | null = null;
     private nextPiece: Piece | null = null;
 
+    @ViewChild(NewBoard, { static: true }) newBoard!: NewBoard;
+
     @ViewChild(BoardComponent, { static: true }) boardComponent!: BoardComponent;
+
+
     @ViewChild('nextPieceBoard', { static: true }) nextPieceBoard!: ElementRef<HTMLCanvasElement>;
 
     private configService = inject(GameConfigService);
     private pieceService = inject(PieceService);
 
     ngOnInit(): void {
+
+        // console.log(this.newBoard);
+
         this.subscribeToConfig();
         this.setupNextPieceBoard();
         this.getNextPiece();
@@ -51,7 +59,7 @@ export class GameComponent {
     // the game component is initialised, this may be better in a service
     play(): void {
         setTimeout(() => {
-            console.log("Play button clicked.");
+            // console.log("Play button clicked.");
             this.boardComponent.startGame();
         }, 500);
     }
