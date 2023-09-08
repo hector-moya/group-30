@@ -74,16 +74,16 @@ export class PieceService {
        * @param {CanvasRenderingContext2D} ctx - The 2D rendering context for the canvas.
        * @returns {Piece} A newly generated Piece instance.
        */
-    getPiece(ctx: CanvasRenderingContext2D): Piece {
-        const randomTetromino = this.getRandomTetromino(false);
-        return new Piece(ctx, randomTetromino, this.gameConfig, false);
+    getPiece(ctx: CanvasRenderingContext2D, isExtended: boolean = false): Piece {
+        const randomTetromino = this.getRandomTetromino(isExtended);
+        return new Piece(ctx, randomTetromino, this.gameConfig);
     }
 
-    // Generates a new Piece with a random Tetromino and returns it; For testing purposes
-    getNextPiece(ctx: CanvasRenderingContext2D): Piece {
-        const randomTetromino = this.getRandomTetromino(false);
-        return new Piece(ctx, randomTetromino, this.gameConfig, true);
-    }
+    // // Generates a new Piece with a random Tetromino and returns it; For testing purposes
+    // getNextPiece(ctx: CanvasRenderingContext2D): Piece {
+    //     const randomTetromino = this.getRandomTetromino(false);
+    //     return new Piece(ctx, randomTetromino, this.gameConfig);
+    // }
 
     moveUp(): void {
         // if (this.piece?.canMove(this.piece)) {

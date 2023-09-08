@@ -11,18 +11,11 @@ export class Piece {
     private stepInterval: ReturnType<typeof setInterval> | undefined;
     private bottomCollision: boolean = false; //Add a flag to check if the piece has bottom collision, this is temporary and will be removed ones we implement the grid.
 
-    constructor(private ctx: CanvasRenderingContext2D, tetromino: Tetromino, gameConfig: GameConfig, isNextPiece: boolean = false) {
+    constructor(private ctx: CanvasRenderingContext2D, tetromino: Tetromino, gameConfig: GameConfig) {
         this.ctx = ctx;
         this.shape = tetromino.matrix;
         this.color = tetromino.color;
         this.gameConfig = gameConfig;
-
-        // If the piece is the next piece, start at middle of the next piece board
-        if (isNextPiece) {
-            this.x = 1;
-            this.y = 1;
-        }
-        this.render();
     }
 
     // this will not live here, it is just for testing

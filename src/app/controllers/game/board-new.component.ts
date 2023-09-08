@@ -32,6 +32,7 @@ export class BoardNewComponent {
 
     getPiece(): void {
         this.currentPiece = this.pieceService.getPiece(this.ctx!);
+        this.pieceService.setCurrentPiece(this.currentPiece); // Set the current piece in the service
     }
     
     /**

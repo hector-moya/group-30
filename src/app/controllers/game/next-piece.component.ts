@@ -33,7 +33,7 @@ export class NextPieceComponent {
   }  
 
   getPiece(): void {
-    this.piece = this.pieceService.getNextPiece(this.ctx!);
+    this.piece = this.pieceService.getPiece(this.ctx!);
 }
   /**
    * Subscribe to the Piece updates from the PieceService.

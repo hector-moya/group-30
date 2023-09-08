@@ -8,18 +8,17 @@
         <div>
             <logo class="wh-8" />
             <hr>
-            <canvas #nextPieceBoard class="bdr-red bdr-3"></canvas>
+            <app-next-piece></app-next-piece>
             <hr>
 
             <div class="grid cols-2 mt">
                 <!-- <div (click)="play()" class="btn pink">Play</div> -->
                 <!-- <div (click)="rotate()" class="btn pink">Rotate</div> -->
-                <div (click)="pause()" class="btn yellow">Pause</div>
+                <!-- <div (click)="pause()" class="btn yellow">Pause</div> -->
             </div>
         </div>
         <div class="w-24 mt">
             <app-score></app-score>
-            <app-next-piece></app-next-piece>
         </div>
     </div>
 </div>
