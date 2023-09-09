@@ -26,6 +26,7 @@ export class NextPieceComponent {
 
     ngOnInit(): void {
         this.init();
+        this.subscribeToNextPiece();
     }
 
     /**
@@ -39,9 +40,24 @@ export class NextPieceComponent {
         this.getPiece();
     }
 
-    getPiece(): void {
-        // console.log(this.pieceService.getPiece(this.ctx!));
-        // this.pieceService.setPiece(this.piece, 'next'); // Set the current piece in the service
+    /**
+        * Get a Piece from the PieceService and set it to the nextPiece
+        * property. Then, run the setPiece() method of the PieceService
+        * which will notify the subscribers of the current Piece.
+        */
+    private getPiece(): void {
+        this.nextPiece = this.pieceService.getPiece(this.ctx!);
+        this.pieceService.setPiece(this.nextPiece, 'next');
+    }
+
+    /**
+     * Subscribe to the Piece updates from the PieceService which is
+     * responsible for creating and moving the Piece.
+     */
+    private subscribeToNextPiece(): void {
+        this.pieceService.pieceObservable().subscribe((piece: Piece | null) => {
+            this.nextPiece = piece;
+        })
     }
 
 

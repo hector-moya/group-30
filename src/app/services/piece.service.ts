@@ -44,7 +44,6 @@ export class PieceService {
      * When the configuration changes, the callback function is triggered.
      */
     subscribeToConfig(): void {
-        // Subscribe to the getConfigObservable() method of the GameConfigService
         this.configService.getConfigObservable().subscribe((config: IConfig) => {
             this.config = config;
         });
@@ -52,7 +51,6 @@ export class PieceService {
 
     /**
      * Get the observable that emits the current Piece
-     *
      * @returns {Observable<Piece | null>} An observable of the current Piece
      */
     pieceObservable(): Observable<Piece | null> {
@@ -60,51 +58,40 @@ export class PieceService {
     }
 
     /**
-     * Set the current Piece and notify subscribers
-     *
-     * @param piece
+     * Get the observable that emits the next Piece
+     * @returns {Observable<Piece | null>} An observable of the next Piece
+     */
+    nextPieceObservable(): Observable<Piece | null> {
+        return this.nextPieceSubject.asObservable();
+    }
+
+    /**
+     * Set the current or next Piece and notify subscribers
+     * @param piece - The Piece instance to set as current or next
+     * @param type - The type of piece to set (current or next)
      */
     setPiece(piece: Piece, type: string = 'current'): void {
-        if (type === 'current') {
+        if (type === 'next') {
+            this.nextPiece = piece;
+            this.nextPieceSubject.next(piece);
+        } else {
             this.piece = piece;
             this.pieceSubject.next(piece);
-        }
-        else if (type === 'next') {
-            this.nextPiece = piece;
         }
     }
 
     /**
-       * Generates a new Piece with a random Tetromino and returns it.
-       *
-       * @param {CanvasRenderingContext2D} ctx - The 2D rendering context for the canvas.
-       * @returns {Piece} A newly generated Piece instance.
-       */
+     * Generates a new Piece with a random Tetromino and returns it.
+     * @param {CanvasRenderingContext2D} ctx - The 2D rendering context for the canvas.
+     * @returns {Piece} A newly generated Piece instance.
+     */
     getPiece(ctx: CanvasRenderingContext2D, isExtended: boolean = false): Piece {
         const randomTetromino = this.getRandomTetromino(isExtended);
         return new Piece(ctx, randomTetromino, this.config);
     }
 
-
-    // getPiece(ctx: CanvasRenderingContext2D, isExtended: boolean = false): void {
-    //     const randomTetromino = this.getRandomTetromino(isExtended);
-    //     const newPiece = new Piece(ctx, randomTetromino, this.config);
-
-    //     // Emit the new piece as the next piece
-    //     this.nextPieceSubject.next(newPiece);
-
-    //     // If there is an existing current piece, emit it as the current piece
-    //     if (this.currentPiece) {
-    //         this.currentPieceSubject.next(this.currentPiece);
-    //     }
-
-    //     // Update the current piece with the new piece
-    //     this.currentPiece = newPiece;
-    // }
-
     /**
      * Get a random Tetromino object
-     *
      * @param {boolean} extended - Whether to include extended Tetrominos
      * @returns {Tetromino} A randomly selected Tetromino object
      */
@@ -118,7 +105,6 @@ export class PieceService {
 
     /**
      * Get the available Tetromino shapes based on the game mode
-     *
      * @param {boolean} extended - Whether to include extended Tetrominos
      * @returns {Object.<string, Tetromino>} An object containing the available Tetromino shapes
      */
@@ -133,11 +119,9 @@ export class PieceService {
      * REVIEW AND MOVE THIS
      *
      *
-     *
-     *
-     *
-     *
      */
+
+
     moveUp(): void {
         // if (this.piece?.canMove(this.piece)) {
         this.piece!.move('rotate');
