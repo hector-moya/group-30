@@ -1,5 +1,4 @@
-import { Component, ElementRef, HostListener, ViewChild, inject } from '@angular/core';
-import { GameConfigService } from 'src/app/services/game-config.service';
+import { Component, ElementRef, HostListener, Input, ViewChild, inject } from '@angular/core';
 import { AppLayout } from 'src/app/views/layouts/app-layout.component';
 import { PieceService } from 'src/app/services/piece.service';
 import { ModalService } from 'src/app/services/modal.service';
@@ -9,49 +8,46 @@ import { Canvas } from 'src/app/models/Canvas';
 import { Piece } from 'src/app/models/Piece';
 
 @Component({
-    selector: 'app-board-new',
+    selector: 'app-board',
     standalone: true,
     imports: [CommonModule, AppLayout],
     template: `<canvas #canvas class="bdr bdr-red"></canvas>`,
 })
-export class BoardNewComponent {
+export class BoardComponent {
 
     @ViewChild('canvas', { static: true }) boardRef!: ElementRef;
+    @Input() config!: IConfig;
 
     ctx!: CanvasRenderingContext2D | null;
     private currentPiece!: Piece | null;
 
-    private configService = inject(GameConfigService);
     private pieceService = inject(PieceService);
     private modalService = inject(ModalService);
 
     ngOnInit(): void {
-        this.initGameBoard();
+        this.init();
         this.subscribeToPiece();
     }
 
     /**
-     * Subscribe to the configuration updates from the ConfigService and
-     * initialize the game board.
-     */
-    private initGameBoard(): void {
-        this.configService.getConfigObservable().subscribe((config: IConfig) => {
-            // Instantiate the game board and set the context
-            const { rows, columns, blockSize } = config
-            const board = new Canvas(columns, rows, this.boardRef.nativeElement, blockSize);
-            this.ctx = board.getContext();
-            this.getPiece();
-        });
+     * Initialise the game board and set the context. Then, get a Piece from
+     * the PieceService and set it to the currentPiece property.
+    */
+    private init(): void {
+        const { rows, columns, blockSize } = this.config;
+        const board = new Canvas(columns, rows, this.boardRef.nativeElement, blockSize);
+        this.ctx = board.getContext();
+        this.getPiece();
     }
 
     /**
      * Get a Piece from the PieceService and set it to the currentPiece
-     * property. Then, run the setCurrentPiece() method of the PieceService
+     * property. Then, run the setPiece() method of the PieceService
      * which will notify the subscribers of the current Piece.
      */
     private getPiece(): void {
         this.currentPiece = this.pieceService.getPiece(this.ctx!);
-        this.pieceService.setCurrentPiece(this.currentPiece);
+        this.pieceService.setPiece(this.currentPiece);
     }
 
     /**
@@ -59,7 +55,7 @@ export class BoardNewComponent {
      * responsible for creating and moving the Piece.
      */
     private subscribeToPiece(): void {
-        this.pieceService.getPieceObservable().subscribe((piece: Piece | null) => {
+        this.pieceService.pieceObservable().subscribe((piece: Piece | null) => {
             this.currentPiece = piece;
         })
     }
