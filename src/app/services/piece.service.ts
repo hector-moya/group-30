@@ -64,12 +64,12 @@ export class PieceService {
      * @param piece
      */
     setCurrentPiece(piece: Piece, type: string = 'current'): void {
-        if (type === 'current') 
-        {            
+        if (type === 'current')
+        {
         this.piece = piece;
         this.pieceSubject.next(piece);
         }
-        else if ( type === 'next') 
+        else if ( type === 'next')
         {
             this.nextPiece = piece;
             this.nextPieceSubject.next(piece);
@@ -84,14 +84,12 @@ export class PieceService {
        */
     getPiece(ctx: CanvasRenderingContext2D, isExtended: boolean = false): Piece {
         const randomTetromino = this.getRandomTetromino(isExtended);
-        console.log('Calling current piece');
         return new Piece(ctx, randomTetromino, this.gameConfig);
     }
 
     // Generates a new Piece with a random Tetromino and returns it; For testing purposes
     getNextPiece(ctx: CanvasRenderingContext2D): Piece {
         const randomTetromino = this.getRandomTetromino(false);
-        console.log('Calling next piece');
         return new Piece(ctx, randomTetromino, this.gameConfig);
     }
 

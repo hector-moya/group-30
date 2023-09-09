@@ -1,11 +1,12 @@
-import { AppLayout } from 'src/app/views/layouts/app-layout.component';
 import { Component, ElementRef, HostListener, ViewChild, inject } from '@angular/core';
+import { GameConfigService } from 'src/app/services/game-config.service';
+import { AppLayout } from 'src/app/views/layouts/app-layout.component';
+import { PieceService } from 'src/app/services/piece.service';
+import { ModalService } from 'src/app/services/modal.service';
+import { IConfig } from 'src/app/models/GameConfig';
 import { CommonModule } from '@angular/common';
 import { Canvas } from 'src/app/models/Canvas';
 import { Piece } from 'src/app/models/Piece';
-import { PieceService } from 'src/app/services/piece.service';
-import { ModalService } from 'src/app/services/modal.service';
-
 
 @Component({
     selector: 'app-board-new',
@@ -17,28 +18,70 @@ export class BoardNewComponent {
 
     @ViewChild('canvas', { static: true }) boardRef!: ElementRef;
 
-    board?: Canvas;
-    ctx: CanvasRenderingContext2D | null = null;
+    ctx!: CanvasRenderingContext2D | null;
+    private currentPiece!: Piece | null;
+
+    private configService = inject(GameConfigService);
     private pieceService = inject(PieceService);
-    private currentPiece: Piece | null = null;
     private modalService = inject(ModalService);
 
     ngOnInit(): void {
-        this.init();
-        this.getPiece();
-        this.pieceService.moveDown();
-
+        this.initGameBoard();
+        this.subscribeToPiece();
     }
 
-    init(): void {
-        this.board = new Canvas(10, 5, this.boardRef.nativeElement, 30);
-        this.ctx = this.board.getContext();
+    /**
+     * Subscribe to the configuration updates from the ConfigService and
+     * initialize the game board.
+     */
+    private initGameBoard(): void {
+        this.configService.getConfigObservable().subscribe((config: IConfig) => {
+            // Instantiate the game board and set the context
+            const { rows, columns, blockSize } = config
+            const board = new Canvas(columns, rows, this.boardRef.nativeElement, blockSize);
+            this.ctx = board.getContext();
+            this.getPiece();
+        });
     }
 
-    getPiece(): void {
+    /**
+     * Get a Piece from the PieceService and set it to the currentPiece
+     * property. Then, run the setCurrentPiece() method of the PieceService
+     * which will notify the subscribers of the current Piece.
+     */
+    private getPiece(): void {
         this.currentPiece = this.pieceService.getPiece(this.ctx!);
-        this.pieceService.setCurrentPiece(this.currentPiece); // Set the current piece in the service
+        this.pieceService.setCurrentPiece(this.currentPiece);
     }
+
+    /**
+     * Subscribe to the Piece updates from the PieceService which is
+     * responsible for creating and moving the Piece.
+     */
+    private subscribeToPiece(): void {
+        this.pieceService.getPieceObservable().subscribe((piece: Piece | null) => {
+            this.currentPiece = piece;
+        })
+    }
+
+    /**
+     *
+     *
+     *
+     *
+     * REVIEW AN WOVE THIS
+     *
+     *
+     *
+     *
+     *
+     *
+     *
+     *
+     *
+     *
+     */
+
 
     moveLeft() {
         this.pieceService.moveLeft();
@@ -63,13 +106,14 @@ export class BoardNewComponent {
     pauseGame(): void {
         this.currentPiece?.stopInterval();
     }
-    
+
     /**
      * Handle keyboard events
      * @param event
      */
     @HostListener('window:keydown', ['$event'])
     handleKeyboardEvent(event: KeyboardEvent): void {
+        event.preventDefault();
         switch (event.code) {
             case 'ArrowLeft':
                 this.moveLeft();
@@ -89,21 +133,7 @@ export class BoardNewComponent {
         }
     }
 
-    // this code will not live here
     handleEscape(): void {
         this.modalService.openModal('Do you want to end the game?');
     }
-    
-    /**
-     * Subscribe to the Piece updates from the PieceService.
-     * When the Piece changes, the callback function is triggered.
-     * This is where we will render the Piece.
-     *
-     */
-    subscribeToPiece(): void {
-        this.pieceService.getPieceObservable().subscribe((piece: Piece | null) => {
-            this.currentPiece = piece;
-        })
-    }
-
 }

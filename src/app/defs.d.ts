@@ -1,5 +1,5 @@
 /**
- * Game configuration settings
+ * THIS IS DEPRECATED AND SHOULD BE REMOVED
  */
 export interface GameConfig {
     rows: number;
