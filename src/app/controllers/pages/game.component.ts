@@ -2,15 +2,15 @@ import { Component, ElementRef, ViewChild, inject } from '@angular/core';
 import { GameConfigService } from '../../services/game-config.service';
 import { ScoreComponent } from '../../game-components/score.component';
 import { NextPieceComponent } from '../game/next-piece.component';
-import { BoardNewComponent } from '../game/board-new.component';
 import { LogoComponent } from '../components/logo.component';
+import { BoardComponent } from '../game/board.component';
 import { CommonModule } from '@angular/common';
 import { GameConfig } from '../../defs';
 
 @Component({
     selector: 'app-game',
     standalone: true,
-    imports: [CommonModule, ScoreComponent, LogoComponent, BoardNewComponent, NextPieceComponent],
+    imports: [CommonModule, ScoreComponent, LogoComponent, BoardComponent, NextPieceComponent],
     templateUrl: './game.component.html',
     styles: [
     ]

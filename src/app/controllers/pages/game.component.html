@@ -1,24 +1,26 @@
 <div class="container flex flex-start items-start ha-c gg-2 py-5">
-    <!-- <app-board #newBoard></app-board> -->
 
-    <app-board-new></app-board-new>
+    <app-board />
 
-    <!-- <app-board #board></app-board> -->
     <div>
-        <div>
+
+        <div class="space-y">
+
             <logo class="wh-8" />
-            <hr>
-            <hr>
+
+            <div>
+                <app-next-piece />
+            </div>
 
             <div class="grid cols-2 mt">
-                <!-- <div (click)="play()" class="btn pink">Play</div> -->
-                <!-- <div (click)="rotate()" class="btn pink">Rotate</div> -->
                 <!-- <div (click)="pause()" class="btn yellow">Pause</div> -->
             </div>
+
         </div>
-        <div class="w-24 mt">
-            <app-score></app-score>
-            <app-next-piece></app-next-piece>
+
+        <div class="w-24">
+            <app-score />
         </div>
+
     </div>
 </div>

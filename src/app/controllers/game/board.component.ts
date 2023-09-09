@@ -9,12 +9,12 @@ import { Canvas } from 'src/app/models/Canvas';
 import { Piece } from 'src/app/models/Piece';
 
 @Component({
-    selector: 'app-board-new',
+    selector: 'app-board',
     standalone: true,
     imports: [CommonModule, AppLayout],
     template: `<canvas #canvas class="bdr bdr-red"></canvas>`,
 })
-export class BoardNewComponent {
+export class BoardComponent {
 
     @ViewChild('canvas', { static: true }) boardRef!: ElementRef;
 
