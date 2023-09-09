@@ -1,10 +1,11 @@
-import { Injectable } from '@angular/core';
-import { TETROMINOS, EXT_TETROMINOS } from '../data';
-import { GameConfig, Tetromino } from '../defs';
-import { Piece } from '../models/Piece';
 import { BehaviorSubject } from 'rxjs/internal/BehaviorSubject';
-import { Observable } from 'rxjs';
 import { GameConfigService } from './game-config.service';
+import { TETROMINOS, EXT_TETROMINOS } from '../data';
+import { Injectable } from '@angular/core';
+import { Piece } from '../models/Piece';
+import { Tetromino } from '../defs';
+import { Observable } from 'rxjs';
+import { IConfig } from '../models/GameConfig';
 
 @Injectable({
     providedIn: 'root'
@@ -13,24 +14,31 @@ import { GameConfigService } from './game-config.service';
 export class PieceService {
 
     /**
-     * BehaviorSubject to hold and broadcast the current Piece
-     * @private
+     * Current Piece BehaviorSubjects to notify subscribers of changes
      */
     private pieceSubject: BehaviorSubject<Piece | null> = new BehaviorSubject<Piece | null>(this.piece!)
-    private nextPieceSubject: BehaviorSubject<Piece | null> = new BehaviorSubject<Piece | null>(this.nextPiece!)
+
+    /**
+     * Next Piece BehaviorSubjects to notify subscribers of changes
+     */
+    private nextPieceSubject: BehaviorSubject<Piece | null> = new BehaviorSubject<Piece | null>(null);
 
     /**
      * The current piece instance
      */
     private piece?: Piece;
 
-    // The next piece instance; For testing purposes
+    /**
+     * The next piece instance
+     */
     private nextPiece?: Piece;
 
-    private gameConfig!: GameConfig;
+    private config!: IConfig;
 
     constructor(private configService: GameConfigService) {
         this.subscribeToConfig();
+        // set the next piece as soon at the service is instantiated
+        // this.nextPiece = this.getPiece(this.ctx!);
     }
 
     /**
@@ -39,8 +47,8 @@ export class PieceService {
      */
     subscribeToConfig(): void {
         // Subscribe to the getConfigObservable() method of the GameConfigService
-        this.configService.getConfigObservable().subscribe((config: GameConfig) => {
-            this.gameConfig = config;
+        this.configService.getConfigObservable().subscribe((config: IConfig) => {
+            this.config = config;
         });
     }
 
@@ -53,26 +61,18 @@ export class PieceService {
         return this.pieceSubject.asObservable();
     }
 
-    // Get the observable that emits the next Piece; For testing purposes
-    getNextPieceObservable(): Observable<Piece | null> {
-        return this.nextPieceSubject.asObservable();
-    }
-
     /**
      * Set the current Piece and notify subscribers
      *
      * @param piece
      */
-    setCurrentPiece(piece: Piece, type: string = 'current'): void {
-        if (type === 'current')
-        {
-        this.piece = piece;
-        this.pieceSubject.next(piece);
+    setPiece(piece: Piece, type: string = 'current'): void {
+        if (type === 'current') {
+            this.piece = piece;
+            this.pieceSubject.next(piece);
         }
-        else if ( type === 'next')
-        {
+        else if (type === 'next') {
             this.nextPiece = piece;
-            this.nextPieceSubject.next(piece);
         }
     }
 
@@ -84,45 +84,32 @@ export class PieceService {
        */
     getPiece(ctx: CanvasRenderingContext2D, isExtended: boolean = false): Piece {
         const randomTetromino = this.getRandomTetromino(isExtended);
-        return new Piece(ctx, randomTetromino, this.gameConfig);
+        return new Piece(ctx, randomTetromino, this.config);
     }
 
-    // Generates a new Piece with a random Tetromino and returns it; For testing purposes
-    getNextPiece(ctx: CanvasRenderingContext2D): Piece {
-        const randomTetromino = this.getRandomTetromino(false);
-        return new Piece(ctx, randomTetromino, this.gameConfig);
-    }
 
-    moveUp(): void {
-        // if (this.piece?.canMove(this.piece)) {
-            this.piece!.move('rotate');
-        // }
-    }
+    // getPiece(ctx: CanvasRenderingContext2D, isExtended: boolean = false): void {
+    //     const randomTetromino = this.getRandomTetromino(isExtended);
+    //     const newPiece = new Piece(ctx, randomTetromino, this.config);
 
-    moveLeft(): void {
-        // if (this.piece?.canMove(this.piece)) {
-            this.piece!.move('left');
-        // }
-    }
+    //     // Emit the new piece as the next piece
+    //     this.nextPieceSubject.next(newPiece);
 
-    moveRight(): void {
-        // if (this.piece?.canMove(this.piece)) {
-            this.piece!.move('right');
-        // }
-    }
+    //     // If there is an existing current piece, emit it as the current piece
+    //     if (this.currentPiece) {
+    //         this.currentPieceSubject.next(this.currentPiece);
+    //     }
 
-    moveDown(): void {
-        // if (this.piece?.canMove(this.piece)) {
-            this.piece!.move('down');
-        // }
-    }
+    //     // Update the current piece with the new piece
+    //     this.currentPiece = newPiece;
+    // }
 
     /**
-    * Get a random Tetromino object
-    *
-    * @param {boolean} extended - Whether to include extended Tetrominos
-    * @returns {Tetromino} A randomly selected Tetromino object
-    */
+     * Get a random Tetromino object
+     *
+     * @param {boolean} extended - Whether to include extended Tetrominos
+     * @returns {Tetromino} A randomly selected Tetromino object
+     */
     private getRandomTetromino(extended: boolean = false): Tetromino {
         const shapes = this.getGameShapes(extended);
         const shapeKeys = Object.keys(shapes);
@@ -140,4 +127,42 @@ export class PieceService {
     private getGameShapes(extended: boolean): { [key: string]: Tetromino } {
         return extended ? { ...TETROMINOS, ...EXT_TETROMINOS } : { ...TETROMINOS };
     }
+
+    /**
+     *
+     *
+     *
+     * REVIEW AND MOVE THIS
+     *
+     *
+     *
+     *
+     *
+     *
+     */
+    moveUp(): void {
+        // if (this.piece?.canMove(this.piece)) {
+        this.piece!.move('rotate');
+        // }
+    }
+
+    moveLeft(): void {
+        // if (this.piece?.canMove(this.piece)) {
+        this.piece!.move('left');
+        // }
+    }
+
+    moveRight(): void {
+        // if (this.piece?.canMove(this.piece)) {
+        this.piece!.move('right');
+        // }
+    }
+
+    moveDown(): void {
+        // if (this.piece?.canMove(this.piece)) {
+        this.piece!.move('down');
+        // }
+    }
+
+
 }

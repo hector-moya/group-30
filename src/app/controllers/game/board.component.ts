@@ -46,12 +46,12 @@ export class BoardComponent {
 
     /**
      * Get a Piece from the PieceService and set it to the currentPiece
-     * property. Then, run the setCurrentPiece() method of the PieceService
+     * property. Then, run the setPiece() method of the PieceService
      * which will notify the subscribers of the current Piece.
      */
     private getPiece(): void {
         this.currentPiece = this.pieceService.getPiece(this.ctx!);
-        this.pieceService.setCurrentPiece(this.currentPiece);
+        this.pieceService.setPiece(this.currentPiece);
     }
 
     /**
