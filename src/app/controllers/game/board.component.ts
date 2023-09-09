@@ -2,7 +2,7 @@ import { Component, ElementRef, HostListener, Input, ViewChild, inject } from '@
 import { AppLayout } from 'src/app/views/layouts/app-layout.component';
 import { PieceService } from 'src/app/services/piece.service';
 import { ModalService } from 'src/app/services/modal.service';
-import { IConfig } from 'src/app/models/GameConfig';
+import { IConfig } from 'src/app/models/Config';
 import { CommonModule } from '@angular/common';
 import { Canvas } from 'src/app/models/Canvas';
 import { Piece } from 'src/app/models/Piece';

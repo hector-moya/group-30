@@ -1,5 +1,5 @@
 import { ToolTipComponent } from '../components/tool-tip.component';
-import { IConfig } from 'src/app/models/GameConfig';
+import { IConfig } from 'src/app/models/Config';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Component } from '@angular/core';

@@ -1,4 +1,5 @@
-import { GameConfig, Tetromino } from "../defs";
+import { Tetromino } from "../defs";
+import { IConfig } from "./Config";
 
 export class Piece {
 
@@ -7,15 +8,15 @@ export class Piece {
     public x: number = 3; // start at middle
     public y: number = 0; // start at top
 
-    private gameConfig!: GameConfig;
+    private config!: IConfig;
     private stepInterval: ReturnType<typeof setInterval> | undefined;
     private bottomCollision: boolean = false; //Add a flag to check if the piece has bottom collision, this is temporary and will be removed ones we implement the grid.
 
-    constructor(private ctx: CanvasRenderingContext2D, tetromino: Tetromino, gameConfig: GameConfig) {
+    constructor(private ctx: CanvasRenderingContext2D, tetromino: Tetromino, config: IConfig) {
         this.ctx = ctx;
         this.shape = tetromino.matrix;
         this.color = tetromino.color;
-        this.gameConfig = gameConfig;
+        this.config = config;
         this.render();
     }
 
@@ -147,8 +148,8 @@ export class Piece {
         // it work but we will need to make sure it is getting the correct
         // values dynamically
         return x >= 0
-            && x < this.gameConfig.columns
-            && y < this.gameConfig.rows;
+            && x < this.config.columns
+            && y < this.config.rows;
     }
 
 

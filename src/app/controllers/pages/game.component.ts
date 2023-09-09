@@ -1,11 +1,11 @@
 import { Component, ElementRef, ViewChild, inject } from '@angular/core';
-import { GameConfigService } from '../../services/game-config.service';
+import { ConfigService } from '../../services/config.service';
 import { ScoreComponent } from '../../game-components/score.component';
 import { NextPieceComponent } from '../game/next-piece.component';
 import { LogoComponent } from '../components/logo.component';
 import { BoardComponent } from '../game/board.component';
 import { CommonModule } from '@angular/common';
-import { GameConfig } from '../../defs';
+import { IConfig } from 'src/app/models/Config';
 
 @Component({
     selector: 'app-game',
@@ -17,20 +17,20 @@ import { GameConfig } from '../../defs';
 })
 export class GameComponent {
 
-    public config!: GameConfig;
+    public config!: IConfig;
 
-    private configService = inject(GameConfigService);
+    private configService = inject(ConfigService);
 
     ngOnInit(): void {
         this.subscribeToConfig();
     }
 
     /**
-     * Subscribe to the configuration updates from the GameConfigService.
+     * Subscribe to the configuration updates from the ConfigService.
      * When the configuration changes, the callback function is triggered.
      */
     subscribeToConfig(): void {
-        this.configService.getConfigObservable().subscribe((config: GameConfig) => {
+        this.configService.getConfigObservable().subscribe((config: IConfig) => {
             this.config = config;
         });
     }

@@ -1,25 +1,24 @@
 import { BehaviorSubject, Observable } from 'rxjs';
-import { IConfig } from '../models/GameConfig';
+import { IConfig } from '../models/Config';
 import { Injectable } from '@angular/core';
-import { GameConfig } from '../defs';
 
 @Injectable({
     providedIn: 'root'
 })
-export class GameConfigService {
+export class ConfigService {
 
-    private gameConfig: IConfig = { columns: 10, rows: 20, blockSize: 20, extended: false, startLevel: 1};
+    private config: IConfig = { columns: 10, rows: 20, blockSize: 20, extended: false, startLevel: 1};
 
     /**
      * BehaviorSubject to hold and broadcast the configuration
      */
-    private configSubject: BehaviorSubject<GameConfig> = new BehaviorSubject<GameConfig>(this.gameConfig);
+    private configSubject: BehaviorSubject<IConfig> = new BehaviorSubject<IConfig>(this.config);
 
     /**
       * Get the observable that emits the current game configuration.
       * @returns An observable of the current game configuration.
       */
-    getConfigObservable(): Observable<GameConfig> {
+    getConfigObservable(): Observable<IConfig> {
         return this.configSubject.asObservable();
     }
 
@@ -27,7 +26,7 @@ export class GameConfigService {
      * Update the game configuration and notify subscribers.
      * @param config The new configuration to update to.
      */
-    updateConfig(config: GameConfig): void {
+    updateConfig(config: IConfig): void {
         this.configSubject.next(config);
     }
 

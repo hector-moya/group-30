@@ -1,6 +1,6 @@
 import { Component, ElementRef, Input, ViewChild, inject } from '@angular/core';
 import { PieceService } from 'src/app/services/piece.service';
-import { IConfig } from 'src/app/models/GameConfig';
+import { IConfig } from 'src/app/models/Config';
 import { CommonModule } from '@angular/common';
 import { Canvas } from 'src/app/models/Canvas';
 import { Piece } from 'src/app/models/Piece';
