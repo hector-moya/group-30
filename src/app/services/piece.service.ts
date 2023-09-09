@@ -37,8 +37,6 @@ export class PieceService {
 
     constructor(private configService: GameConfigService) {
         this.subscribeToConfig();
-        // set the next piece as soon at the service is instantiated
-        // this.nextPiece = this.getPiece(this.ctx!);
     }
 
     /**
@@ -57,7 +55,7 @@ export class PieceService {
      *
      * @returns {Observable<Piece | null>} An observable of the current Piece
      */
-    getPieceObservable(): Observable<Piece | null> {
+    pieceObservable(): Observable<Piece | null> {
         return this.pieceSubject.asObservable();
     }
 

@@ -17,7 +17,7 @@ import { GameConfig } from '../../defs';
 })
 export class GameComponent {
 
-    private gameConfig!: GameConfig;
+    public config!: GameConfig;
 
     private configService = inject(GameConfigService);
 
@@ -31,24 +31,25 @@ export class GameComponent {
      */
     subscribeToConfig(): void {
         this.configService.getConfigObservable().subscribe((config: GameConfig) => {
-            this.gameConfig = config;
+            this.config = config;
         });
     }
-
-    // I have put a time out in because the board component is not ready when
-    // the game component is initialised, this may be better in a service
-    // play(): void {
-    //     setTimeout(() => {
-    //         // console.log("Play button clicked.");
-    //         this.boardComponent.startGame();
-    //     }, 500);
-    // }
-
-    // pause(): void {
-    //     this.boardComponent.pauseGame();
-    // }
-
-    // rotate(): void {
-    //     this.boardComponent.moveUp();
-    // }
 }
+
+
+
+// I have put a time out in because the board component is not ready when
+// the game component is initialised, this may be better in a service
+// play(): void {
+//     setTimeout(() => {
+//         this.boardComponent.startGame();
+//     }, 500);
+// }
+
+// pause(): void {
+//     this.boardComponent.pauseGame();
+// }
+
+// rotate(): void {
+//     this.boardComponent.moveUp();
+// }

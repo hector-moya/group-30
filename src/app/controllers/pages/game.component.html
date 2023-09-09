@@ -1,6 +1,6 @@
 <div class="container flex flex-start items-start ha-c gg-2 py-5">
 
-    <app-board />
+    <app-board [config]="config"></app-board>
 
     <div>
 
@@ -9,7 +9,7 @@
             <logo class="wh-8" />
 
             <div>
-                <app-next-piece />
+                <app-next-piece [config]="config" />
             </div>
 
             <div class="grid cols-2 mt">

@@ -16,9 +16,9 @@ export class Piece {
         this.shape = tetromino.matrix;
         this.color = tetromino.color;
         this.gameConfig = gameConfig;
+        this.render();
     }
 
-    // this will not live here, it is just for testing
     render() {
         this.ctx!.fillStyle = this.color;
         this.shape.forEach((row, y) => {
@@ -33,7 +33,6 @@ export class Piece {
     startInterval(time: number = 1000) {
         if (!this.stepInterval) {
             this.stepInterval = setInterval(() => {
-                // console.log('moving down');
                 this.move('down');
             }, time);
         }

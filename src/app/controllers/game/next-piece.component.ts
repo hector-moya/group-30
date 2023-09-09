@@ -1,5 +1,4 @@
-import { Component, ElementRef, ViewChild, inject } from '@angular/core';
-import { GameConfigService } from 'src/app/services/game-config.service';
+import { Component, ElementRef, Input, ViewChild, inject } from '@angular/core';
 import { PieceService } from 'src/app/services/piece.service';
 import { IConfig } from 'src/app/models/GameConfig';
 import { CommonModule } from '@angular/common';
@@ -18,11 +17,11 @@ import { Piece } from 'src/app/models/Piece';
 export class NextPieceComponent {
 
     @ViewChild('canvas', { static: true }) nextPieceRef!: ElementRef;
+    @Input() config!: IConfig;
 
     ctx!: CanvasRenderingContext2D | null;
     private nextPiece!: Piece | null;
 
-    private configService = inject(GameConfigService);
     private pieceService = inject(PieceService);
 
     ngOnInit(): void {
@@ -34,20 +33,14 @@ export class NextPieceComponent {
       * initialize the canvas.
       */
     private init(): void {
-        this.configService.getConfigObservable().subscribe((config: IConfig) => {
-            // Instantiate the canvas and set the context
-            const { blockSize } = config
-            const board = new Canvas(5, 5, this.nextPieceRef.nativeElement, blockSize);
-            this.ctx = board.getContext();
-            this.getPiece();
-
-
-        });
+        const { blockSize } = this.config;
+        const board = new Canvas(5, 5, this.nextPieceRef.nativeElement, blockSize);
+        this.ctx = board.getContext();
+        this.getPiece();
     }
 
     getPiece(): void {
         // console.log(this.pieceService.getPiece(this.ctx!));
-        ;
         // this.pieceService.setPiece(this.piece, 'next'); // Set the current piece in the service
     }
 
