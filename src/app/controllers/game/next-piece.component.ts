@@ -5,7 +5,6 @@ import { CommonModule } from '@angular/common';
 import { Canvas } from 'src/app/models/Canvas';
 import { Piece } from 'src/app/models/Piece';
 
-
 @Component({
     selector: 'app-next-piece',
     standalone: true,
@@ -34,19 +33,19 @@ export class NextPieceComponent {
       * initialize the canvas.
       */
     private init(): void {
-        const { blockSize } = this.config;
-        const board = new Canvas(5, 5, this.nextPieceRef.nativeElement, blockSize);
+        const { nextRows, nextColumns, blockSize } = this.config;
+        const board = new Canvas(nextRows, nextColumns, this.nextPieceRef.nativeElement, blockSize);
         this.ctx = board.getContext();
         this.getPiece();
     }
 
     /**
-        * Get a Piece from the PieceService and set it to the nextPiece
-        * property. Then, run the setPiece() method of the PieceService
-        * which will notify the subscribers of the current Piece.
-        */
+     * Get a Piece from the PieceService and set it to the nextPiece
+     * property. Then, run the setPiece() method of the PieceService
+     * which will notify the subscribers of the current Piece.
+     */
     private getPiece(): void {
-        this.nextPiece = this.pieceService.getPiece(this.ctx!);
+        this.nextPiece = this.pieceService.getPiece(this.ctx!, this.config.extended, 'next');
         this.pieceService.setPiece(this.nextPiece, 'next');
     }
 
@@ -59,6 +58,4 @@ export class NextPieceComponent {
             this.nextPiece = piece;
         })
     }
-
-
 }

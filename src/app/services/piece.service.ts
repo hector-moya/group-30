@@ -85,9 +85,9 @@ export class PieceService {
      * @param {CanvasRenderingContext2D} ctx - The 2D rendering context for the canvas.
      * @returns {Piece} A newly generated Piece instance.
      */
-    getPiece(ctx: CanvasRenderingContext2D, isExtended: boolean = false): Piece {
+    getPiece(ctx: CanvasRenderingContext2D, isExtended: boolean, type: string = 'current'): Piece {
         const randomTetromino = this.getRandomTetromino(isExtended);
-        return new Piece(ctx, randomTetromino, this.config);
+        return new Piece(ctx, randomTetromino, this.config, type);
     }
 
     /**
@@ -95,7 +95,7 @@ export class PieceService {
      * @param {boolean} extended - Whether to include extended Tetrominos
      * @returns {Tetromino} A randomly selected Tetromino object
      */
-    private getRandomTetromino(extended: boolean = false): Tetromino {
+    private getRandomTetromino(extended: boolean): Tetromino {
         const shapes = this.getGameShapes(extended);
         const shapeKeys = Object.keys(shapes);
         const randomIndex = Math.floor(Math.random() * shapeKeys.length);
@@ -122,29 +122,29 @@ export class PieceService {
      */
 
 
-    moveUp(): void {
-        // if (this.piece?.canMove(this.piece)) {
-        this.piece!.move('rotate');
-        // }
-    }
+    // moveUp(): void {
+    //     // if (this.piece?.canMove(this.piece)) {
+    //     this.piece!.move('rotate');
+    //     // }
+    // }
 
-    moveLeft(): void {
-        // if (this.piece?.canMove(this.piece)) {
-        this.piece!.move('left');
-        // }
-    }
+    // moveLeft(): void {
+    //     // if (this.piece?.canMove(this.piece)) {
+    //     this.piece!.move('left');
+    //     // }
+    // }
 
-    moveRight(): void {
-        // if (this.piece?.canMove(this.piece)) {
-        this.piece!.move('right');
-        // }
-    }
+    // moveRight(): void {
+    //     // if (this.piece?.canMove(this.piece)) {
+    //     this.piece!.move('right');
+    //     // }
+    // }
 
-    moveDown(): void {
-        // if (this.piece?.canMove(this.piece)) {
-        this.piece!.move('down');
-        // }
-    }
+    // moveDown(): void {
+    //     // if (this.piece?.canMove(this.piece)) {
+    //     this.piece!.move('down');
+    //     // }
+    // }
 
 
 }
