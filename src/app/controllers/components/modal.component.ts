@@ -1,4 +1,4 @@
-import { ModalService } from '../services/modal.service';
+import { ModalService } from 'src/app/services/modal.service';
 import { Component, Input, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';

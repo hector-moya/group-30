@@ -2,8 +2,8 @@ import { Component, ElementRef, ViewChild, inject } from '@angular/core';
 import { GameConfigService } from '../../services/game-config.service';
 import { ScoreComponent } from '../../game-components/score.component';
 import { NextPieceComponent } from '../game/next-piece.component';
-import { LogoComponent } from '../../components/logo.component';
 import { BoardNewComponent } from '../game/board-new.component';
+import { LogoComponent } from '../components/logo.component';
 import { CommonModule } from '@angular/common';
 import { GameConfig } from '../../defs';
 

@@ -1,4 +1,5 @@
 import { BehaviorSubject, Observable } from 'rxjs';
+import { IConfig } from '../models/GameConfig';
 import { Injectable } from '@angular/core';
 import { GameConfig } from '../defs';
 
@@ -7,7 +8,7 @@ import { GameConfig } from '../defs';
 })
 export class GameConfigService {
 
-    private gameConfig: GameConfig = { columns: 10, rows: 20, blockSize: 20, extended: false, startLevel: 1};
+    private gameConfig: IConfig = { columns: 10, rows: 20, blockSize: 20, extended: false, startLevel: 1};
 
     /**
      * BehaviorSubject to hold and broadcast the configuration
