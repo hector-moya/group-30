@@ -1,11 +1,11 @@
 import { BehaviorSubject } from 'rxjs/internal/BehaviorSubject';
-import { GameConfigService } from './game-config.service';
+import { ConfigService } from './config.service';
 import { TETROMINOS, EXT_TETROMINOS } from '../data';
 import { Injectable } from '@angular/core';
 import { Piece } from '../models/Piece';
 import { Tetromino } from '../defs';
 import { Observable } from 'rxjs';
-import { IConfig } from '../models/GameConfig';
+import { IConfig } from '../models/Config';
 
 @Injectable({
     providedIn: 'root'
@@ -35,12 +35,12 @@ export class PieceService {
 
     private config!: IConfig;
 
-    constructor(private configService: GameConfigService) {
+    constructor(private configService: ConfigService) {
         this.subscribeToConfig();
     }
 
     /**
-     * Subscribe to the configuration updates from the GameConfigService.
+     * Subscribe to the configuration updates from the ConfigService.
      * When the configuration changes, the callback function is triggered.
      */
     subscribeToConfig(): void {

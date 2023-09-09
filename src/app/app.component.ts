@@ -1,4 +1,4 @@
-import { GameConfigService } from './services/game-config.service';
+import { ConfigService } from './services/config.service';
 import { RouterOutlet } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
@@ -12,7 +12,7 @@ import { Component } from '@angular/core';
 })
 export class AppComponent {
 
-    constructor(private configService: GameConfigService) {
+    constructor(private configService: ConfigService) {
         this.init();
     }
 
