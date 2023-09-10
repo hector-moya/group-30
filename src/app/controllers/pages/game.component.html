@@ -1,0 +1,26 @@
+<div class="container flex flex-start items-start ha-c gg-2 py-5">
+
+    <app-board [config]="config"></app-board>
+
+    <div>
+
+        <div class="space-y">
+
+            <logo class="wh-8" />
+
+            <div>
+                <app-next-piece [config]="config" />
+            </div>
+
+            <div class="grid cols-2 mt">
+                <!-- <div (click)="pause()" class="btn yellow">Pause</div> -->
+            </div>
+
+        </div>
+
+        <div class="w-24">
+            <app-score />
+        </div>
+
+    </div>
+</div>

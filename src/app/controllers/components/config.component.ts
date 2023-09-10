@@ -1,8 +1,8 @@
 import { ToolTipComponent } from '../components/tool-tip.component';
+import { IConfig } from 'src/app/models/Config';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Component } from '@angular/core';
-import { GameConfig } from '../defs';
 
 @Component({
     selector: 'app-config',
@@ -14,6 +14,6 @@ import { GameConfig } from '../defs';
 
 export class ConfigComponent {
 
-    config: GameConfig = { columns: 10, rows: 20, blockSize: 30, extended: false, startLevel: 1 };
+    config: IConfig = { columns: 10, rows: 20, blockSize: 30, extended: false, startLevel: 1 };
 
 }

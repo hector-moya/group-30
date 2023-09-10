@@ -3,7 +3,7 @@ import { Routes } from '@angular/router';
 export const routes: Routes = [
     {
         path: '',
-        redirectTo: 'start',
+        redirectTo: 'play-game',
         pathMatch: 'full'
     },
     {
@@ -11,7 +11,7 @@ export const routes: Routes = [
             .then(mod => mod.StartComponent)
     },
     {
-        path: 'play-game', loadComponent: () => import('./pages/game.component')
+        path: 'play-game', loadComponent: () => import('./controllers/pages/game.component')
             .then(mod => mod.GameComponent)
     },
     {

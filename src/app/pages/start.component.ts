@@ -1,11 +1,11 @@
 import { HighScoreComponent } from '../game-components/high-score.component';
-import { ModalComponent } from '../components/modal.component';
-import { LogoComponent } from '../components/logo.component';
+import { ConfigComponent } from '../controllers/components/config.component';
+import { ModalComponent } from '../controllers/components/modal.component';
+import { LogoComponent } from '../controllers/components/logo.component';
 import { ModalService } from '../services/modal.service';
 import { Component, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
-import { ConfigComponent } from '../components/config.component';
 
 @Component({
     selector: 'app-start',

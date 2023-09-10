@@ -1,15 +1,4 @@
 /**
- * Game configuration settings
- */
-export interface GameConfig {
-    rows: number;
-    columns: number;
-    blockSize: number;
-    extended: boolean;
-    startLevel: number;
-}
-
-/**
  * Tetrominos details
  */
 export interface Tetromino {

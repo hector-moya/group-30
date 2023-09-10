@@ -1,4 +1,5 @@
-import { GameConfig, Tetromino } from "../defs";
+import { Tetromino } from "../defs";
+import { IConfig } from "./Config";
 
 export class Piece {
 
@@ -7,25 +8,18 @@ export class Piece {
     public x: number = 3; // start at middle
     public y: number = 0; // start at top
 
-    private gameConfig!: GameConfig;
+    private config!: IConfig;
     private stepInterval: ReturnType<typeof setInterval> | undefined;
     private bottomCollision: boolean = false; //Add a flag to check if the piece has bottom collision, this is temporary and will be removed ones we implement the grid.
 
-    constructor(private ctx: CanvasRenderingContext2D, tetromino: Tetromino, gameConfig: GameConfig, isNextPiece: boolean = false) {
+    constructor(private ctx: CanvasRenderingContext2D, tetromino: Tetromino, config: IConfig) {
         this.ctx = ctx;
         this.shape = tetromino.matrix;
         this.color = tetromino.color;
-        this.gameConfig = gameConfig;
-
-        // If the piece is the next piece, start at middle of the next piece board
-        if (isNextPiece) {
-            this.x = 1;
-            this.y = 1;
-        }
+        this.config = config;
         this.render();
     }
 
-    // this will not live here, it is just for testing
     render() {
         this.ctx!.fillStyle = this.color;
         this.shape.forEach((row, y) => {
@@ -40,7 +34,6 @@ export class Piece {
     startInterval(time: number = 1000) {
         if (!this.stepInterval) {
             this.stepInterval = setInterval(() => {
-                console.log('moving down');
                 this.move('down');
             }, time);
         }
@@ -87,34 +80,34 @@ export class Piece {
 
     /**
      * Rotate the piece clockwise as long as there is no collision
-     * 
+     *
      * @returns {void}
      */
     private rotate(): void {
         // Create a temporary copy of the shape
         const tempShape = this.shape.map(row => row.slice());
-    
+
         // Transpose the temporary matrix (rotate 90 degrees)
         for (let y = 0; y < tempShape.length; ++y) {
             for (let x = 0; x < y; ++x) {
                 [tempShape[x][y], tempShape[y][x]] = [tempShape[y][x], tempShape[x][y]];
             }
         }
-    
+
         // Reverse each row of the temporary matrix
         tempShape.forEach(row => row.reverse());
-    
+
         // Check if the rotated shape is within the boundary
         if (this.isRotationAllowed(tempShape)) {
             // Update the actual shape with the rotated version
             this.shape = tempShape;
-            
+
             // Re-render the piece
             this.clear();
             this.render();
         }
     }
-    
+
 
     /**
      * Determine if a tetromino is allowed to move
@@ -155,17 +148,17 @@ export class Piece {
         // it work but we will need to make sure it is getting the correct
         // values dynamically
         return x >= 0
-            && x < this.gameConfig.columns
-            && y < this.gameConfig.rows;
+            && x < this.config.columns
+            && y < this.config.rows;
     }
 
 
     /**
      * Check if the rotated shape is within the boundary and does not collide with other pieces
      * Return a boolean value indicating whether the rotation is allowed
-     * 
-     * @param rotatedShape 
-     * @returns 
+     *
+     * @param rotatedShape
+     * @returns
      */
 
     private isRotationAllowed(rotatedShape: number[][]): boolean {
@@ -174,7 +167,7 @@ export class Piece {
             return row.every((value, columnIndex) => {
                 let x = this.x + columnIndex;
                 let y = this.y + rowIndex;
-    
+
                 return value === 0 || this.isInBoundary(x, y);
             });
         });

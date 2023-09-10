@@ -1,6 +1,6 @@
-import { Component } from '@angular/core';
+import { LogoComponent } from '../controllers/components/logo.component';
 import { CommonModule } from '@angular/common';
-import { LogoComponent } from '../components/logo.component';
+import { Component } from '@angular/core';
 
 @Component({
     selector: 'app-goodbye',
@@ -17,6 +17,7 @@ import { LogoComponent } from '../components/logo.component';
         </div>
     </div>`
 })
+
 export class GoodbyeComponent {
 
 }
