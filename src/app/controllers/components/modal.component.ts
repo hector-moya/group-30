@@ -41,7 +41,7 @@ export class ModalComponent {
     private router = inject(Router);
 
     ngOnInit() {
-        this.modalService.getShowModal().subscribe(data => {
+        this.modalService.observeModal().subscribe(data => {
             this.showModal = data.isOpen;
             this.title = data.title ?? '';
         });

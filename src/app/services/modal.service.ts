@@ -6,19 +6,18 @@ import { Injectable } from '@angular/core';
 })
 export class ModalService {
 
-    private showModal = new BehaviorSubject<{ isOpen: boolean, title: string | null }>
-        ({ isOpen: false, title: null });
+    private modalSubject$ = new BehaviorSubject<{ isOpen: boolean, title: string | null }>({ isOpen: false, title: null });
 
-    getShowModal(): Observable<{ isOpen: boolean, title: string | null }> {
-        return this.showModal.asObservable();
+    observeModal(): Observable<{ isOpen: boolean, title: string | null }> {
+        return this.modalSubject$.asObservable();
     }
 
     openModal(title: string): void {
-        this.showModal.next({ isOpen: true, title: title });
+        this.modalSubject$.next({ isOpen: true, title: title });
     }
 
     closeModal(): void {
-        this.showModal.next({ isOpen: false, title: null });
+        this.modalSubject$.next({ isOpen: false, title: null });
     }
 
 }

@@ -1,8 +1,9 @@
-import { HighScoreComponent } from '../game-components/high-score.component';
-import { ConfigComponent } from '../controllers/components/config.component';
-import { ModalComponent } from '../controllers/components/modal.component';
-import { LogoComponent } from '../controllers/components/logo.component';
-import { ModalService } from '../services/modal.service';
+
+import { HighScoreComponent } from 'src/app/controllers/game/high-score.component';
+import { ConfigComponent } from '../components/config.component';
+import { ModalComponent } from '../components/modal.component';
+import { ModalService } from 'src/app/services/modal.service';
+import { LogoComponent } from '../components/logo.component';
 import { Component, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
@@ -11,7 +12,7 @@ import { Router } from '@angular/router';
     selector: 'app-start',
     standalone: true,
     imports: [CommonModule, LogoComponent, ModalComponent, HighScoreComponent, ConfigComponent],
-    templateUrl: './start.component.html',
+    templateUrl: '../../views/pages/start.component.html',
     styles: [
     ]
 })

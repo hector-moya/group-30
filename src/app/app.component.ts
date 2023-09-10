@@ -7,7 +7,7 @@ import { Component } from '@angular/core';
     selector: 'app-root',
     standalone: true,
     imports: [CommonModule, RouterOutlet],
-    templateUrl: './app.component.html',
+    templateUrl: './views/app.component.html',
     styles: []
 })
 export class AppComponent {
@@ -17,7 +17,14 @@ export class AppComponent {
     }
 
     init() {
-        this.configService.updateConfig({ columns: 15, rows: 25, blockSize: 20, extended: true, startLevel: 1 });
+        this.configService.updateConfig({
+            rows: 25,
+            columns: 15,
+            blockSize: 20,
+            extended: false,
+            startLevel: 1,
+            nextGridSize: 4
+        });
     }
 
 }

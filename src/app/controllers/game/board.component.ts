@@ -2,7 +2,7 @@ import { Component, ElementRef, HostListener, Input, ViewChild, inject } from '@
 import { AppLayout } from 'src/app/views/layouts/app-layout.component';
 import { PieceService } from 'src/app/services/piece.service';
 import { ModalService } from 'src/app/services/modal.service';
-import { IConfig } from 'src/app/models/Config';
+import { IConfig } from 'src/app/interfaces/Config';
 import { CommonModule } from '@angular/common';
 import { Canvas } from 'src/app/models/Canvas';
 import { Piece } from 'src/app/models/Piece';
@@ -46,7 +46,7 @@ export class BoardComponent {
      * which will notify the subscribers of the current Piece.
      */
     private getPiece(): void {
-        this.currentPiece = this.pieceService.getPiece(this.ctx!);
+        this.currentPiece = this.pieceService.getPiece(this.ctx!, this.config.extended);
         this.pieceService.setPiece(this.currentPiece);
     }
 
@@ -55,7 +55,7 @@ export class BoardComponent {
      * responsible for creating and moving the Piece.
      */
     private subscribeToPiece(): void {
-        this.pieceService.pieceObservable().subscribe((piece: Piece | null) => {
+        this.pieceService.observePiece().subscribe((piece: Piece | null) => {
             this.currentPiece = piece;
         })
     }
@@ -79,55 +79,55 @@ export class BoardComponent {
      */
 
 
-    moveLeft() {
-        this.pieceService.moveLeft();
-    }
+    // moveLeft() {
+    //     this.pieceService.moveLeft();
+    // }
 
-    moveRight() {
-        this.pieceService.moveRight();
-    }
+    // moveRight() {
+    //     this.pieceService.moveRight();
+    // }
 
-    moveDown() {
-        this.pieceService.moveDown();
-    }
+    // moveDown() {
+    //     this.pieceService.moveDown();
+    // }
 
-    moveUp() {
-        this.pieceService.moveUp();
-    }
+    // moveUp() {
+    //     this.pieceService.moveUp();
+    // }
 
-    startGame(): void {
-        this.currentPiece?.startInterval(600);
-    }
+    // startGame(): void {
+    //     this.currentPiece?.startInterval(600);
+    // }
 
-    pauseGame(): void {
-        this.currentPiece?.stopInterval();
-    }
+    // pauseGame(): void {
+    //     this.currentPiece?.stopInterval();
+    // }
 
     /**
      * Handle keyboard events
      * @param event
      */
-    @HostListener('window:keydown', ['$event'])
-    handleKeyboardEvent(event: KeyboardEvent): void {
-        event.preventDefault();
-        switch (event.code) {
-            case 'ArrowLeft':
-                this.moveLeft();
-                break;
-            case 'ArrowRight':
-                this.moveRight();
-                break;
-            case 'ArrowDown':
-                this.moveDown();
-                break;
-            case 'ArrowUp':
-                this.moveUp();
-                break;
-            case 'Escape':
-                this.handleEscape();
-                break;
-        }
-    }
+    // @HostListener('window:keydown', ['$event'])
+    // handleKeyboardEvent(event: KeyboardEvent): void {
+    //     event.preventDefault();
+    //     switch (event.code) {
+    //         case 'ArrowLeft':
+    //             this.moveLeft();
+    //             break;
+    //         case 'ArrowRight':
+    //             this.moveRight();
+    //             break;
+    //         case 'ArrowDown':
+    //             this.moveDown();
+    //             break;
+    //         case 'ArrowUp':
+    //             this.moveUp();
+    //             break;
+    //         case 'Escape':
+    //             this.handleEscape();
+    //             break;
+    //     }
+    // }
 
     handleEscape(): void {
         this.modalService.openModal('Do you want to end the game?');

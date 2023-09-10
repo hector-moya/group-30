@@ -1,5 +1,5 @@
 import { ToolTipComponent } from '../components/tool-tip.component';
-import { IConfig } from 'src/app/models/Config';
+import { IConfig } from 'src/app/interfaces/Config';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Component } from '@angular/core';
@@ -8,7 +8,7 @@ import { Component } from '@angular/core';
     selector: 'app-config',
     standalone: true,
     imports: [CommonModule, FormsModule, ToolTipComponent],
-    templateUrl: './config.component.html',
+    templateUrl: '../../views/components/config.component.html',
     styles: []
 })
 

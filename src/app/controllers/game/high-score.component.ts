@@ -1,7 +1,7 @@
 import { CommonModule } from '@angular/common';
+import { HighScore } from '../../interfaces/Score';
 import { Component } from '@angular/core';
-import { HIGH_SCORES } from '../data';
-import { HighScore } from '../defs';
+import { HIGH_SCORES } from '../../data';
 
 @Component({
     selector: 'app-high-score',

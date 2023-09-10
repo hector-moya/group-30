@@ -1,10 +1,9 @@
 import { Component, ElementRef, Input, ViewChild, inject } from '@angular/core';
 import { PieceService } from 'src/app/services/piece.service';
-import { IConfig } from 'src/app/models/Config';
+import { IConfig } from 'src/app/interfaces/Config';
 import { CommonModule } from '@angular/common';
 import { Canvas } from 'src/app/models/Canvas';
 import { Piece } from 'src/app/models/Piece';
-
 
 @Component({
     selector: 'app-next-piece',
@@ -34,19 +33,19 @@ export class NextPieceComponent {
       * initialize the canvas.
       */
     private init(): void {
-        const { blockSize } = this.config;
-        const board = new Canvas(5, 5, this.nextPieceRef.nativeElement, blockSize);
+        const { nextGridSize, blockSize } = this.config;
+        const board = new Canvas(nextGridSize, nextGridSize, this.nextPieceRef.nativeElement, blockSize);
         this.ctx = board.getContext();
         this.getPiece();
     }
 
     /**
-        * Get a Piece from the PieceService and set it to the nextPiece
-        * property. Then, run the setPiece() method of the PieceService
-        * which will notify the subscribers of the current Piece.
-        */
+     * Get a Piece from the PieceService and set it to the nextPiece
+     * property. Then, run the setPiece() method of the PieceService
+     * which will notify the subscribers of the current Piece.
+     */
     private getPiece(): void {
-        this.nextPiece = this.pieceService.getPiece(this.ctx!);
+        this.nextPiece = this.pieceService.getPiece(this.ctx!, this.config.extended, 'next');
         this.pieceService.setPiece(this.nextPiece, 'next');
     }
 
@@ -55,10 +54,8 @@ export class NextPieceComponent {
      * responsible for creating and moving the Piece.
      */
     private subscribeToNextPiece(): void {
-        this.pieceService.pieceObservable().subscribe((piece: Piece | null) => {
+        this.pieceService.observeNextPiece().subscribe((piece: Piece | null) => {
             this.nextPiece = piece;
         })
     }
-
-
 }
