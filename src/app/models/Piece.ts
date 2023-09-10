@@ -1,19 +1,27 @@
-import { Tetromino } from "../defs";
+import { ITetromino } from "./Tetromino";
 import { IConfig } from "./Config";
 
-export class Piece {
+export interface IPiece extends ITetromino {
+    x: number;
+    y: number;
+}
 
-    private shape: number[][];
-    private color: string;
+export class Piece implements IPiece {
+
     public x: number;
-    public y: number = 0; // start at top
+    public y: number = 0;
+    public matrix: number[][];
+    public color: string;
 
-    constructor(private ctx: CanvasRenderingContext2D, public tetromino: Tetromino, private config: IConfig, public type: string = 'current') {
-        this.ctx = ctx;
-        this.shape = tetromino.matrix;
+    constructor(
+        private ctx: CanvasRenderingContext2D,
+        public tetromino: ITetromino,
+        private config: IConfig,
+        public type: string = 'current'
+    ) {
+        this.matrix = tetromino.matrix;
         this.color = tetromino.color;
-        this.x = 1;
-        this.x = this.centerXPosition(this.shape);
+        this.x = this.centerXPosition(this.matrix);
         this.render();
     }
 
@@ -24,7 +32,7 @@ export class Piece {
     move(piece: Piece): void {
         this.x = piece.x;
         this.y = piece.y;
-        this.shape = piece.shape; // update matrix with new orientation
+        this.matrix = piece.matrix; // update matrix with new orientation
         this.clear();
         this.render();
     }
@@ -36,10 +44,10 @@ export class Piece {
      * @returns {Piece} The rotated Tetromino piece
      */
     rotate(piece: Piece): Piece {
-        const currentMatrix = piece.shape;
+        const currentMatrix = piece.matrix;
         const transposedMatrix = this.transposeMatrix(currentMatrix);
-        // Replace existing shape matrix with the rotated transposed matrix
-        piece.shape = transposedMatrix;
+        // Replace existing piece matrix with the rotated transposed matrix
+        piece.matrix = transposedMatrix;
 
         return piece;
     }
@@ -56,7 +64,7 @@ export class Piece {
      */
     private render() {
         this.ctx!.fillStyle = this.color;
-        this.shape.forEach((row, y) => {
+        this.matrix.forEach((row, y) => {
             row.forEach((value, x) => {
                 if (value > 0) {
                     this.ctx!.fillRect(this.x + x, this.y + y, 1, 1);
@@ -138,7 +146,7 @@ export class Piece {
     */
     canMove(piece: Piece, xOffset: number, yOffset: number): boolean {
         // `matrix.every` checks if every row of the shape meets the conditions
-        return piece.shape.every((row, rowIndex) => {
+        return piece.matrix.every((row, rowIndex) => {
             // `row.every` checks if every value (cell) in the row meets the conditions.
             return row.every((value, columnIndex) => {
                 // Calculate the actual x and y position on the board for the current cell.

@@ -1,5 +1,3 @@
-
-
 /**
  * Tetrominos details
  */
