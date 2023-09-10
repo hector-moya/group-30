@@ -4,6 +4,5 @@ export interface IConfig {
     blockSize: number;
     extended: boolean;
     startLevel: number;
-    nextRows?: number;
-    nextColumns?: number;
+    nextGridSize?: number;
 }

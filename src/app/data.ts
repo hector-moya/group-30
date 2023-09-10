@@ -1,4 +1,15 @@
 import { Tetromino, Point, HighScore } from "./defs";
+import { IConfig } from "./models/Config";
+
+export const DEFAULT_CONFIG: IConfig = {
+    rows: 25,
+    columns: 15,
+    blockSize: 20,
+    extended: false,
+    startLevel: 1,
+    nextGridSize: 4
+}
+
 
 /**
  * default tetrominos each with 4 squares for `normal` game

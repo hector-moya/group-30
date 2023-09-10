@@ -33,8 +33,8 @@ export class NextPieceComponent {
       * initialize the canvas.
       */
     private init(): void {
-        const { nextRows, nextColumns, blockSize } = this.config;
-        const board = new Canvas(nextRows, nextColumns, this.nextPieceRef.nativeElement, blockSize);
+        const { nextGridSize, blockSize } = this.config;
+        const board = new Canvas(nextGridSize, nextGridSize, this.nextPieceRef.nativeElement, blockSize);
         this.ctx = board.getContext();
         this.getPiece();
     }

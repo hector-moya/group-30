@@ -1,8 +1,10 @@
+type Matrix = number[][];
+
 /**
  * Tetrominos details
  */
 export interface Tetromino {
-    matrix: number[][];
+    matrix: Matrix;
     color: string;
 }
 

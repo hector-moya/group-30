@@ -109,7 +109,7 @@ export class Piece implements IPiece {
      */
     private centerXPosition(matrix: number[][]): number {
         const columns = this.type === 'next'
-            ? this.config.nextColumns
+            ? this.config.nextGridSize
             : this.config.columns;
         return Math.floor((columns! - this.calculateMaxWidth(matrix)) / 2);
     }

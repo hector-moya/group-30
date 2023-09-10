@@ -44,7 +44,7 @@ export class PieceService {
      * When the configuration changes, the callback function is triggered.
      */
     subscribeToConfig(): void {
-        this.configService.getConfigObservable().subscribe((config: IConfig) => {
+        this.configService.observeConfig().subscribe((config: IConfig) => {
             this.config = config;
         });
     }

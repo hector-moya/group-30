@@ -23,8 +23,7 @@ export class AppComponent {
             blockSize: 20,
             extended: false,
             startLevel: 1,
-            nextRows: 5,
-            nextColumns: 5
+            nextGridSize: 4
         });
     }
 
