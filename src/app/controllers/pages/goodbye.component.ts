@@ -1,4 +1,4 @@
-import { LogoComponent } from '../controllers/components/logo.component';
+import { LogoComponent } from '../components/logo.component';
 import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
 

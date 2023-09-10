@@ -1,5 +1,6 @@
-import { Tetromino, Point, HighScore } from "./defs";
-import { IConfig } from "./models/Config";
+import { HighScore, IGameStats, Point } from "./interfaces/Score";
+import { ITetromino } from "./interfaces/Tetromino";
+import { IConfig } from "./interfaces/Config";
 
 export const DEFAULT_CONFIG: IConfig = {
     rows: 25,
@@ -10,11 +11,17 @@ export const DEFAULT_CONFIG: IConfig = {
     nextGridSize: 4
 }
 
+export const GAME_STATS: IGameStats = {
+    score: 0,
+    lines: 0,
+    level: 1,
+    levelUp: 10
+}
 
 /**
  * default tetrominos each with 4 squares for `normal` game
  */
-export const TETROMINOS: { [key: string]: Tetromino } = {
+export const TETROMINOS: { [key: string]: ITetromino } = {
     I: { matrix: [[1, 0, 0, 0], [1, 0, 0, 0], [1, 0, 0, 0], [1, 0, 0, 0]], color: 'teal' },
     J: { matrix: [[2, 0, 0], [2, 2, 2], [0, 0, 0]], color: 'blue' },
     L: { matrix: [[0, 0, 3], [3, 3, 3], [0, 0, 0]], color: 'orange' },
@@ -27,7 +34,7 @@ export const TETROMINOS: { [key: string]: Tetromino } = {
 /**
  * extended tetrominos each with 3 squares for 'extended' game
  */
-export const EXT_TETROMINOS: { [key: string]: Tetromino } = {
+export const EXT_TETROMINOS: { [key: string]: ITetromino } = {
     IE: { matrix: [[0, 0, 0, 0], [8, 8, 8, 0], [0, 0, 0, 0], [0, 0, 0, 0]], color: 'sky' },
     LE: { matrix: [[9, 0, 0], [9, 9, 0], [0, 0, 0]], color: 'pink' }
 };

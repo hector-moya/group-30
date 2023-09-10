@@ -1,11 +1,11 @@
 import { BehaviorSubject } from 'rxjs/internal/BehaviorSubject';
-import { ConfigService } from './config.service';
+import { ITetromino } from '../interfaces/Tetromino';
 import { TETROMINOS, EXT_TETROMINOS } from '../data';
+import { ConfigService } from './config.service';
+import { IConfig } from '../interfaces/Config';
 import { Injectable } from '@angular/core';
 import { Piece } from '../models/Piece';
-import { Tetromino } from '../defs';
 import { Observable } from 'rxjs';
-import { IConfig } from '../models/Config';
 
 @Injectable({
     providedIn: 'root'
@@ -16,22 +16,12 @@ export class PieceService {
     /**
      * Current Piece BehaviorSubjects to notify subscribers of changes
      */
-    private pieceSubject: BehaviorSubject<Piece | null> = new BehaviorSubject<Piece | null>(this.piece!)
+    private pieceSubject$: BehaviorSubject<Piece | null> = new BehaviorSubject<Piece | null>(null)
 
     /**
      * Next Piece BehaviorSubjects to notify subscribers of changes
      */
-    private nextPieceSubject: BehaviorSubject<Piece | null> = new BehaviorSubject<Piece | null>(null);
-
-    /**
-     * The current piece instance
-     */
-    private piece?: Piece;
-
-    /**
-     * The next piece instance
-     */
-    private nextPiece?: Piece;
+    private nextPieceSubject$: BehaviorSubject<Piece | null> = new BehaviorSubject<Piece | null>(null);
 
     private config!: IConfig;
 
@@ -53,16 +43,16 @@ export class PieceService {
      * Get the observable that emits the current Piece
      * @returns {Observable<Piece | null>} An observable of the current Piece
      */
-    pieceObservable(): Observable<Piece | null> {
-        return this.pieceSubject.asObservable();
+    observePiece(): Observable<Piece | null> {
+        return this.pieceSubject$.asObservable();
     }
 
     /**
      * Get the observable that emits the next Piece
      * @returns {Observable<Piece | null>} An observable of the next Piece
      */
-    nextPieceObservable(): Observable<Piece | null> {
-        return this.nextPieceSubject.asObservable();
+    observeNextPiece(): Observable<Piece | null> {
+        return this.nextPieceSubject$.asObservable();
     }
 
     /**
@@ -72,11 +62,9 @@ export class PieceService {
      */
     setPiece(piece: Piece, type: string = 'current'): void {
         if (type === 'next') {
-            this.nextPiece = piece;
-            this.nextPieceSubject.next(piece);
+            this.nextPieceSubject$.next(piece);
         } else {
-            this.piece = piece;
-            this.pieceSubject.next(piece);
+            this.pieceSubject$.next(piece);
         }
     }
 
@@ -95,7 +83,7 @@ export class PieceService {
      * @param {boolean} extended - Whether to include extended Tetrominos
      * @returns {Tetromino} A randomly selected Tetromino object
      */
-    private getRandomTetromino(extended: boolean): Tetromino {
+    private getRandomTetromino(extended: boolean): ITetromino {
         const shapes = this.getGameShapes(extended);
         const shapeKeys = Object.keys(shapes);
         const randomIndex = Math.floor(Math.random() * shapeKeys.length);
@@ -108,7 +96,7 @@ export class PieceService {
      * @param {boolean} extended - Whether to include extended Tetrominos
      * @returns {Object.<string, Tetromino>} An object containing the available Tetromino shapes
      */
-    private getGameShapes(extended: boolean): { [key: string]: Tetromino } {
+    private getGameShapes(extended: boolean): { [key: string]: ITetromino } {
         return extended ? { ...TETROMINOS, ...EXT_TETROMINOS } : { ...TETROMINOS };
     }
 

@@ -1,6 +1,6 @@
 import { Component, ElementRef, Input, ViewChild, inject } from '@angular/core';
 import { PieceService } from 'src/app/services/piece.service';
-import { IConfig } from 'src/app/models/Config';
+import { IConfig } from 'src/app/interfaces/Config';
 import { CommonModule } from '@angular/common';
 import { Canvas } from 'src/app/models/Canvas';
 import { Piece } from 'src/app/models/Piece';
@@ -54,7 +54,7 @@ export class NextPieceComponent {
      * responsible for creating and moving the Piece.
      */
     private subscribeToNextPiece(): void {
-        this.pieceService.pieceObservable().subscribe((piece: Piece | null) => {
+        this.pieceService.observeNextPiece().subscribe((piece: Piece | null) => {
             this.nextPiece = piece;
         })
     }

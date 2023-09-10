@@ -1,11 +1,6 @@
-export interface ICanvas {
-    width: number;
-    height: number;
-    canvas: HTMLCanvasElement;
-    scale: number;
-}
+import { IDrawingContext } from "../interfaces/DrawingContext";
 
-export class Canvas implements ICanvas {
+export class Canvas implements IDrawingContext {
 
     private ctx!: CanvasRenderingContext2D | null;
 

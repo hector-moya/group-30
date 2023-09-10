@@ -1,17 +1,17 @@
 import { Component, ElementRef, ViewChild, inject } from '@angular/core';
-import { ConfigService } from '../../services/config.service';
-import { ScoreComponent } from '../../game-components/score.component';
 import { NextPieceComponent } from '../game/next-piece.component';
+import { ConfigService } from '../../services/config.service';
 import { LogoComponent } from '../components/logo.component';
 import { BoardComponent } from '../game/board.component';
+import { ScoreComponent } from '../game/score.component';
+import { IConfig } from 'src/app/interfaces/Config';
 import { CommonModule } from '@angular/common';
-import { IConfig } from 'src/app/models/Config';
 
 @Component({
     selector: 'app-game',
     standalone: true,
-    imports: [CommonModule, ScoreComponent, LogoComponent, BoardComponent, NextPieceComponent],
-    templateUrl: './game.component.html',
+    imports: [CommonModule, LogoComponent, BoardComponent, NextPieceComponent, ScoreComponent],
+    templateUrl: '../../views/pages/game.component.html',
     styles: [
     ]
 })

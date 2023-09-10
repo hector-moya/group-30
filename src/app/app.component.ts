@@ -7,7 +7,7 @@ import { Component } from '@angular/core';
     selector: 'app-root',
     standalone: true,
     imports: [CommonModule, RouterOutlet],
-    templateUrl: './app.component.html',
+    templateUrl: './views/app.component.html',
     styles: []
 })
 export class AppComponent {

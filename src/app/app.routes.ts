@@ -7,7 +7,7 @@ export const routes: Routes = [
         pathMatch: 'full'
     },
     {
-        path: 'start', loadComponent: () => import('./pages/start.component')
+        path: 'start', loadComponent: () => import('./controllers/pages/start.component')
             .then(mod => mod.StartComponent)
     },
     {
@@ -15,7 +15,7 @@ export const routes: Routes = [
             .then(mod => mod.GameComponent)
     },
     {
-        path: 'goodbye', loadComponent: () => import('./pages/goodbye.component')
+        path: 'goodbye', loadComponent: () => import('./controllers/pages/goodbye.component')
             .then(mod => mod.GoodbyeComponent)
     },
 ];

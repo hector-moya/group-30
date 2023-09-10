@@ -1,16 +1,12 @@
-import { ITetromino } from "./Tetromino";
-import { IConfig } from "./Config";
-
-export interface IPiece extends ITetromino {
-    x: number;
-    y: number;
-}
+import { ITetromino } from "../interfaces/Tetromino";
+import { IPiece } from "../interfaces/Piece";
+import { IConfig } from "../interfaces/Config";
 
 export class Piece implements IPiece {
 
     public x: number;
     public y: number = 0;
-    public matrix: number[][];
+    public matrix: Matrix;
     public color: string;
 
     constructor(
@@ -84,7 +80,7 @@ export class Piece implements IPiece {
      * @param matrix The original matrix to be transposed
      * @returns The transposed matrix (rotated clockwise)
      */
-    private transposeMatrix(matrix: number[][]): number[][] {
+    private transposeMatrix(matrix: Matrix): Matrix {
         const numRows = matrix.length;
         const numCols = matrix[0].length;
 
@@ -104,10 +100,10 @@ export class Piece implements IPiece {
 
     /**
      * Calculate the center x position of a matrix
-     * @param {number[][]} matrix - The matrix to be checked
+     * @param {Matrix} matrix - The matrix to be checked
      * @returns {number} The center x position of the matrix
      */
-    private centerXPosition(matrix: number[][]): number {
+    private centerXPosition(matrix: Matrix): number {
         const columns = this.type === 'next'
             ? this.config.nextGridSize
             : this.config.columns;
@@ -116,10 +112,10 @@ export class Piece implements IPiece {
 
     /**
      * Helper function to calculate the maximum width of a matrix
-     * @param {number[][]} matrix - The matrix to be checked
+     * @param {Matrix} matrix - The matrix to be checked
      * @returns {number} The maximum width of the matrix
      */
-    private calculateMaxWidth(matrix: number[][]): number {
+    private calculateMaxWidth(matrix: Matrix): number {
         let maxWidth = 0;
 
         for (let row = 0; row < matrix.length; row++) {

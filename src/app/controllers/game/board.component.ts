@@ -2,7 +2,7 @@ import { Component, ElementRef, HostListener, Input, ViewChild, inject } from '@
 import { AppLayout } from 'src/app/views/layouts/app-layout.component';
 import { PieceService } from 'src/app/services/piece.service';
 import { ModalService } from 'src/app/services/modal.service';
-import { IConfig } from 'src/app/models/Config';
+import { IConfig } from 'src/app/interfaces/Config';
 import { CommonModule } from '@angular/common';
 import { Canvas } from 'src/app/models/Canvas';
 import { Piece } from 'src/app/models/Piece';
@@ -55,7 +55,7 @@ export class BoardComponent {
      * responsible for creating and moving the Piece.
      */
     private subscribeToPiece(): void {
-        this.pieceService.pieceObservable().subscribe((piece: Piece | null) => {
+        this.pieceService.observePiece().subscribe((piece: Piece | null) => {
             this.currentPiece = piece;
         })
     }

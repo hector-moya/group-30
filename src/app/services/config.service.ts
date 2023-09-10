@@ -1,5 +1,5 @@
 import { BehaviorSubject, Observable } from 'rxjs';
-import { IConfig } from '../models/Config';
+import { IConfig } from '../interfaces/Config';
 import { Injectable } from '@angular/core';
 import { DEFAULT_CONFIG } from '../data';
 
@@ -9,14 +9,9 @@ import { DEFAULT_CONFIG } from '../data';
 export class ConfigService {
 
     /**
-     * Default game configuration for initializing the game.
-     */
-    private config: IConfig = DEFAULT_CONFIG;
-
-    /**
      * BehaviorSubject to hold and broadcast the configuration
      */
-    private configSubject$: BehaviorSubject<IConfig> = new BehaviorSubject<IConfig>(this.config);
+    private configSubject$: BehaviorSubject<IConfig> = new BehaviorSubject<IConfig>(DEFAULT_CONFIG);
 
     /**
       * Get the observable that emits the current game configuration.
