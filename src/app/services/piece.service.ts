@@ -6,6 +6,7 @@ import { IConfig } from '../interfaces/Config';
 import { Injectable } from '@angular/core';
 import { Piece } from '../models/Piece';
 import { Observable } from 'rxjs';
+import { IPosition } from '../interfaces/Position';
 
 @Injectable({
     providedIn: 'root'
@@ -27,16 +28,6 @@ export class PieceService {
 
     constructor(private configService: ConfigService) {
         this.subscribeToConfig();
-    }
-
-    /**
-     * Subscribe to the configuration updates from the ConfigService.
-     * When the configuration changes, the callback function is triggered.
-     */
-    subscribeToConfig(): void {
-        this.configService.observeConfig().subscribe((config: IConfig) => {
-            this.config = config;
-        });
     }
 
     /**
@@ -69,6 +60,32 @@ export class PieceService {
     }
 
     /**
+     * Check if a tetromino is allowed to move to the specified position
+     * within the game board.
+     * @param {Matrix} matrix The matrix of the tetromino (current or next shape)
+     * @param {Position} position The position to check
+     * @returns {boolean} Whether the tetromino can move to the specified position
+     */
+    canMove(matrix: Matrix, position: IPosition): boolean {
+        // Get the current piece from the subject
+        const currentPiece = this.pieceSubject$.value;
+        // Call the canMove method of the current piece passing the matrix and position
+        return (currentPiece?.canMove(matrix, position)) || false;
+    }
+
+    /**
+     * Move the current piece to the specified position and notify subscribers
+     * of the change.
+     * @param {Matrix} matrix The update matrix of the piece
+     * @param {Position} position The updated position
+     */
+    move(matrix: Matrix, position: IPosition) {
+        const currentPiece = this.pieceSubject$.value;
+        currentPiece?.move(matrix, position);
+        this.setPiece(currentPiece!);
+    }
+
+    /**
      * Generates a new Piece with a random Tetromino and returns it.
      * @param {CanvasRenderingContext2D} ctx - The 2D rendering context for the canvas.
      * @returns {Piece} A newly generated Piece instance.
@@ -76,6 +93,16 @@ export class PieceService {
     getPiece(ctx: CanvasRenderingContext2D, isExtended: boolean, type: string = 'current'): Piece {
         const randomTetromino = this.getRandomTetromino(isExtended);
         return new Piece(ctx, randomTetromino, this.config, type);
+    }
+
+    /**
+     * Subscribe to the configuration updates from the ConfigService.
+     * When the configuration changes, the callback function is triggered.
+     */
+    private subscribeToConfig(): void {
+        this.configService.observeConfig().subscribe((config: IConfig) => {
+            this.config = config;
+        });
     }
 
     /**
@@ -99,40 +126,5 @@ export class PieceService {
     private getGameShapes(extended: boolean): { [key: string]: ITetromino } {
         return extended ? { ...TETROMINOS, ...EXT_TETROMINOS } : { ...TETROMINOS };
     }
-
-    /**
-     *
-     *
-     *
-     * REVIEW AND MOVE THIS
-     *
-     *
-     */
-
-
-    // moveUp(): void {
-    //     // if (this.piece?.canMove(this.piece)) {
-    //     this.piece!.move('rotate');
-    //     // }
-    // }
-
-    // moveLeft(): void {
-    //     // if (this.piece?.canMove(this.piece)) {
-    //     this.piece!.move('left');
-    //     // }
-    // }
-
-    // moveRight(): void {
-    //     // if (this.piece?.canMove(this.piece)) {
-    //     this.piece!.move('right');
-    //     // }
-    // }
-
-    // moveDown(): void {
-    //     // if (this.piece?.canMove(this.piece)) {
-    //     this.piece!.move('down');
-    //     // }
-    // }
-
 
 }

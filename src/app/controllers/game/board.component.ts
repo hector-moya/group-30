@@ -1,5 +1,6 @@
 import { Component, ElementRef, HostListener, Input, ViewChild, inject } from '@angular/core';
 import { AppLayout } from 'src/app/views/layouts/app-layout.component';
+import { ModalComponent } from '../components/modal.component';
 import { PieceService } from 'src/app/services/piece.service';
 import { ModalService } from 'src/app/services/modal.service';
 import { IConfig } from 'src/app/interfaces/Config';
@@ -10,8 +11,11 @@ import { Piece } from 'src/app/models/Piece';
 @Component({
     selector: 'app-board',
     standalone: true,
-    imports: [CommonModule, AppLayout],
-    template: `<canvas #canvas class="bdr bdr-red"></canvas>`,
+    imports: [CommonModule, AppLayout, ModalComponent],
+    template: `
+        <canvas #canvas class="bdr bdr-red"></canvas>
+        <modal [endGame]="true"></modal>
+    `,
 })
 export class BoardComponent {
 
@@ -60,74 +64,31 @@ export class BoardComponent {
         })
     }
 
-    /**
-     *
-     *
-     *
-     *
-     * REVIEW AN WOVE THIS
-     *
-     *
-     *
-     *
-     *
-     *
-     *
-     *
-     *
-     *
-     */
-
-
-    // moveLeft() {
-    //     this.pieceService.moveLeft();
-    // }
-
-    // moveRight() {
-    //     this.pieceService.moveRight();
-    // }
-
-    // moveDown() {
-    //     this.pieceService.moveDown();
-    // }
-
-    // moveUp() {
-    //     this.pieceService.moveUp();
-    // }
-
-    // startGame(): void {
-    //     this.currentPiece?.startInterval(600);
-    // }
-
-    // pauseGame(): void {
-    //     this.currentPiece?.stopInterval();
-    // }
+    private moves: any = {
+        ArrowLeft: (piece: Piece) => ({ ...piece, x: piece.x - 1 }),
+        ArrowRight: (piece: Piece) => ({ ...piece, x: piece.x + 1 }),
+        ArrowDown: (piece: Piece) => ({ ...piece, y: piece.y + 1 }),
+        // ArrowUp: (piece: Piece) => board.rotate(piece),
+    };
 
     /**
-     * Handle keyboard events
-     * @param event
+     * Handle the keydown event and call the moves object, which accepts
+     * the current piece and uses a callback to return the updated position
+     * in the selected direction or rotation.
      */
-    // @HostListener('window:keydown', ['$event'])
-    // handleKeyboardEvent(event: KeyboardEvent): void {
-    //     event.preventDefault();
-    //     switch (event.code) {
-    //         case 'ArrowLeft':
-    //             this.moveLeft();
-    //             break;
-    //         case 'ArrowRight':
-    //             this.moveRight();
-    //             break;
-    //         case 'ArrowDown':
-    //             this.moveDown();
-    //             break;
-    //         case 'ArrowUp':
-    //             this.moveUp();
-    //             break;
-    //         case 'Escape':
-    //             this.handleEscape();
-    //             break;
-    //     }
-    // }
+    @HostListener('document:keydown', ['$event'])
+    onKeydown(event: KeyboardEvent): void {
+        if (this.moves[event.key]) {
+            const updatedPiece = this.moves[event.key](this.currentPiece);
+            const { matrix, x, y } = updatedPiece;
+            const canMove = this.pieceService.canMove(matrix, { x, y });
+            if (canMove) {
+                this.pieceService.move(matrix, { x, y });
+            }
+        }
+
+        if (event.key === 'Escape') this.handleEscape();
+    }
 
     handleEscape(): void {
         this.modalService.openModal('Do you want to end the game?');
