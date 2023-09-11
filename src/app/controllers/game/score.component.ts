@@ -18,12 +18,16 @@ export class ScoreComponent implements OnInit {
     gameStats!: IGameStats;
 
     ngOnInit(): void {
+        this.subscribeToScore();
+    }
+
+    subscribeToScore(): void {
         this.scoreService.observeScore().subscribe((stats: IGameStats) => {
             this.gameStats = stats;
         })
     }
 
-    clear(linesCleared: number) {
+    clear(linesCleared: number): void {
         this.scoreService.updateGameStats(linesCleared);
     }
 

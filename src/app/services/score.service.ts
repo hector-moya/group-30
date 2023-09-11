@@ -38,7 +38,7 @@ export class ScoreService {
      */
     private calculateStats(linesCleared: number): IGameStats {
         const updatedGameStats = { ...this.scoreSubject$.value }; // Clone current stats
-        updatedGameStats.score += this.getScore(linesCleared);
+        updatedGameStats.score += this.getPoints(linesCleared);
         updatedGameStats.lines += linesCleared;
         updatedGameStats.level = Math.floor(updatedGameStats.lines / updatedGameStats.levelUp + 1);
         return updatedGameStats;
@@ -49,7 +49,7 @@ export class ScoreService {
      * @param {number} linesCleared The number of lines cleared.
      * @returns {number} Points scored.
      */
-    private getScore(linesCleared: number): number {
+    private getPoints(linesCleared: number): number {
         return POINTS[linesCleared] ?? 0;
     }
 }
