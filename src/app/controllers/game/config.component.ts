@@ -8,7 +8,7 @@ import { Component } from '@angular/core';
     selector: 'app-config',
     standalone: true,
     imports: [CommonModule, FormsModule, ToolTipComponent],
-    templateUrl: '../../views/components/config.component.html',
+    templateUrl: '../../views/game/config.component.html',
     styles: []
 })
 

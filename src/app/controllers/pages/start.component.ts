@@ -1,9 +1,9 @@
 
 import { HighScoreComponent } from 'src/app/controllers/game/high-score.component';
-import { ConfigComponent } from '../components/config.component';
 import { ModalComponent } from '../components/modal.component';
 import { ModalService } from 'src/app/services/modal.service';
 import { LogoComponent } from '../components/logo.component';
+import { ConfigComponent } from '../game/config.component';
 import { Component, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
