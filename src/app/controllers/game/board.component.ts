@@ -19,21 +19,21 @@ export class BoardComponent {
     @Input() config!: IConfig;
 
     ctx!: CanvasRenderingContext2D | null;
-    private currentPiece!: Piece | null;
+    private piece!: Piece | null;
 
     private pieceService = inject(PieceService);
     private modalService = inject(ModalService);
 
     ngOnInit(): void {
-        this.init();
         this.subscribeToPiece();
+        this.initBoard();
     }
 
     /**
      * Initialise the game board and set the context. Then, get a Piece from
-     * the PieceService and set it to the currentPiece property.
+     * the PieceService and set it to the piece property.
     */
-    private init(): void {
+    private initBoard(): void {
         const { rows, columns, blockSize } = this.config;
         const board = new Canvas(columns, rows, this.boardRef.nativeElement, blockSize);
         this.ctx = board.getContext();
@@ -41,13 +41,13 @@ export class BoardComponent {
     }
 
     /**
-     * Get a Piece from the PieceService and set it to the currentPiece
+     * Get a Piece from the PieceService and set it to the piece
      * property. Then, run the setPiece() method of the PieceService
      * which will notify the subscribers of the current Piece.
      */
     private getPiece(): void {
-        this.currentPiece = this.pieceService.getPiece(this.ctx!, this.config.extended);
-        this.pieceService.setPiece(this.currentPiece);
+        this.piece = this.pieceService.getPiece(this.ctx!, this.config.extended);
+        this.pieceService.setPiece(this.piece);
     }
 
     /**
@@ -56,7 +56,7 @@ export class BoardComponent {
      */
     private subscribeToPiece(): void {
         this.pieceService.observePiece().subscribe((piece: Piece | null) => {
-            this.currentPiece = piece;
+            this.piece = piece;
         })
     }
 

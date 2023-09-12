@@ -30,16 +30,6 @@ export class PieceService {
     }
 
     /**
-     * Subscribe to the configuration updates from the ConfigService.
-     * When the configuration changes, the callback function is triggered.
-     */
-    subscribeToConfig(): void {
-        this.configService.observeConfig().subscribe((config: IConfig) => {
-            this.config = config;
-        });
-    }
-
-    /**
      * Get the observable that emits the current Piece
      * @returns {Observable<Piece | null>} An observable of the current Piece
      */
@@ -76,6 +66,16 @@ export class PieceService {
     getPiece(ctx: CanvasRenderingContext2D, isExtended: boolean, type: string = 'current'): Piece {
         const randomTetromino = this.getRandomTetromino(isExtended);
         return new Piece(ctx, randomTetromino, this.config, type);
+    }
+
+    /**
+     * Subscribe to the configuration updates from the ConfigService.
+     * When the configuration changes, the callback function is triggered.
+     */
+    private subscribeToConfig(): void {
+        this.configService.observeConfig().subscribe((config: IConfig) => {
+            this.config = config;
+        });
     }
 
     /**
