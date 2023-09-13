@@ -31,6 +31,7 @@ export class BoardComponent {
     ngOnInit(): void {
         this.subscribeToPiece();
         this.initBoard();
+        // this.startInterval();
     }
 
     /**
@@ -46,12 +47,10 @@ export class BoardComponent {
 
     /**
      * Get a Piece from the PieceService and set it to the piece
-     * property. Then, run the setPiece() method of the PieceService
-     * which will notify the subscribers of the current Piece.
+     * property.
      */
     private getPiece(): void {
         this.piece = this.pieceService.getPiece(this.ctx!, this.config.extended);
-        this.pieceService.setPiece(this.piece);
     }
 
     /**
@@ -68,7 +67,7 @@ export class BoardComponent {
         ArrowLeft: (piece: Piece) => ({ ...piece, x: piece.x - 1 }),
         ArrowRight: (piece: Piece) => ({ ...piece, x: piece.x + 1 }),
         ArrowDown: (piece: Piece) => ({ ...piece, y: piece.y + 1 }),
-        // ArrowUp: (piece: Piece) => board.rotate(piece),
+        ArrowUp: (piece: Piece) => (this.pieceService.getRotatedPiece(piece)),
     };
 
     /**
@@ -79,7 +78,7 @@ export class BoardComponent {
     @HostListener('document:keydown', ['$event'])
     onKeydown(event: KeyboardEvent): void {
         if (this.moves[event.key]) {
-            const updatedPiece = this.moves[event.key](this.currentPiece);
+            const updatedPiece = this.moves[event.key](this.piece);
             const { matrix, x, y } = updatedPiece;
             const canMove = this.pieceService.canMove(matrix, { x, y });
             if (canMove) {
@@ -92,5 +91,33 @@ export class BoardComponent {
 
     handleEscape(): void {
         this.modalService.openModal('Do you want to end the game?');
+    }
+
+    /**
+     * Set an interval to move the piece down every 900ms. This is
+     * cleared when the game is paused or the piece can no longer
+     * move down.
+     */
+
+    private stepInterval?: any;
+
+    startInterval(time: number = 900) {
+        if (!this.stepInterval) {
+            this.stepInterval = setInterval(() => {
+                let updatedPiece = this.moves["ArrowDown"](this.piece);
+                let { matrix, x, y } = updatedPiece;
+                let canMove = this.pieceService.canMove(matrix, { x, y });
+                if (canMove) {
+                    this.pieceService.move(matrix, { x, y });
+                }
+            }, time);
+        }
+    }
+
+    stopInterval() {
+        if (this.stepInterval) {
+            clearInterval(this.stepInterval);
+            this.stepInterval = undefined; // Reset the interval ID
+        }
     }
 }

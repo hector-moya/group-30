@@ -1,12 +1,12 @@
 import { BehaviorSubject } from 'rxjs/internal/BehaviorSubject';
 import { ITetromino } from '../interfaces/Tetromino';
 import { TETROMINOS, EXT_TETROMINOS } from '../data';
+import { IPosition } from '../interfaces/Position';
 import { ConfigService } from './config.service';
 import { IConfig } from '../interfaces/Config';
 import { Injectable } from '@angular/core';
 import { Piece } from '../models/Piece';
 import { Observable } from 'rxjs';
-import { IPosition } from '../interfaces/Position';
 
 @Injectable({
     providedIn: 'root'
@@ -47,16 +47,30 @@ export class PieceService {
     }
 
     /**
-     * Set the current or next Piece and notify subscribers
-     * @param piece - The Piece instance to set as current or next
-     * @param type - The type of piece to set (current or next)
+     *
+     * @param {CanvasRenderingContext2D} ctx The 2D rendering context for the canvas.
+     * @param {boolean} isExtended Determine the available game pieces
+     * @param {string} type The type of piece to generate (current or next)
+     * @returns {Piece} A newly generated Piece instance.
      */
-    setPiece(piece: Piece, type: string = 'current'): void {
-        if (type === 'next') {
-            this.nextPieceSubject$.next(piece);
-        } else {
-            this.pieceSubject$.next(piece);
-        }
+    getPiece(ctx: CanvasRenderingContext2D, isExtended: boolean, type: string = 'current'): Piece {
+        const randomTetromino = this.getRandomTetromino(isExtended);
+        const piece = new Piece(ctx, randomTetromino, this.config, type);
+        // Update the current or next piece subject
+        this.setPiece(piece, type);
+        return piece;
+    }
+
+    /**
+     * Set the current or next Piece and notify subscribers
+     * @param {Piece} piece - The Piece instance to set as current or next
+     * @param {string} type - The type of piece to set (current or next)
+     */
+    private setPiece(piece: Piece, type: string): void {
+        const subject = type === 'next'
+            ? this.nextPieceSubject$
+            : this.pieceSubject$;
+        subject.next(piece); // update the subject
     }
 
     /**
@@ -82,23 +96,24 @@ export class PieceService {
     move(matrix: Matrix, position: IPosition) {
         const currentPiece = this.pieceSubject$.value;
         currentPiece?.move(matrix, position);
-        this.setPiece(currentPiece!);
+        // hardcode as `current` because it is the only option
+        this.setPiece(currentPiece!, 'current');
     }
 
     /**
-     * Generates a new Piece with a random Tetromino and returns it.
-     * @param {CanvasRenderingContext2D} ctx - The 2D rendering context for the canvas.
-     * @returns {Piece} A newly generated Piece instance.
+     * Get a rotated version of the given piece. Note: This method does not
+     * update the piece subject, that is handled by the move() method.
+     * @param {Piece} piece - The original piece to rotate.
+     * @returns {Piece} A rotated piece.
      */
-    getPiece(ctx: CanvasRenderingContext2D, isExtended: boolean, type: string = 'current'): Piece {
-        const randomTetromino = this.getRandomTetromino(isExtended);
-        return new Piece(ctx, randomTetromino, this.config, type);
+    getRotatedPiece(piece: Piece): Piece {
+        return this.pieceSubject$.value?.rotate(piece)!;
     }
 
     /**
-     * Subscribe to the configuration updates from the ConfigService.
-     * When the configuration changes, the callback function is triggered.
-     */
+    * Subscribe to the configuration updates from the ConfigService.
+    * When the configuration changes, the callback function is triggered.
+    */
     private subscribeToConfig(): void {
         this.configService.observeConfig().subscribe((config: IConfig) => {
             this.config = config;

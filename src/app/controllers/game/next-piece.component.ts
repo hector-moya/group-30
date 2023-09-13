@@ -46,7 +46,6 @@ export class NextPieceComponent {
      */
     private getPiece(): void {
         this.nextPiece = this.pieceService.getPiece(this.ctx!, this.config.extended, 'next');
-        this.pieceService.setPiece(this.nextPiece, 'next');
     }
 
     /**
