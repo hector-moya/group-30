@@ -18,9 +18,9 @@ export class AppComponent {
 
     init() {
         this.configService.updateConfig({
-            rows: 25,
-            columns: 15,
-            blockSize: 20,
+            rows: 20,
+            columns: 10,
+            blockSize: 25,
             extended: false,
             startLevel: 1,
             nextGridSize: 4
