@@ -1,6 +1,7 @@
 import { ITetromino } from "../interfaces/Tetromino";
-import { IPiece } from "../interfaces/Piece";
+import { IPosition } from "../interfaces/Position";
 import { IConfig } from "../interfaces/Config";
+import { IPiece } from "../interfaces/Piece";
 
 export class Piece implements IPiece {
 
@@ -23,12 +24,13 @@ export class Piece implements IPiece {
 
     /**
      * Move the piece, clear the canvas and render in the new position
-     * @param piece - The piece containing the new position and shape.
+     * @param {IMatrix} matrix the updated piece matrix
+     * @param {IPosition} position the updated piece position
      */
-    move(piece: Piece): void {
-        this.x = piece.x;
-        this.y = piece.y;
-        this.matrix = piece.matrix; // update matrix with new orientation
+    move(matrix: Matrix, position: IPosition): void {
+        this.x = position.x;
+        this.y = position.y;
+        this.matrix = matrix;
         this.clear();
         this.render();
     }
@@ -136,20 +138,22 @@ export class Piece implements IPiece {
     }
 
     /**
-    * Determine if a tetromino is allowed to move
-    * @param {Piece} piece The tetromino object to be checked.
-    * @returns {boolean} The movable state
-    */
-    canMove(piece: Piece, xOffset: number, yOffset: number): boolean {
+     * Check if a tetromino is allowed to move to the specified position
+     * within the game board.
+     * @param {Matrix} matrix The matrix of the tetromino (current or next shape)
+     * @param {Position} position The position to check
+     * @returns {boolean} Whether the tetromino can move to the specified position
+     */
+    canMove(matrix: Matrix, position: IPosition): boolean {
         // `matrix.every` checks if every row of the shape meets the conditions
-        return piece.matrix.every((row, rowIndex) => {
+        return matrix.every((row, rowIndex) => {
             // `row.every` checks if every value (cell) in the row meets the conditions.
             return row.every((value, columnIndex) => {
                 // Calculate the actual x and y position on the board for the current cell.
-                let x = piece.x + columnIndex + xOffset;
-                let y = piece.y + rowIndex + yOffset;
+                let x = position.x + columnIndex;
+                let y = position.y + rowIndex;
 
-                return value === 0 || this.isInBoundary(x, y);
+                return value === 0 || this.isInBoundary({ x, y });
             });
         });
     }
@@ -160,70 +164,9 @@ export class Piece implements IPiece {
      * @param y The y position of the piece
      * @returns True if the piece is within the boundary, false otherwise
      */
-    private isInBoundary(x: number, y: number): boolean {
-        return x >= 0
-            && x < this.config.columns
-            && y < this.config.rows;
+    private isInBoundary(position: IPosition): boolean {
+        return position.x >= 0
+            && position.x < this.config.columns
+            && position.y < this.config.rows;
     }
-
-
-    /**
-     *
-     *
-     *
-     * FOR REVIEW
-     *
-     *
-     *
-     *
-     *
-     *
-     */
-
-    // startInterval(time: number = 1000) {
-    //     if (!this.stepInterval) {
-    //         this.stepInterval = setInterval(() => {
-    //             this.move('down');
-    //         }, time);
-    //     }
-    // }
-
-    // stopInterval() {
-    //     if (this.stepInterval) {
-    //         clearInterval(this.stepInterval);
-    //         this.stepInterval = undefined; // Reset the interval ID
-    //     }
-    // }
-
-    // move(direction: 'left' | 'right' | 'down' | 'rotate'): void {
-    //     if (this.bottomCollision) return; // If the piece has bottom collision, do not allow further movement.
-    //     let xOffset = 0;
-    //     let yOffset = 0;
-
-    //     switch (direction) {
-    //         case 'left':
-    //             xOffset = -1;
-    //             break;
-    //         case 'right':
-    //             xOffset = 1;
-    //             break;
-    //         case 'down':
-    //             yOffset = 1;
-    //             break;
-    //         case 'rotate':
-    //             this.rotate();
-    //             return;
-    //     }
-    //     if (this.canMove(this, xOffset, yOffset)) {
-    //         this.x += xOffset;
-    //         this.y += yOffset;
-    //         this.clear();
-    //         this.render();
-    //     } else if (direction === 'down') {
-    //         // If the piece is unable to move down, it means it has bottom collision and should not move further
-    //         this.bottomCollision = true;
-    //         this.stopInterval(); // Stop the interval
-
-    //     }
-    // }
 }
