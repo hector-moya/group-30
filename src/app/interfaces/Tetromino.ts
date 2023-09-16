@@ -1,4 +1,4 @@
 export interface ITetromino {
-    matrix: Matrix;
+    shape: Matrix;
     color: string;
 }

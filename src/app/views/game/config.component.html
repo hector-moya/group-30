@@ -3,28 +3,24 @@
         <div class="frm-row">
             <div class="flex space-between">
                 <label for="columns">Columns</label>
-                <tool-tip />
             </div>
             <input [(ngModel)]="config.columns" name="columns" type="range" min="8" max="12" value="10">
         </div>
         <div class="frm-row">
             <div class="flex space-between">
                 <label for="rows">Rows</label>
-                <tool-tip />
             </div>
             <input [(ngModel)]="config.rows" name="rows" type="range" min="16" max="24" value="20">
         </div>
         <div class="frm-row">
             <div class="flex space-between">
                 <label for="rows">Level</label>
-                <tool-tip />
             </div>
             <input [(ngModel)]="config.startLevel" name="startLevel" type="range" min="1" max="50" value="1">
         </div>
         <div class="frm-row">
             <div class="flex space-between">
                 <label for="extended-game">Game Mode</label>
-                <tool-tip />
             </div>
             <div class="grid cols-2 mt-05">
                 <label> <input [(ngModel)]="config.extended" type="radio" [value]="false"
@@ -56,4 +52,3 @@
     <button class="btn red" disabled>AI Demo</button>
 </div>
 
-<!-- <pre class="pxy-05">{{ config | json }}</pre> -->
