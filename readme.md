@@ -2,6 +2,13 @@
 
 <!-- TOC -->
 
+- [Coding Tasks to Complete](#coding-tasks-to-complete)
+- [If time permits](#if-time-permits)
+- [Game Grid](#game-grid)
+- [Switch from Current to next](#switch-from-current-to-next)
+- [Remembering the state of the grid](#remembering-the-state-of-the-grid)
+- [Game Over](#game-over)
+- [Toggle Sound](#toggle-sound)
 - [Files and directories](#files-and-directories)
 - [Directory Overview](#directory-overview)
     - [controllers](#controllers)
@@ -11,6 +18,76 @@
     - [Views](#views)
 
 <!-- /TOC -->
+
+<a id="markdown-coding-tasks-to-complete" name="coding-tasks-to-complete"></a>
+
+## Coding Tasks to Complete
+
+- [ ] Wire up the configuration so it affects the game
+    - [ ] Game level needs to work with the interval
+    - [ ] Extended or normal game
+    - [ ] remember state
+    - [ ] initialize default values
+- [ ] Wire up game statistics
+    - [ ] Score
+    - [ ] Level
+    - [ ] Lines
+- [ ] Key press
+    - [ ] P for pause and resume game
+    - [ ] M for music
+- [ ] Add music and sound effects
+- [ ] Handle landing
+- [ ] current = next
+- [ ] Top collision Game Over
+- [ ] Add high score
+- [ ] Remember state for high scores
+- [ ] center the next piece in it's canvas
+- [ ] colors for the extended game are not working
+
+<a id="markdown-if-time-permits" name="if-time-permits"></a>
+
+## If time permits
+
+- [ ] hard drop???
+- [ ] Change the randomize tetromino method to reduce the change of getting the same shape twice in a row
+
+
+<a id="markdown-game-grid" name="game-grid"></a>
+
+## Game Grid
+- Create a grid which represents that game board state. The grid should contain multiple tetrominos and should display it's own color.
+- On the grid create multiple rows containing tetrominos displayed in their respective colour. Make sure several rows are filled with tetrominos.
+- On event, clear the completed row of tetrominos and move the rows above it down.
+
+<a id="markdown-switch-from-current-to-next" name="switch-from-current-to-next"></a>
+
+## Switch from Current to next
+- Create a method which switches the current tetromino with the next tetromino.
+- When the current tetromino hits the bottom, the next tetromino should be displayed on the grid, and a new tetromino should be generated as the next tetromino.
+
+<a id="markdown-remembering-the-state-of-the-grid" name="remembering-the-state-of-the-grid"></a>
+
+## Remembering the state of the grid
+- Create a method which remembers the state of the grid.
+- When the current tetromino hits the bottom, the state of the grid should be remembered.
+
+<a id="markdown-game-over" name="game-over"></a>
+
+## Game Over
+- Create a method which checks if the game is over.
+- When the current tetromino hits the top of the grid, the game should be over.
+- When the game is over, check if the score is in the top 10.
+- When the game is over, the user should be able to start a new game.
+
+<a id="markdown-toggle-sound" name="toggle-sound"></a>
+
+## Toggle Sound
+- Create a method which toggles the sound on and off.
+- When the user presses the P button, the sound should be toggled on and off.
+- This method should be called when the user presses the P button and anytime anywhere in the application.
+
+
+
 <a id="markdown-files-and-directories" name="files-and-directories"></a>
 
 ## Files and directories

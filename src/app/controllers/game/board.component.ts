@@ -36,20 +36,14 @@ export class BoardComponent {
 
     /**
      * Initialise the game board and set the context. Then, get a Piece from
-     * the PieceService and set it to the piece property.
+     * the PieceService and set to the piece property for for rendering and
+     * easy access to the current Piece.
     */
     private initBoard(): void {
-        const { rows, columns, blockSize } = this.config;
-        const board = new Canvas(columns, rows, this.boardRef.nativeElement, blockSize);
+        const { rows, columns, blockSize: scale } = this.config;
+        const board = new Canvas(columns, rows, this.boardRef.nativeElement, scale);
         this.ctx = board.getContext();
-        this.getPiece();
-    }
-
-    /**
-     * Get a Piece from the PieceService and set it to the piece
-     * property.
-     */
-    private getPiece(): void {
+        // Retrieve the initial piece for rendering
         this.piece = this.pieceService.getPiece(this.ctx!, this.config.extended);
     }
 
@@ -63,6 +57,14 @@ export class BoardComponent {
         })
     }
 
+    /**
+     * Possible moves for the current Piece.
+     *
+     * These are called from the onKeydown event handler. The moves object
+     * accepts the current Piece and uses a callback to return the updated
+     * position in the selected direction or rotation.
+     *
+     */
     private moves: any = {
         ArrowLeft: (piece: Piece) => ({ ...piece, x: piece.x - 1 }),
         ArrowRight: (piece: Piece) => ({ ...piece, x: piece.x + 1 }),
@@ -78,11 +80,12 @@ export class BoardComponent {
     @HostListener('document:keydown', ['$event'])
     onKeydown(event: KeyboardEvent): void {
         if (this.moves[event.key]) {
-            const updatedPiece = this.moves[event.key](this.piece);
-            const { matrix, x, y } = updatedPiece;
-            const canMove = this.pieceService.canMove(matrix, { x, y });
+            event.preventDefault();
+            // decompose the updated piece into its shape, x, and y
+            const { shape, x, y } = this.moves[event.key](this.piece);
+            const canMove = this.pieceService.canMove(shape, { x, y });
             if (canMove) {
-                this.pieceService.move(matrix, { x, y });
+                this.pieceService.move(shape, { x, y });
             }
         }
 
@@ -98,17 +101,16 @@ export class BoardComponent {
      * cleared when the game is paused or the piece can no longer
      * move down.
      */
-
     private stepInterval?: any;
 
     startInterval(time: number = 900) {
         if (!this.stepInterval) {
             this.stepInterval = setInterval(() => {
                 let updatedPiece = this.moves["ArrowDown"](this.piece);
-                let { matrix, x, y } = updatedPiece;
-                let canMove = this.pieceService.canMove(matrix, { x, y });
+                let { shape, x, y } = updatedPiece;
+                let canMove = this.pieceService.canMove(shape, { x, y });
                 if (canMove) {
-                    this.pieceService.move(matrix, { x, y });
+                    this.pieceService.move(shape, { x, y });
                 }
             }, time);
         }

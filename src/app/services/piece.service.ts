@@ -76,26 +76,44 @@ export class PieceService {
     /**
      * Check if a tetromino is allowed to move to the specified position
      * within the game board.
-     * @param {Matrix} matrix The matrix of the tetromino (current or next shape)
+     * @param {Matrix} shape The shape of the tetromino (current or next shape)
      * @param {Position} position The position to check
      * @returns {boolean} Whether the tetromino can move to the specified position
      */
-    canMove(matrix: Matrix, position: IPosition): boolean {
-        // Get the current piece from the subject
-        const currentPiece = this.pieceSubject$.value;
-        // Call the canMove method of the current piece passing the matrix and position
-        return (currentPiece?.canMove(matrix, position)) || false;
+    canMove(shape: Matrix, position: IPosition): boolean {
+        // `shape.every` checks if every row of the shape meets the conditions
+        return shape.every((row, rowIndex) => {
+            // `row.every` checks if every value (cell) in the row meets the conditions.
+            return row.every((value, columnIndex) => {
+                // Calculate the actual x and y position on the board for the current cell.
+                let x = position.x + columnIndex;
+                let y = position.y + rowIndex;
+                return value === 0 || this.isInBoundary({ x, y });
+            });
+        });
+    }
+
+    /**
+     * Check if the piece is within the boundary of the canvas
+     * @param x The x position of the piece
+     * @param y The y position of the piece
+     * @returns True if the piece is within the boundary, false otherwise
+     */
+    private isInBoundary(position: IPosition): boolean {
+        return position.x >= 0
+            && position.x < this.config.columns
+            && position.y < this.config.rows;
     }
 
     /**
      * Move the current piece to the specified position and notify subscribers
      * of the change.
-     * @param {Matrix} matrix The update matrix of the piece
+     * @param {Matrix} shape The update shape of the piece
      * @param {Position} position The updated position
      */
-    move(matrix: Matrix, position: IPosition) {
+    move(shape: Matrix, position: IPosition) {
         const currentPiece = this.pieceSubject$.value;
-        currentPiece?.move(matrix, position);
+        currentPiece?.move(shape, position);
         // hardcode as `current` because it is the only option
         this.setPiece(currentPiece!, 'current');
     }
@@ -103,21 +121,45 @@ export class PieceService {
     /**
      * Get a rotated version of the given piece. Note: This method does not
      * update the piece subject, that is handled by the move() method.
-     * @param {Piece} piece - The original piece to rotate.
-     * @returns {Piece} A rotated piece.
+     *
+     * @param {Piece} piece The original piece to be rotated
+     * @returns {Piece} The rotated piece
      */
     getRotatedPiece(piece: Piece): Piece {
-        return this.pieceSubject$.value?.rotate(piece)!;
+        const currentMatrix = piece.shape;
+        const transposedMatrix = this.transposeMatrix(currentMatrix);
+        // Replace existing piece shape with the rotated transposed shape
+        piece.shape = transposedMatrix;
+        return piece;
     }
 
     /**
-    * Subscribe to the configuration updates from the ConfigService.
-    * When the configuration changes, the callback function is triggered.
+    * Transpose a shape by rotating it clockwise
+    *
+    * original         transposed
+    * [a, b, c]   =>   [a, d, g]
+    * [d, e, f]   =>   [b, e, h]
+    * [g, h, i]   =>   [c, f, i]
+    *
+    * @param shape The original shape to be transposed
+    * @returns The transposed shape (rotated clockwise)
     */
-    private subscribeToConfig(): void {
-        this.configService.observeConfig().subscribe((config: IConfig) => {
-            this.config = config;
-        });
+    private transposeMatrix(shape: Matrix): Matrix {
+        const numRows = shape.length;
+        const numCols = shape[0].length;
+
+        // Create a new shape for the rotated values
+        const rotatedMatrix = new Array(numCols).fill(null).map(() => new Array(numRows));
+
+        // Loop through rows and columns to perform rotation
+        for (let row = 0; row < numRows; row++) {
+            for (let col = 0; col < numCols; col++) {
+                // Rotate the values by swapping rows and columns
+                rotatedMatrix[col][numRows - 1 - row] = shape[row][col];
+            }
+        }
+
+        return rotatedMatrix;
     }
 
     /**
@@ -140,6 +182,16 @@ export class PieceService {
      */
     private getGameShapes(extended: boolean): { [key: string]: ITetromino } {
         return extended ? { ...TETROMINOS, ...EXT_TETROMINOS } : { ...TETROMINOS };
+    }
+
+    /**
+    * Subscribe to the configuration updates from the ConfigService.
+    * When the configuration changes, the callback function is triggered.
+    */
+    private subscribeToConfig(): void {
+        this.configService.observeConfig().subscribe((config: IConfig) => {
+            this.config = config;
+        });
     }
 
 }
