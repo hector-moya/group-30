@@ -1,5 +1,6 @@
 import { Component, ElementRef, HostListener, Input, ViewChild, inject } from '@angular/core';
 import { AppLayout } from 'src/app/views/layouts/app-layout.component';
+import { ModalComponent } from '../components/modal.component';
 import { PieceService } from 'src/app/services/piece.service';
 import { ModalService } from 'src/app/services/modal.service';
 import { IConfig } from 'src/app/interfaces/Config';
@@ -10,8 +11,11 @@ import { Piece } from 'src/app/models/Piece';
 @Component({
     selector: 'app-board',
     standalone: true,
-    imports: [CommonModule, AppLayout],
-    template: `<canvas #canvas class="bdr bdr-red"></canvas>`,
+    imports: [CommonModule, AppLayout, ModalComponent],
+    template: `
+        <canvas #canvas class="bdr bdr-red"></canvas>
+        <modal [endGame]="true"></modal>
+    `,
 })
 export class BoardComponent {
 
@@ -19,35 +23,28 @@ export class BoardComponent {
     @Input() config!: IConfig;
 
     ctx!: CanvasRenderingContext2D | null;
-    private currentPiece!: Piece | null;
+    private piece!: Piece | null;
 
     private pieceService = inject(PieceService);
     private modalService = inject(ModalService);
 
     ngOnInit(): void {
-        this.init();
         this.subscribeToPiece();
+        this.initBoard();
+        // this.startInterval();
     }
 
     /**
      * Initialise the game board and set the context. Then, get a Piece from
-     * the PieceService and set it to the currentPiece property.
+     * the PieceService and set to the piece property for for rendering and
+     * easy access to the current Piece.
     */
-    private init(): void {
-        const { rows, columns, blockSize } = this.config;
-        const board = new Canvas(columns, rows, this.boardRef.nativeElement, blockSize);
+    private initBoard(): void {
+        const { rows, columns, blockSize: scale } = this.config;
+        const board = new Canvas(columns, rows, this.boardRef.nativeElement, scale);
         this.ctx = board.getContext();
-        this.getPiece();
-    }
-
-    /**
-     * Get a Piece from the PieceService and set it to the currentPiece
-     * property. Then, run the setPiece() method of the PieceService
-     * which will notify the subscribers of the current Piece.
-     */
-    private getPiece(): void {
-        this.currentPiece = this.pieceService.getPiece(this.ctx!, this.config.extended);
-        this.pieceService.setPiece(this.currentPiece);
+        // Retrieve the initial piece for rendering
+        this.piece = this.pieceService.getPiece(this.ctx!, this.config.extended);
     }
 
     /**
@@ -56,80 +53,73 @@ export class BoardComponent {
      */
     private subscribeToPiece(): void {
         this.pieceService.observePiece().subscribe((piece: Piece | null) => {
-            this.currentPiece = piece;
+            this.piece = piece;
         })
     }
 
     /**
+     * Possible moves for the current Piece.
      *
-     *
-     *
-     *
-     * REVIEW AN WOVE THIS
-     *
-     *
-     *
-     *
-     *
-     *
-     *
-     *
-     *
+     * These are called from the onKeydown event handler. The moves object
+     * accepts the current Piece and uses a callback to return the updated
+     * position in the selected direction or rotation.
      *
      */
-
-
-    // moveLeft() {
-    //     this.pieceService.moveLeft();
-    // }
-
-    // moveRight() {
-    //     this.pieceService.moveRight();
-    // }
-
-    // moveDown() {
-    //     this.pieceService.moveDown();
-    // }
-
-    // moveUp() {
-    //     this.pieceService.moveUp();
-    // }
-
-    // startGame(): void {
-    //     this.currentPiece?.startInterval(600);
-    // }
-
-    // pauseGame(): void {
-    //     this.currentPiece?.stopInterval();
-    // }
+    private moves: any = {
+        ArrowLeft: (piece: Piece) => ({ ...piece, x: piece.x - 1 }),
+        ArrowRight: (piece: Piece) => ({ ...piece, x: piece.x + 1 }),
+        ArrowDown: (piece: Piece) => ({ ...piece, y: piece.y + 1 }),
+        ArrowUp: (piece: Piece) => (this.pieceService.getRotatedPiece(piece)),
+    };
 
     /**
-     * Handle keyboard events
-     * @param event
+     * Handle the keydown event and call the moves object, which accepts
+     * the current piece and uses a callback to return the updated position
+     * in the selected direction or rotation.
      */
-    // @HostListener('window:keydown', ['$event'])
-    // handleKeyboardEvent(event: KeyboardEvent): void {
-    //     event.preventDefault();
-    //     switch (event.code) {
-    //         case 'ArrowLeft':
-    //             this.moveLeft();
-    //             break;
-    //         case 'ArrowRight':
-    //             this.moveRight();
-    //             break;
-    //         case 'ArrowDown':
-    //             this.moveDown();
-    //             break;
-    //         case 'ArrowUp':
-    //             this.moveUp();
-    //             break;
-    //         case 'Escape':
-    //             this.handleEscape();
-    //             break;
-    //     }
-    // }
+    @HostListener('document:keydown', ['$event'])
+    onKeydown(event: KeyboardEvent): void {
+        if (this.moves[event.key]) {
+            event.preventDefault();
+            // decompose the updated piece into its shape, x, and y
+            const { shape, x, y } = this.moves[event.key](this.piece);
+            const canMove = this.pieceService.canMove(shape, { x, y });
+            if (canMove) {
+                this.pieceService.move(shape, { x, y });
+            }
+        }
+
+        if (event.key === 'Escape') this.handleEscape();
+    }
 
     handleEscape(): void {
         this.modalService.openModal('Do you want to end the game?');
+    }
+
+    /**
+     * Set an interval to move the piece down every 900ms. This is
+     * cleared when the game is paused or the piece can no longer
+     * move down.
+     */
+    private stepInterval?: any;
+
+    startInterval(time: number = 900) {
+        if (!this.stepInterval) {
+            this.stepInterval = setInterval(() => {
+                let updatedPiece = this.moves["ArrowDown"](this.piece);
+                let { shape, x, y } = updatedPiece;
+                let canMove = this.pieceService.canMove(shape, { x, y });
+                if (canMove) {
+                    this.pieceService.move(shape, { x, y });
+                }
+            }, time);
+        }
+    }
+
+    stopInterval() {
+        if (this.stepInterval) {
+            clearInterval(this.stepInterval);
+            this.stepInterval = undefined; // Reset the interval ID
+        }
     }
 }
