@@ -4,9 +4,6 @@
 
 - [Coding Tasks to Complete](#coding-tasks-to-complete)
 - [If time permits](#if-time-permits)
-- [Game Grid](#game-grid)
-- [Switch from Current to next](#switch-from-current-to-next)
-- [Remembering the state of the grid](#remembering-the-state-of-the-grid)
 - [Game Over](#game-over)
 - [Toggle Sound](#toggle-sound)
 - [Files and directories](#files-and-directories)
@@ -18,6 +15,9 @@
     - [Views](#views)
 
 <!-- /TOC -->
+
+- [ ] move `canMove` method to game service and update references
+- [ ] update class diagram to reflect changes
 
 <a id="markdown-coding-tasks-to-complete" name="coding-tasks-to-complete"></a>
 
@@ -51,25 +51,6 @@
 - [ ] hard drop???
 - [ ] Change the randomize tetromino method to reduce the change of getting the same shape twice in a row
 
-
-<a id="markdown-game-grid" name="game-grid"></a>
-
-## Game Grid
-- Create a grid which represents that game board state. The grid should contain multiple tetrominos and should display it's own color.
-- On the grid create multiple rows containing tetrominos displayed in their respective colour. Make sure several rows are filled with tetrominos.
-- On event, clear the completed row of tetrominos and move the rows above it down.
-
-<a id="markdown-switch-from-current-to-next" name="switch-from-current-to-next"></a>
-
-## Switch from Current to next
-- Create a method which switches the current tetromino with the next tetromino.
-- When the current tetromino hits the bottom, the next tetromino should be displayed on the grid, and a new tetromino should be generated as the next tetromino.
-
-<a id="markdown-remembering-the-state-of-the-grid" name="remembering-the-state-of-the-grid"></a>
-
-## Remembering the state of the grid
-- Create a method which remembers the state of the grid.
-- When the current tetromino hits the bottom, the state of the grid should be remembered.
 
 <a id="markdown-game-over" name="game-over"></a>
 
