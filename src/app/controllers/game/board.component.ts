@@ -3,6 +3,7 @@ import { AppLayout } from 'src/app/views/layouts/app-layout.component';
 import { ModalComponent } from '../components/modal.component';
 import { PieceService } from 'src/app/services/piece.service';
 import { ModalService } from 'src/app/services/modal.service';
+import { GameService } from 'src/app/services/game.service';
 import { IConfig } from 'src/app/interfaces/Config';
 import { CommonModule } from '@angular/common';
 import { Canvas } from 'src/app/models/Canvas';
@@ -27,6 +28,7 @@ export class BoardComponent {
 
     private pieceService = inject(PieceService);
     private modalService = inject(ModalService);
+    private gameService = inject(GameService);
 
     ngOnInit(): void {
         this.subscribeToPiece();
@@ -58,6 +60,16 @@ export class BoardComponent {
     }
 
     /**
+   * Subscribe to the grid updates from the GameService which is
+   * responsible for rendering the grid.
+   */
+    private subscribeToGrid(): void {
+        this.gameService.observeGrid().subscribe((grid: Matrix | null) => {
+            // this.gameService.renderGrid(this.ctx!);
+        });
+    }
+
+    /**
      * Possible moves for the current Piece.
      *
      * These are called from the onKeydown event handler. The moves object
@@ -83,7 +95,7 @@ export class BoardComponent {
             event.preventDefault();
             // decompose the updated piece into its shape, x, and y
             const { shape, x, y } = this.moves[event.key](this.piece);
-            const canMove = this.pieceService.canMove(shape, { x, y });
+            const canMove = this.gameService.canMove(shape, { x, y });
             if (canMove) {
                 this.pieceService.move(shape, { x, y });
             }
@@ -108,7 +120,7 @@ export class BoardComponent {
             this.stepInterval = setInterval(() => {
                 let updatedPiece = this.moves["ArrowDown"](this.piece);
                 let { shape, x, y } = updatedPiece;
-                let canMove = this.pieceService.canMove(shape, { x, y });
+                let canMove = this.gameService.canMove(shape, { x, y });
                 if (canMove) {
                     this.pieceService.move(shape, { x, y });
                 }

@@ -2,6 +2,11 @@
 
 <!-- TOC -->
 
+- [1. Create the game service and update the board component](#1-create-the-game-service-and-update-the-board-component)
+- [2. Add the game loop and implement GameService](#2-add-the-game-loop-and-implement-gameservice)
+- [3. Create method to clear rows, create new piece and wire up scoring](#3-create-method-to-clear-rows-create-new-piece-and-wire-up-scoring)
+- [3. Create method to clear lines and wire up scoring](#3-create-method-to-clear-lines-and-wire-up-scoring)
+- [](#)
 - [Coding Tasks to Complete](#coding-tasks-to-complete)
 - [If time permits](#if-time-permits)
 - [Game Over](#game-over)
@@ -16,22 +21,53 @@
 
 <!-- /TOC -->
 
-- [ ] move `canMove` method to game service and update references
-- [ ] update class diagram to reflect changes
+- [ ] update sequence diagram to reflect changes
+
+<a id="markdown-1-create-the-game-service-and-update-the-board-component" name="1-create-the-game-service-and-update-the-board-component"></a>
+
+## 1. Create the game service and update the board component
+
+- [ ] add game service and implement all functions in the class diagram
+    - [ ] `renderGrid` method
+- [ ] BoardComponent
+    - [ ] render grid with dummy data
+
+<a id="markdown-2-add-the-game-loop-and-implement-gameservice" name="2-add-the-game-loop-and-implement-gameservice"></a>
+
+## 2. Add the game loop and implement GameService
+
+- [ ] Add game loop
+    - [ ] `drop` method
+    - [ ] `lock` method (there is a gotcha here)
+
+<a id="markdown-3-create-method-to-clear-rows-create-new-piece-and-wire-up-scoring" name="3-create-method-to-clear-rows-create-new-piece-and-wire-up-scoring"></a>
+
+## 3. Create method to clear rows, create new piece and wire up scoring
+
+- [ ] wire up level to interval time. What is the math between time and interval?
+- [ ] handle switch current and next tetromino
+
+
+
+<a id="markdown-3-create-method-to-clear-lines-and-wire-up-scoring" name="3-create-method-to-clear-lines-and-wire-up-scoring"></a>
+
+## 3. Create method to clear lines and wire up scoring
+
+- [] GameService
+    - [ ] `clearLines` method
+    - [ ] `increaseLevel` method
+    - [ ] `increaseScore` method
+
+##
 
 <a id="markdown-coding-tasks-to-complete" name="coding-tasks-to-complete"></a>
 
 ## Coding Tasks to Complete
-
 - [ ] Wire up the configuration so it affects the game
     - [ ] Game level needs to work with the interval
     - [ ] Extended or normal game
     - [ ] remember state
     - [ ] initialize default values
-- [ ] Wire up game statistics
-    - [ ] Score
-    - [ ] Level
-    - [ ] Lines
 - [ ] Key press
     - [ ] P for pause and resume game
     - [ ] M for music

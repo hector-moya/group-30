@@ -74,38 +74,6 @@ export class PieceService {
     }
 
     /**
-     * Check if a tetromino is allowed to move to the specified position
-     * within the game board.
-     * @param {Matrix} shape The shape of the tetromino (current or next shape)
-     * @param {Position} position The position to check
-     * @returns {boolean} Whether the tetromino can move to the specified position
-     */
-    canMove(shape: Matrix, position: IPosition): boolean {
-        // `shape.every` checks if every row of the shape meets the conditions
-        return shape.every((row, rowIndex) => {
-            // `row.every` checks if every value (cell) in the row meets the conditions.
-            return row.every((value, columnIndex) => {
-                // Calculate the actual x and y position on the board for the current cell.
-                let x = position.x + columnIndex;
-                let y = position.y + rowIndex;
-                return value === 0 || this.isInBoundary({ x, y });
-            });
-        });
-    }
-
-    /**
-     * Check if the piece is within the boundary of the canvas
-     * @param x The x position of the piece
-     * @param y The y position of the piece
-     * @returns True if the piece is within the boundary, false otherwise
-     */
-    private isInBoundary(position: IPosition): boolean {
-        return position.x >= 0
-            && position.x < this.config.columns
-            && position.y < this.config.rows;
-    }
-
-    /**
      * Move the current piece to the specified position and notify subscribers
      * of the change.
      * @param {Matrix} shape The update shape of the piece
