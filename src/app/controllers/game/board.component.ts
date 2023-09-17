@@ -33,6 +33,7 @@ export class BoardComponent {
     ngOnInit(): void {
         this.subscribeToPiece();
         this.initBoard();
+        this.subscribeToGrid();
         // this.startInterval();
     }
 
@@ -65,7 +66,7 @@ export class BoardComponent {
    */
     private subscribeToGrid(): void {
         this.gameService.observeGrid().subscribe((grid: Matrix | null) => {
-            // this.gameService.renderGrid(this.ctx!);
+            this.gameService.renderGrid(this.ctx!);
         });
     }
 

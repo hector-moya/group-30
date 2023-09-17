@@ -22,6 +22,8 @@
 <!-- /TOC -->
 
 - [ ] update sequence diagram to reflect changes
+- [ ] initialize grid with not data
+- [ ] default config is not updating, why?
 
 <a id="markdown-1-create-the-game-service-and-update-the-board-component" name="1-create-the-game-service-and-update-the-board-component"></a>
 
@@ -31,6 +33,7 @@
     - [ ] `renderGrid` method
 - [ ] BoardComponent
     - [ ] render grid with dummy data
+
 
 <a id="markdown-2-add-the-game-loop-and-implement-gameservice" name="2-add-the-game-loop-and-implement-gameservice"></a>
 
