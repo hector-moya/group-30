@@ -21,6 +21,10 @@ export class GameService {
         this.subscribeToConfig();
     }
 
+    /**
+     * Get the observable that emits the game grid.
+     * @returns An observable of the game grid.
+     */
     observeGrid(): Observable<Matrix | null> {
         return this.gridSubject$.asObservable();
     }
@@ -60,8 +64,39 @@ export class GameService {
                 let x = position.x + columnIndex;
                 let y = position.y + rowIndex;
                 return tetVal === 0 ||
-                    this.isInBoundary({ x, y });
+                    this.isInBoundary({ x, y }) && this.isVacant({ x, y });
             });
+        });
+    }
+
+    /**
+     * Lock the piece in place on the game board
+     * @param matrix
+     * @param position
+     */
+    lock(matrix: Matrix, position: IPosition): void {
+        const currentGrid = this.gridSubject$.value;
+        matrix.forEach((row, rowIndex) => {
+            row.forEach((tetVal, columnIndex) => {
+                if (tetVal > 0) {
+                    let x = position.x + columnIndex;
+                    let y = position.y + rowIndex;
+                    currentGrid![y][x] = tetVal;
+                }
+            });
+        });
+    }
+
+    /**
+     * Clear the rows that are filled
+     */
+    clearRows(): void {
+        const grid = this.gridSubject$.value;
+        grid!.forEach((row, y) => {
+            if (row.every(cell => cell > 0)) {
+                grid!.splice(y, 1);
+                grid!.unshift(Array(this.config.columns).fill(0));
+            }
         });
     }
 
@@ -74,6 +109,17 @@ export class GameService {
         return position.x >= 0
             && position.x < this.config.columns
             && position.y < this.config.rows;
+    }
+
+    /**
+     * Check if the position is vacant
+     * @param {IPosition} position The position to check
+     * @returns {boolean} Whether the position is vacant
+     */
+    private isVacant(position: IPosition): boolean {
+        const grid = this.gridSubject$.value;
+        const { x, y } = position;
+        return grid![x] && grid![y][x] === 0;
     }
 
     /**

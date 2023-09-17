@@ -4,6 +4,7 @@ import { ModalComponent } from '../components/modal.component';
 import { PieceService } from 'src/app/services/piece.service';
 import { ModalService } from 'src/app/services/modal.service';
 import { GameService } from 'src/app/services/game.service';
+import { IPosition } from 'src/app/interfaces/Position';
 import { IConfig } from 'src/app/interfaces/Config';
 import { CommonModule } from '@angular/common';
 import { Canvas } from 'src/app/models/Canvas';
@@ -23,9 +24,27 @@ export class BoardComponent {
     @ViewChild('canvas', { static: true }) boardRef!: ElementRef;
     @Input() config!: IConfig;
 
+    /**
+     * Set an interval to move the piece down every. This is
+     * cleared when the game is paused or the piece can no longer
+     * move down.
+     */
+    private stepInterval?: any;
+
+    /**
+     * The canvas context which gives access to the canvas API
+     */
     ctx!: CanvasRenderingContext2D | null;
+
+    /**
+     * Local reference to the current Piece for rendering and easy access to
+     * the current Piece.
+     */
     private piece!: Piece | null;
 
+    /**
+     * Component dependencies
+     */
     private pieceService = inject(PieceService);
     private modalService = inject(ModalService);
     private gameService = inject(GameService);
@@ -34,7 +53,7 @@ export class BoardComponent {
         this.subscribeToPiece();
         this.initBoard();
         this.subscribeToGrid();
-        // this.startInterval();
+        this.startInterval();
     }
 
     /**
@@ -96,9 +115,9 @@ export class BoardComponent {
             event.preventDefault();
             // decompose the updated piece into its shape, x, and y
             const { shape, x, y } = this.moves[event.key](this.piece);
-            const canMove = this.gameService.canMove(shape, { x, y });
-            if (canMove) {
-                this.pieceService.move(shape, { x, y });
+            // if the piece can move to the new position
+            if (this.gameService.canMove(shape, { x, y })) {
+                this.moveAndRenderGrid(shape, { x, y });
             }
         }
 
@@ -106,33 +125,59 @@ export class BoardComponent {
     }
 
     handleEscape(): void {
+        this.stopInterval();
         this.modalService.openModal('Do you want to end the game?');
     }
 
     /**
-     * Set an interval to move the piece down every 900ms. This is
-     * cleared when the game is paused or the piece can no longer
-     * move down.
-     */
-    private stepInterval?: any;
-
-    startInterval(time: number = 900) {
+      * Start a periodic interval with a specified time interval. The time is
+      * based on the level of the game. The higher the level, the faster the
+      * interval.
+      * @param {number} time The time interval in milliseconds
+      */
+    startInterval(time: number = 400) {
         if (!this.stepInterval) {
             this.stepInterval = setInterval(() => {
-                let updatedPiece = this.moves["ArrowDown"](this.piece);
-                let { shape, x, y } = updatedPiece;
-                let canMove = this.gameService.canMove(shape, { x, y });
-                if (canMove) {
-                    this.pieceService.move(shape, { x, y });
-                }
+                this.drop();
             }, time);
         }
     }
 
+    /**
+     * Stop the periodic interval by clearing the interval ID
+     */
     stopInterval() {
         if (this.stepInterval) {
             clearInterval(this.stepInterval);
             this.stepInterval = undefined; // Reset the interval ID
+        }
+    }
+
+    /**
+     * Move the piece to the new position and render the grid
+     * @param {Matrix} shape The shape of the piece
+     * @param {IPosition} position The new position of the piece
+     */
+    private moveAndRenderGrid(shape: Matrix, position: IPosition): void {
+        this.pieceService.move(shape, { x: position.x, y: position.y });
+        this.gameService.renderGrid(this.ctx!);
+    }
+
+    /**
+     * Drop the piece down one row if it can move. If it can't move, lock the
+     * piece in place.
+     */
+    private drop(): void {
+        const { shape, x, y } = this.moves["ArrowDown"](this.piece);
+        if (this.gameService.canMove(shape, { x, y })) {
+            this.moveAndRenderGrid(shape, { x, y });
+        } else {
+            // make sure you pass in the 'current' position to be locked in!
+            this.gameService.lock(shape, { x: this.piece?.x || 0, y: this.piece?.y || 0 });
+            this.piece = this.pieceService.getPiece(this.ctx!, this.config.extended, 'current');
+            // this is jittery, but it works. The new piece and clearing of
+            // rows needs to happen at the same time
+            this.gameService.clearRows();
         }
     }
 }
