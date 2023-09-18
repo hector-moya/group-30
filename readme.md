@@ -32,6 +32,8 @@
 - [ ] Wire up the configuration so it affects the game
     - [ ] Game level needs to work with the interval
     - [ ] remember state
+- [ ] add grid scale
+
 
 <a id="markdown-bugs" name="bugs"></a>
 

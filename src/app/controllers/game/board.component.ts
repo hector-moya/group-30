@@ -29,7 +29,7 @@ export class BoardComponent {
      * cleared when the game is paused or the piece can no longer
      * move down.
      */
-    private stepInterval?: any;
+    private intervalId?: any;
 
     /**
      * The canvas context which gives access to the canvas API
@@ -53,7 +53,7 @@ export class BoardComponent {
         this.subscribeToPiece();
         this.initBoard();
         this.subscribeToGrid();
-        this.startInterval();
+        // this.startInterval();
     }
 
     /**
@@ -136,8 +136,8 @@ export class BoardComponent {
       * @param {number} time The time interval in milliseconds
       */
     startInterval(time: number = 400) {
-        if (!this.stepInterval) {
-            this.stepInterval = setInterval(() => {
+        if (!this.intervalId) {
+            this.intervalId = setInterval(() => {
                 this.drop();
             }, time);
         }
@@ -147,9 +147,9 @@ export class BoardComponent {
      * Stop the periodic interval by clearing the interval ID
      */
     stopInterval() {
-        if (this.stepInterval) {
-            clearInterval(this.stepInterval);
-            this.stepInterval = undefined; // Reset the interval ID
+        if (this.intervalId) {
+            clearInterval(this.intervalId);
+            this.intervalId = undefined; // Reset the interval ID
         }
     }
 
