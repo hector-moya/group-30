@@ -4,6 +4,7 @@ import { BehaviorSubject, Observable } from 'rxjs';
 import { ConfigService } from './config.service';
 import { IConfig } from '../interfaces/Config';
 import { Injectable } from '@angular/core';
+import { ScoreService } from './score.service';
 
 @Injectable({
     providedIn: 'root'
@@ -16,9 +17,10 @@ export class GameService {
     private gridSubject$: BehaviorSubject<Matrix | null> = new BehaviorSubject<Matrix | null>(GRID)
     private playState$: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false)
 
+
     private config!: IConfig;
 
-    constructor(private configService: ConfigService) {
+    constructor(private configService: ConfigService, private scoreService: ScoreService) {
         this.subscribeToConfig();
     }
 
@@ -101,12 +103,17 @@ export class GameService {
      */
     clearRows(): void {
         const grid = this.gridSubject$.value;
+        let linesCleared = 0;
         grid!.forEach((row, y) => {
             if (row.every(cell => cell > 0)) {
                 grid!.splice(y, 1);
                 grid!.unshift(Array(this.config.columns).fill(0));
+                linesCleared++;
             }
         });
+        if (linesCleared > 0) {
+            this.scoreService.updateGameStats(linesCleared);
+        }
     }
 
     /**
