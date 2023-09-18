@@ -37,7 +37,19 @@ export class GameComponent {
         });
     }
 
+    /**
+     * Start the game
+     * @returns {boolean} Whether the game is in play
+     */
     play(): void {
         this.gameService.play();
+    }
+
+    /**
+     * Pause the game
+     * @returns {boolean} Whether the game is in play
+     */
+    pause(): void {
+        this.gameService.pause();
     }
 }

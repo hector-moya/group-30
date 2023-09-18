@@ -73,7 +73,7 @@ export class GameService {
                 let x = position.x + columnIndex;
                 let y = position.y + rowIndex;
                 return tetVal === 0 ||
-                    this.isInBoundary({ x, y }) && this.isVacant({ x, y });
+                    this.isInBoundary({ x, y }) && this.isVacant({ x, y }) && this.playState$.value;
             });
         });
     }
