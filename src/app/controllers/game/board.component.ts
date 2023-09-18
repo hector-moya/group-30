@@ -9,6 +9,7 @@ import { IConfig } from 'src/app/interfaces/Config';
 import { CommonModule } from '@angular/common';
 import { Canvas } from 'src/app/models/Canvas';
 import { Piece } from 'src/app/models/Piece';
+import { distinctUntilChanged } from 'rxjs';
 
 @Component({
     selector: 'app-board',
@@ -43,6 +44,11 @@ export class BoardComponent {
     private piece!: Piece | null;
 
     /**
+     * The game play state
+     */
+    private playState: boolean = false;
+
+    /**
      * Component dependencies
      */
     private pieceService = inject(PieceService);
@@ -53,6 +59,7 @@ export class BoardComponent {
         this.subscribeToPiece();
         this.initBoard();
         this.subscribeToGrid();
+        this.subscribeToPlayState();
         // this.startInterval();
     }
 
@@ -90,6 +97,17 @@ export class BoardComponent {
     }
 
     /**
+     * Subscribe to the play state updates from the GameService which is
+     * responsible for starting and stopping the game.
+     */
+    private subscribeToPlayState(): void {
+        this.gameService.observePlayState().pipe(distinctUntilChanged()).subscribe((playState: boolean) => {
+                this.playState = playState; 
+                this.playState ? this.startInterval() : this.stopInterval();
+            });
+    }
+
+    /**
      * Possible moves for the current Piece.
      *
      * These are called from the onKeydown event handler. The moves object
@@ -122,6 +140,9 @@ export class BoardComponent {
         }
 
         if (event.key === 'Escape') this.handleEscape();
+
+        // On Spacebar event, pause or play the game
+        if (event.key === ' ') { this.playState ? this.gameService.pause() : this.gameService.play() }
     }
 
     handleEscape(): void {

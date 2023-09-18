@@ -14,6 +14,7 @@ export class GameService {
      * Next Piece BehaviorSubjects to notify subscribers of changes
      */
     private gridSubject$: BehaviorSubject<Matrix | null> = new BehaviorSubject<Matrix | null>(GRID)
+    private playState$: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false)
 
     private config!: IConfig;
 
@@ -27,6 +28,14 @@ export class GameService {
      */
     observeGrid(): Observable<Matrix | null> {
         return this.gridSubject$.asObservable();
+    }
+
+    /**
+     * Get the observable that emits the game play state.
+     * @returns An observable of the game play state.
+     */
+    observePlayState(): Observable<boolean> {
+        return this.playState$.asObservable();
     }
 
     /**
@@ -120,6 +129,24 @@ export class GameService {
         const grid = this.gridSubject$.value;
         const { x, y } = position;
         return grid![x] && grid![y][x] === 0;
+    }
+
+    /**
+     * Method to start the game
+     * @returns {boolean} Whether the game is in play
+     */
+    play(): boolean {
+        this.playState$.next(true);
+        return this.playState$.value;
+    }
+
+    /**
+     * Method to pause the game
+     * @returns {boolean} Whether the game is in play
+     */
+    pause(): boolean {
+        this.playState$.next(false);
+        return this.playState$.value;
     }
 
     /**

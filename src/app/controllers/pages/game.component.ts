@@ -6,6 +6,7 @@ import { BoardComponent } from '../game/board.component';
 import { ScoreComponent } from '../game/score.component';
 import { IConfig } from 'src/app/interfaces/Config';
 import { CommonModule } from '@angular/common';
+import { GameService } from '../../services/game.service';
 
 @Component({
     selector: 'app-game',
@@ -20,6 +21,7 @@ export class GameComponent {
     public config!: IConfig;
 
     private configService = inject(ConfigService);
+    private gameService = inject(GameService);
 
     ngOnInit(): void {
         this.subscribeToConfig();
@@ -33,5 +35,9 @@ export class GameComponent {
         this.configService.observeConfig().subscribe((config: IConfig) => {
             this.config = config;
         });
+    }
+
+    play(): void {
+        this.gameService.play();
     }
 }
