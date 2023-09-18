@@ -61,6 +61,18 @@ export class GameService {
     }
 
     /**
+     * Check if there is a top collision to end the game
+     * @param {Matrix} shape The shape to check
+     */
+    isTopCollision(shape: Matrix, position: IPosition): boolean {
+        return shape.some((row, rowIndex) => {
+            return row.some((tetVal) => {
+                return tetVal > 0 && position.y + rowIndex <= 1;
+            });
+        });
+    }
+
+    /**
      * Check if the shape can move to the position
      * @param {matrix} shape The shape to check
      * @param {position} position The position to check

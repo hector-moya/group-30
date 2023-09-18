@@ -151,6 +151,15 @@ export class BoardComponent {
     }
 
     /**
+     * Handle the game over event by pausing the game and opening the modal
+     */
+    haddleGameOver(): void {
+        this.gameService.pause();
+        this.modalService.openModal('Game Over!');
+    }
+
+
+    /**
       * Start a periodic interval with a specified time interval. The time is
       * based on the level of the game. The higher the level, the faster the
       * interval.
@@ -183,6 +192,7 @@ export class BoardComponent {
         this.pieceService.move(shape, { x: position.x, y: position.y });
         this.gameService.renderGrid(this.ctx!);
     }
+    
 
     /**
      * Drop the piece down one row if it can move. If it can't move, lock the
@@ -193,6 +203,10 @@ export class BoardComponent {
         if (this.gameService.canMove(shape, { x, y })) {
             this.moveAndRenderGrid(shape, { x, y });
         } else {
+            if (this.gameService.isTopCollision(shape, { x, y })) {
+                this.haddleGameOver();
+                return;
+            }
             // make sure you pass in the 'current' position to be locked in!
             this.gameService.lock(shape, { x: this.piece?.x || 0, y: this.piece?.y || 0 });
             this.piece = this.pieceService.getPiece(this.ctx!, this.config.extended, 'current');
