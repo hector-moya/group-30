@@ -2,10 +2,11 @@
 
 <!-- TOC -->
 
-- [Coding Tasks to Complete](#coding-tasks-to-complete)
+- [Priority List](#priority-list)
+- [Bugs](#bugs)
+- [Before release](#before-release)
+- [Other Tasks](#other-tasks)
 - [If time permits](#if-time-permits)
-- [Game Over](#game-over)
-- [Toggle Sound](#toggle-sound)
 - [Files and directories](#files-and-directories)
 - [Directory Overview](#directory-overview)
     - [controllers](#controllers)
@@ -16,33 +17,47 @@
 
 <!-- /TOC -->
 
-- [ ] move `canMove` method to game service and update references
-- [ ] update class diagram to reflect changes
+- [ ] update sequence diagram to reflect changes
 
-<a id="markdown-coding-tasks-to-complete" name="coding-tasks-to-complete"></a>
+<a id="markdown-priority-list" name="priority-list"></a>
 
-## Coding Tasks to Complete
+## Priority List
 
+- [ ] Hook up play and pause to the interval, and the P key
+- [ ] Disable keystrokes when interval is stopped to prevent unwanted behavior
+- [ ] wire up scoring function to the clear line method
+- [ ] wire up level to interval time. What is the math between time and interval?
+- [ ] handle switch current and next tetromino (after locked method)
+- [ ] handle game over (when the current tetromino hits the top of the grid)
 - [ ] Wire up the configuration so it affects the game
     - [ ] Game level needs to work with the interval
-    - [ ] Extended or normal game
     - [ ] remember state
-    - [ ] initialize default values
-- [ ] Wire up game statistics
-    - [ ] Score
-    - [ ] Level
-    - [ ] Lines
+- [ ] add grid scale
+
+
+<a id="markdown-bugs" name="bugs"></a>
+
+## Bugs
+
+- [ ] there is a bug when the piece is rotated against the wall it triggers the lock method
+- [ ] default config is not updating, why? does it matter? (this prevents extended from working)
+
+<a id="markdown-before-release" name="before-release"></a>
+
+## Before release
+
+- [ ] initialize grid with out data
+
+
+<a id="markdown-other-tasks" name="other-tasks"></a>
+
+## Other Tasks
 - [ ] Key press
-    - [ ] P for pause and resume game
     - [ ] M for music
 - [ ] Add music and sound effects
-- [ ] Handle landing
-- [ ] current = next
-- [ ] Top collision Game Over
 - [ ] Add high score
 - [ ] Remember state for high scores
 - [ ] center the next piece in it's canvas
-- [ ] colors for the extended game are not working
 
 <a id="markdown-if-time-permits" name="if-time-permits"></a>
 
@@ -50,24 +65,6 @@
 
 - [ ] hard drop???
 - [ ] Change the randomize tetromino method to reduce the change of getting the same shape twice in a row
-
-
-<a id="markdown-game-over" name="game-over"></a>
-
-## Game Over
-- Create a method which checks if the game is over.
-- When the current tetromino hits the top of the grid, the game should be over.
-- When the game is over, check if the score is in the top 10.
-- When the game is over, the user should be able to start a new game.
-
-<a id="markdown-toggle-sound" name="toggle-sound"></a>
-
-## Toggle Sound
-- Create a method which toggles the sound on and off.
-- When the user presses the P button, the sound should be toggled on and off.
-- This method should be called when the user presses the P button and anytime anywhere in the application.
-
-
 
 <a id="markdown-files-and-directories" name="files-and-directories"></a>
 
