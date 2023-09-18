@@ -50,6 +50,10 @@ export class GameService {
         grid!.forEach((row, y) => {
             // tetVal represents the tetromino value. I = 1, J=2 ... Z=7
             row.forEach((tetVal, x) => {
+                ctx.strokeStyle = '#ccc';
+                ctx.lineWidth = 0.005;
+                ctx.strokeRect(x, y, 1, 1);
+                ctx.stroke();
                 if (tetVal > 0) {
                     // fetch the tetromino object from either the TETROMINOS or EXT_TETROMINOS object
                     const tetromino = Object.values({ ...TETROMINOS, ...EXT_TETROMINOS }).find(t => t.id === tetVal);
