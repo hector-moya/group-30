@@ -4,15 +4,19 @@ import { Component, inject } from '@angular/core';
 import { HIGH_SCORES } from '../../data';
 import { ScoreService } from 'src/app/services/score.service';
 import { Router } from '@angular/router';
+import { FormsModule } from '@angular/forms';
 
 @Component({
     selector: 'app-high-score',
     standalone: true,
-    imports: [CommonModule],
+    imports: [CommonModule, FormsModule],
     template: `
-    <div *ngFor="let hs of highScores">
+    <h5 *ngIf="finalScore > 0">Your final score was: {{finalScore}}</h5>
+    <input *ngIf="finalScore > 0 && isTopScore(finalScore)" [(ngModel)]="playerName" placeholder="Enter your name">
+    <button *ngIf="finalScore > 0 && isTopScore(finalScore)" (click)="saveScore()">Save Score</button>
+    <div *ngFor="let hs of highScores; let i = index">
         <div class="flex space-between">
-            <span> {{hs.playerName}}</span>
+            <span>{{i + 1 }}. {{hs.playerName}}</span>
             <span> {{hs.score}}</span>
         </div>
     </div>
@@ -21,8 +25,12 @@ import { Router } from '@angular/router';
 export class HighScoreComponent {
 
     highScores: HighScore[] = HIGH_SCORES;
+    finalScore: number = 0;
+    playerName: string = '';
 
     private scoreService = inject(ScoreService);
+    private router = inject(Router);
+
     constructor() {
         this.init();
     }
@@ -42,23 +50,23 @@ export class HighScoreComponent {
     subscribeToScore(): void {
         this.scoreService.getFinalScore().subscribe(finalScore => {
             if (finalScore) {
-                this.updateHighScores(finalScore);
-                console.log('final score', finalScore);
+                this.finalScore = finalScore;
+                if (!this.isTopScore(this.finalScore)) {
+                    setTimeout(() => {
+                        this.redirect();
+                    }, 3000);
+                }
             }
         });
     }
 
     /**
-     * Update the high scores with the final score.
-     * @param finalScore 
+     * Redirect to the start page if finalScore not in top 10.
      */
-    updateHighScores(finalScore: number): void {
-        console.log('updateHighScores', finalScore);
-        if (this.isTopScore(finalScore)) {
-            this.highScores.push({ playerName: 'Player', score: finalScore });
-            this.sortHighScores();
-            this.keepTopTen();
-        }
+    redirect(): void {
+        this.scoreService.setFinalScore(0);
+        this.playerName = '';
+        this.router.navigate(['/start']);
     }
 
     /**
@@ -76,6 +84,16 @@ export class HighScoreComponent {
     keepTopTen(): void {
         if (this.highScores.length > 10) {
             this.highScores.pop();
+        }
+    }
+
+    saveScore(): void {
+        console.log('updateHighScores', this.finalScore);
+        if (this.isTopScore(this.finalScore)) {
+            this.highScores.push({ playerName: this.playerName || 'Unknown', score: this.finalScore });
+            this.sortHighScores();
+            this.keepTopTen();
+            this.redirect();
         }
     }
 }

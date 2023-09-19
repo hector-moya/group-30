@@ -10,14 +10,20 @@ import { CommonModule } from '@angular/common';
 import { Canvas } from 'src/app/models/Canvas';
 import { Piece } from 'src/app/models/Piece';
 import { ScoreService } from 'src/app/services/score.service';
+import { HighScoreComponent } from './high-score.component';
 
 @Component({
     selector: 'app-board',
     standalone: true,
-    imports: [CommonModule, AppLayout, ModalComponent],
+    imports: [CommonModule, AppLayout, ModalComponent, HighScoreComponent],
     template: `
         <canvas #canvas class="bdr bdr-red"></canvas>
         <modal [endGame]="true"></modal>
+        <modal>            
+            <ng-container *ngIf="modalType === 'Game Over'">
+                <app-high-score></app-high-score>
+            </ng-container>
+        </modal>
     `,
 })
 export class BoardComponent {
@@ -50,6 +56,7 @@ export class BoardComponent {
     private modalService = inject(ModalService);
     private gameService = inject(GameService);
     private scoreService = inject(ScoreService);
+    modalType: string = '';
 
     ngOnInit(): void {
         this.subscribeToPiece();
@@ -155,10 +162,10 @@ export class BoardComponent {
      */
     handleGameOver(): void {
         this.stopInterval();
-        const finalScore = 400;
+        const finalScore = 500;
         this.scoreService.setFinalScore(finalScore);
-        console.log('finalScore', finalScore);
-        this.modalService.openModal(`Game Over! Your final score is ${finalScore}`);
+        this.modalType = 'Game Over';
+        this.modalService.openModal(this.modalType);
     }
 
     /**
