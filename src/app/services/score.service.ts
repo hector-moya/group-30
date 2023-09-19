@@ -15,6 +15,11 @@ export class ScoreService {
     private scoreSubject$ = new BehaviorSubject<IGameStats>(GAME_STATS);
 
     /**
+     * BehaviorSubject to hold and broadcast the final game score.
+     */
+    private finalScoreSubject$ = new BehaviorSubject<number>(0);
+
+    /**
      * Sets the observable that emits the game scoring stats.
      * @returns An observable of the game scoring stats.
      */
@@ -51,5 +56,23 @@ export class ScoreService {
      */
     private getPoints(linesCleared: number): number {
         return POINTS[linesCleared] ?? 0;
+    }
+
+    /**
+     * Get the observable that emits the final game score.
+     * @returns An observable of the final game score.
+     */
+    getFinalScore(): Observable<number> {
+        console.log('getFinalScore', this.finalScoreSubject$.value);
+        return this.finalScoreSubject$.asObservable();
+    }
+
+    /**
+     * Set the final game score.
+     * @param finalScore 
+     */
+    setFinalScore(finalScore: number): void {
+        console.log('setFinalScore', finalScore);
+        this.finalScoreSubject$.next(finalScore);
     }
 }

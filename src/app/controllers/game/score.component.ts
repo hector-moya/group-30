@@ -31,6 +31,8 @@ export class ScoreComponent implements OnInit {
         this.scoreService.updateGameStats(linesCleared);
     }
 
+    
+
 }
 
 

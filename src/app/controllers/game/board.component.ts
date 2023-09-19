@@ -9,6 +9,7 @@ import { IConfig } from 'src/app/interfaces/Config';
 import { CommonModule } from '@angular/common';
 import { Canvas } from 'src/app/models/Canvas';
 import { Piece } from 'src/app/models/Piece';
+import { ScoreService } from 'src/app/services/score.service';
 
 @Component({
     selector: 'app-board',
@@ -43,16 +44,12 @@ export class BoardComponent {
     private piece!: Piece | null;
 
     /**
-     * The game play state
-     */
-    private playState: boolean = false;
-
-    /**
      * Component dependencies
      */
     private pieceService = inject(PieceService);
     private modalService = inject(ModalService);
     private gameService = inject(GameService);
+    private scoreService = inject(ScoreService);
 
     ngOnInit(): void {
         this.subscribeToPiece();
@@ -143,6 +140,9 @@ export class BoardComponent {
             event.preventDefault();
             this.intervalId ? this.stopInterval() : this.startInterval();
         }
+
+        // Trigger game over on 'g' key
+        if (event.key === 'g') this.handleGameOver();
     }
 
     handleEscape(): void {
@@ -154,7 +154,11 @@ export class BoardComponent {
      * Handle the game over event by pausing the game and opening the modal
      */
     handleGameOver(): void {
-        this.modalService.openModal('Game Over!');
+        this.stopInterval();
+        const finalScore = 400;
+        this.scoreService.setFinalScore(finalScore);
+        console.log('finalScore', finalScore);
+        this.modalService.openModal(`Game Over! Your final score is ${finalScore}`);
     }
 
     /**
