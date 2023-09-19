@@ -15,8 +15,7 @@ export class GameService {
      * Next Piece BehaviorSubjects to notify subscribers of changes
      */
     private gridSubject$: BehaviorSubject<Matrix | null> = new BehaviorSubject<Matrix | null>(GRID)
-    private playState$: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false)
-
+    private playStateSubject$: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false)
 
     private config!: IConfig;
 
@@ -37,7 +36,7 @@ export class GameService {
      * @returns An observable of the game play state.
      */
     observePlayState(): Observable<boolean> {
-        return this.playState$.asObservable();
+        return this.playStateSubject$.asObservable();
     }
 
     /**
@@ -91,7 +90,7 @@ export class GameService {
                 let x = position.x + columnIndex;
                 let y = position.y + rowIndex;
                 return tetVal === 0 ||
-                    this.isInBoundary({ x, y }) && this.isVacant({ x, y }) && this.playState$.value;
+                    this.isInBoundary({ x, y }) && this.isVacant({ x, y });
             });
         });
     }
@@ -155,21 +154,11 @@ export class GameService {
     }
 
     /**
-     * Method to start the game
-     * @returns {boolean} Whether the game is in play
+     * Update the play state of the game
+     * @param {boolean} state
      */
-    play(): boolean {
-        this.playState$.next(true);
-        return this.playState$.value;
-    }
-
-    /**
-     * Method to pause the game
-     * @returns {boolean} Whether the game is in play
-     */
-    pause(): boolean {
-        this.playState$.next(false);
-        return this.playState$.value;
+    setGameState(state: boolean): void {
+        this.playStateSubject$.next(state);
     }
 
     /**

@@ -19,11 +19,15 @@
 
 - [ ] update sequence diagram to reflect changes
 
+
+
 <a id="markdown-priority-list" name="priority-list"></a>
 
 ## Priority List
 
-- [ ] Hook up play and pause to the interval, and the P key
+- [ ] Change space bar to 'p'
+
+
 - [ ] Disable keystrokes when interval is stopped to prevent unwanted behavior
 - [ ] wire up scoring function to the clear line method
 - [ ] wire up level to interval time. What is the math between time and interval?
@@ -33,6 +37,8 @@
     - [ ] Game level needs to work with the interval
     - [ ] remember state
 - [ ] add grid scale
+
+- [ ] seperate the key press functions into a new object, this allows more flexibility and cleaner code.
 
 
 <a id="markdown-bugs" name="bugs"></a>

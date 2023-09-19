@@ -25,6 +25,7 @@ export class GameComponent {
 
     ngOnInit(): void {
         this.subscribeToConfig();
+        this.gameService.setGameState(true);
     }
 
     /**
@@ -42,7 +43,7 @@ export class GameComponent {
      * @returns {boolean} Whether the game is in play
      */
     play(): void {
-        this.gameService.play();
+        this.gameService.setGameState(true);
     }
 
     /**
@@ -50,6 +51,6 @@ export class GameComponent {
      * @returns {boolean} Whether the game is in play
      */
     pause(): void {
-        this.gameService.pause();
+        this.gameService.setGameState(false);
     }
 }

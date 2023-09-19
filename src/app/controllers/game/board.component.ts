@@ -9,7 +9,6 @@ import { IConfig } from 'src/app/interfaces/Config';
 import { CommonModule } from '@angular/common';
 import { Canvas } from 'src/app/models/Canvas';
 import { Piece } from 'src/app/models/Piece';
-import { distinctUntilChanged } from 'rxjs';
 
 @Component({
     selector: 'app-board',
@@ -59,8 +58,8 @@ export class BoardComponent {
         this.subscribeToPiece();
         this.initBoard();
         this.subscribeToGrid();
-        this.subscribeToPlayState();
-        // this.startInterval();
+        // this.subscribeToPlayState();
+        this.startInterval();
     }
 
     /**
@@ -87,9 +86,9 @@ export class BoardComponent {
     }
 
     /**
-   * Subscribe to the grid updates from the GameService which is
-   * responsible for rendering the grid.
-   */
+     * Subscribe to the grid updates from the GameService which is
+     * responsible for rendering the grid.
+     */
     private subscribeToGrid(): void {
         this.gameService.observeGrid().subscribe((grid: Matrix | null) => {
             this.gameService.renderGrid(this.ctx!);
@@ -100,12 +99,9 @@ export class BoardComponent {
      * Subscribe to the play state updates from the GameService which is
      * responsible for starting and stopping the game.
      */
-    private subscribeToPlayState(): void {
-        this.gameService.observePlayState().pipe(distinctUntilChanged()).subscribe((playState: boolean) => {
-                this.playState = playState; 
-                this.playState ? this.startInterval() : this.stopInterval();
-            });
-    }
+    // private subscribeToPlayState(): void {
+    //     this.gameService.observePlayState().subscribe((playState: boolean) => { });
+    // }
 
     /**
      * Possible moves for the current Piece.
@@ -129,6 +125,7 @@ export class BoardComponent {
      */
     @HostListener('document:keydown', ['$event'])
     onKeydown(event: KeyboardEvent): void {
+
         if (this.moves[event.key]) {
             event.preventDefault();
             // decompose the updated piece into its shape, x, and y
@@ -141,8 +138,11 @@ export class BoardComponent {
 
         if (event.key === 'Escape') this.handleEscape();
 
-        // On Spacebar event, pause or play the game
-        if (event.key === ' ') { this.playState ? this.gameService.pause() : this.gameService.play() }
+        // On Space bar event, pause or play the game
+        if (event.key === ' ') {
+            event.preventDefault();
+            this.intervalId ? this.stopInterval() : this.startInterval();
+        }
     }
 
     handleEscape(): void {
@@ -153,11 +153,9 @@ export class BoardComponent {
     /**
      * Handle the game over event by pausing the game and opening the modal
      */
-    haddleGameOver(): void {
-        this.gameService.pause();
+    handleGameOver(): void {
         this.modalService.openModal('Game Over!');
     }
-
 
     /**
       * Start a periodic interval with a specified time interval. The time is
@@ -192,7 +190,6 @@ export class BoardComponent {
         this.pieceService.move(shape, { x: position.x, y: position.y });
         this.gameService.renderGrid(this.ctx!);
     }
-    
 
     /**
      * Drop the piece down one row if it can move. If it can't move, lock the
@@ -204,7 +201,7 @@ export class BoardComponent {
             this.moveAndRenderGrid(shape, { x, y });
         } else {
             if (this.gameService.isTopCollision(shape, { x, y })) {
-                this.haddleGameOver();
+                this.handleGameOver();
                 return;
             }
             // make sure you pass in the 'current' position to be locked in!
