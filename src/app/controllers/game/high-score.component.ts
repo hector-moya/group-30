@@ -48,7 +48,7 @@ export class HighScoreComponent {
      * Subscribe to the final score and update the high scores.
      */
     subscribeToScore(): void {
-        this.scoreService.getFinalScore().subscribe(finalScore => {
+        const finalScore = this.scoreService.getFinalScore();
             if (finalScore) {
                 this.finalScore = finalScore;
                 if (!this.isTopScore(this.finalScore)) {
@@ -57,14 +57,15 @@ export class HighScoreComponent {
                     }, 3000);
                 }
             }
-        });
+        
     }
+
 
     /**
      * Redirect to the start page if finalScore not in top 10.
      */
     redirect(): void {
-        this.scoreService.setFinalScore(0);
+        // this.scoreService.setFinalScore(0);
         this.playerName = '';
         this.router.navigate(['/start']);
     }

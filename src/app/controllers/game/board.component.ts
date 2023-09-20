@@ -162,8 +162,7 @@ export class BoardComponent {
      */
     handleGameOver(): void {
         this.stopInterval();
-        const finalScore = 500;
-        this.scoreService.setFinalScore(finalScore);
+        // this.scoreService.setFinalScore(finalScore);
         this.modalType = 'Game Over';
         this.modalService.openModal(this.modalType);
     }
