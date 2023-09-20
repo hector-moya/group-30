@@ -10,27 +10,31 @@ import { FormsModule } from '@angular/forms';
     standalone: true,
     imports: [CommonModule, FormsModule],
     template: `
-    <div *ngIf="finalScore > 0 && !isTopScore(finalScore)">
-      <h5>Your final score was: {{ finalScore }}</h5>
-      <p>You did not make it to the top 10. Better luck next time!</p>
-    </div>
-    <div class="flex space-between" *ngIf="finalScore > 0 && isTopScore(finalScore) && !scoreSaved">
-      <input [(ngModel)]="playerName" placeholder="Enter your name" />
-      <button class="btn primary"
-        *ngIf="finalScore > 0 && isTopScore(finalScore)"
-        (click)="saveScore()"
-      >
-        Save Score
-      </button>
-    </div>
-    <div *ngIf="scoreSaved || finalScore == 0">
-      <div *ngFor="let hs of highScores; let i = index">
-        <div class="flex space-between">
-          <span>{{ i + 1 }}. {{ hs.playerName }}</span>
-          <span> {{ hs.score }}</span>
-        </div>
+    <!-- Scenario 1: Player has a score but didn't make it to the top 10 -->
+    <div *ngIf="finalScore > 0; else noScoreOrSavedScore">
+      <div *ngIf="!isTopScore(finalScore)">
+        <h5>Your final score was: {{ finalScore }}</h5>
+        <p>You did not make it to the top 10. Better luck next time!</p>
+      </div>
+
+      <!-- Scenario 2: Player made it to the top 10 but hasn't saved their score yet -->
+      <div *ngIf="isTopScore(finalScore) && !scoreSaved">
+        <input [(ngModel)]="playerName" placeholder="Enter your name" />
+        <button class="btn primary" (click)="saveScore()">Save Score</button>
       </div>
     </div>
+
+    <!-- Scenario 3: Player has no score or has already saved their score -->
+    <ng-template #noScoreOrSavedScore>
+      <div *ngIf="scoreSaved || finalScore == 0">
+        <div *ngFor="let hs of highScores; let i = index">
+          <div class="flex space-between">
+            <span>{{ i + 1 }}. {{ hs.playerName }}</span>
+            <span> {{ hs.score }}</span>
+          </div>
+        </div>
+      </div>
+    </ng-template>
   `,
 })
 export class HighScoreComponent {

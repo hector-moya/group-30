@@ -17,8 +17,7 @@ import { Piece } from 'src/app/models/Piece';
     imports: [CommonModule, AppLayout, ModalComponent, HighScoreComponent],
     template: `
     <canvas #canvas class="bdr bdr-red"></canvas>
-    <modal [endGame]="true"></modal>
-    <modal [gameOver]="true">
+    <modal>
       <ng-container *ngIf="modalType === 'Game Over'">
         <app-high-score></app-high-score>
       </ng-container>
@@ -140,7 +139,8 @@ export class BoardComponent {
      */
     handleEscape(): void {
         this.stopInterval();
-        this.modalService.openModal('Do you want to end the game?');
+        this.modalType = 'End Game';
+        this.modalService.openModal('Do you want to end the game?', this.modalType);
     }
 
     /**
@@ -149,7 +149,7 @@ export class BoardComponent {
     handleGameOver(): void {
         this.stopInterval();
         this.modalType = 'Game Over';
-        this.modalService.openModal(this.modalType);
+        this.modalService.openModal(this.modalType, this.modalType);
         this.gameService.resetGrid();
     }
 
