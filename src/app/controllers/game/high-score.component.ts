@@ -7,93 +7,96 @@ import { Router } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 
 @Component({
-    selector: 'app-high-score',
-    standalone: true,
-    imports: [CommonModule, FormsModule],
-    template: `
-    <h5 *ngIf="finalScore > 0">Your final score was: {{finalScore}}</h5>
-    <input *ngIf="finalScore > 0 && isTopScore(finalScore)" [(ngModel)]="playerName" placeholder="Enter your name">
-    <button *ngIf="finalScore > 0 && isTopScore(finalScore)" (click)="saveScore()">Save Score</button>
-    <div *ngFor="let hs of highScores; let i = index">
-        <div class="flex space-between">
-            <span>{{i + 1 }}. {{hs.playerName}}</span>
-            <span> {{hs.score}}</span>
-        </div>
+  selector: 'app-high-score',
+  standalone: true,
+  imports: [CommonModule, FormsModule],
+  template: `
+    <div *ngIf="finalScore > 0 && !isTopScore(finalScore)">
+      <h5>Your final score was: {{ finalScore }}</h5>
+      <p>You did not make it to the top 10. Better luck next time!</p>
     </div>
-    `,
+    <div *ngIf="finalScore > 0 && isTopScore(finalScore) && !scoreSaved">
+      <input [(ngModel)]="playerName" placeholder="Enter your name" />
+      <button
+        *ngIf="finalScore > 0 && isTopScore(finalScore)"
+        (click)="saveScore()"
+      >
+        Save Score
+      </button>
+    </div>
+    <div *ngIf="scoreSaved || finalScore == 0">
+      <div *ngFor="let hs of highScores; let i = index">
+        <div class="flex space-between">
+          <span>{{ i + 1 }}. {{ hs.playerName }}</span>
+          <span> {{ hs.score }}</span>
+        </div>
+      </div>
+    </div>
+  `,
 })
 export class HighScoreComponent {
+  highScores: HighScore[] = HIGH_SCORES;
+  finalScore: number = 0;
+  playerName: string = '';
+  scoreSaved: boolean = false;
 
-    highScores: HighScore[] = HIGH_SCORES;
-    finalScore: number = 0;
-    playerName: string = '';
+  private scoreService = inject(ScoreService);
 
-    private scoreService = inject(ScoreService);
-    private router = inject(Router);
+  constructor() {
+    this.init();
+  }
 
-    constructor() {
-        this.init();
+  init() {
+    this.sortHighScores();
+    this.getScore();
+  }
+
+  sortHighScores() {
+    this.highScores.sort((a, b) => b.score - a.score);
+  }
+
+  /**
+   * Get the final score from the score service.
+   */
+  getScore(): void {
+    const finalScore = this.scoreService.getFinalScore();
+    if (finalScore) {
+      this.finalScore = finalScore;
     }
+  }
 
-    init() {
-        this.sortHighScores();
-        this.subscribeToScore();
-    }
+  /**
+   * Check if the final score is in the top 10 highest scores.
+   * @param finalScore
+   * @returns boolean
+   */
+  isTopScore(finalScore: number): boolean {
+    return this.highScores.length < 10 || finalScore > this.highScores[9].score;
+  }
 
-    sortHighScores() {
-        this.highScores.sort((a, b) => b.score - a.score);
+  /**
+   * Keep only the top 10 highest scores.
+   */
+  keepTopTen(): void {
+    if (this.highScores.length > 10) {
+      this.highScores.pop();
     }
+  }
 
-    /**
-     * Subscribe to the final score and update the high scores.
-     */
-    subscribeToScore(): void {
-        this.scoreService.getFinalScore().subscribe(finalScore => {
-            if (finalScore) {
-                this.finalScore = finalScore;
-                if (!this.isTopScore(this.finalScore)) {
-                    setTimeout(() => {
-                        this.redirect();
-                    }, 3000);
-                }
-            }
-        });
+  /**
+   * Save the score to the high scores list.
+   */
+  saveScore(): void {
+    if (this.isTopScore(this.finalScore)) {
+      this.highScores.push({
+        playerName: this.playerName || 'Unknown',
+        score: this.finalScore,
+      });
+      this.sortHighScores();
+      this.keepTopTen();
+      this.playerName = '';
+      this.finalScore = 0;
+      this.scoreSaved = true;
     }
-
-    /**
-     * Redirect to the start page if finalScore not in top 10.
-     */
-    redirect(): void {
-        this.scoreService.setFinalScore(0);
-        this.playerName = '';
-        this.router.navigate(['/start']);
-    }
-
-    /**
-     * Check if the final score is in the top 10 highest scores.
-     * @param finalScore 
-     * @returns boolean 
-     */
-    isTopScore(finalScore: number): boolean {
-        return this.highScores.length < 10 || finalScore > this.highScores[9].score;
-    }
-
-    /**
-     * Keep only the top 10 highest scores.
-     */
-    keepTopTen(): void {
-        if (this.highScores.length > 10) {
-            this.highScores.pop();
-        }
-    }
-
-    saveScore(): void {
-        console.log('updateHighScores', this.finalScore);
-        if (this.isTopScore(this.finalScore)) {
-            this.highScores.push({ playerName: this.playerName || 'Unknown', score: this.finalScore });
-            this.sortHighScores();
-            this.keepTopTen();
-            this.redirect();
-        }
-    }
+  }
 }
