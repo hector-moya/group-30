@@ -170,4 +170,15 @@ export class GameService {
             this.config = config;
         });
     }
+
+    /**
+     * Reset the game grid
+     * @returns {void}
+     */
+    resetGrid(): void {
+        const rows = this.gridSubject$.value!.length;
+        const cols = this.gridSubject$.value![0].length;
+        const emptyGrid: Matrix = Array.from({ length: rows }, () => Array(cols).fill(0));
+        this.gridSubject$.next(emptyGrid);
+    }
 }

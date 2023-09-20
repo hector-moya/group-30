@@ -40,6 +40,13 @@ export class ScoreService {
     }
 
     /**
+     * Set score.
+     */
+    setScore(score: number): void {
+        this.scoreSubject$.next({ ...this.scoreSubject$.value, score });
+    }
+
+    /**
      * Perform the score calculations to update the game statistics.
      * @param linesCleared
      * @returns

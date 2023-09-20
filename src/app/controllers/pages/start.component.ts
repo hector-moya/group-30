@@ -61,4 +61,5 @@ export class StartComponent {
         this.modalType = title;
         this.modalService.openModal(title);
     }
+    
 }

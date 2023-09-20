@@ -150,6 +150,7 @@ export class BoardComponent {
         this.stopInterval();
         this.modalType = 'Game Over';
         this.modalService.openModal(this.modalType);
+        this.gameService.resetGrid();
     }
 
     /**

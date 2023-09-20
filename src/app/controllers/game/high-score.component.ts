@@ -3,7 +3,6 @@ import { HighScore } from '../../interfaces/Score';
 import { Component, inject } from '@angular/core';
 import { HIGH_SCORES } from '../../data';
 import { ScoreService } from 'src/app/services/score.service';
-import { Router } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 
 @Component({
@@ -15,9 +14,9 @@ import { FormsModule } from '@angular/forms';
       <h5>Your final score was: {{ finalScore }}</h5>
       <p>You did not make it to the top 10. Better luck next time!</p>
     </div>
-    <div *ngIf="finalScore > 0 && isTopScore(finalScore) && !scoreSaved">
+    <div class="flex space-between" *ngIf="finalScore > 0 && isTopScore(finalScore) && !scoreSaved">
       <input [(ngModel)]="playerName" placeholder="Enter your name" />
-      <button
+      <button class="btn primary"
         *ngIf="finalScore > 0 && isTopScore(finalScore)"
         (click)="saveScore()"
       >
@@ -49,6 +48,7 @@ export class HighScoreComponent {
     init() {
         this.sortHighScores();
         this.getScore();
+        this.scoreService.setScore(0);
     }
 
     sortHighScores() {
@@ -95,7 +95,6 @@ export class HighScoreComponent {
             this.sortHighScores();
             this.keepTopTen();
             this.playerName = '';
-            this.finalScore = 0;
             this.scoreSaved = true;
         }
     }
