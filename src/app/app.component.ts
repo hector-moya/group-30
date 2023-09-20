@@ -1,7 +1,8 @@
 import { ConfigService } from './services/config.service';
 import { RouterOutlet } from '@angular/router';
 import { CommonModule } from '@angular/common';
-import { Component } from '@angular/core';
+import { Component, inject } from '@angular/core';
+import { IConfig } from './interfaces/Config';
 
 @Component({
     selector: 'app-root',
@@ -12,19 +13,22 @@ import { Component } from '@angular/core';
 })
 export class AppComponent {
 
-    constructor(private configService: ConfigService) {
-        this.init();
+    /**
+     * Component dependencies
+     */
+    private configService = inject(ConfigService);
+
+    ngOnInit(): void {
+        this.subscribeToConfig();
     }
 
-    init() {
-        this.configService.updateConfig({
-            rows: 20,
-            columns: 10,
-            blockSize: 25,
-            extended: false,
-            startLevel: 1,
-            nextGridSize: 4
-        });
+    /**
+     * Subscribe to the configuration updates from the ConfigService.
+     * When the configuration changes, the callback function is triggered.
+     */
+    subscribeToConfig(): void {
+        this.configService.observeConfig().subscribe();
     }
-
 }
+
+

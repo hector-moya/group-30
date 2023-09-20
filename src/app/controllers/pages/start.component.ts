@@ -18,23 +18,45 @@ import { Router } from '@angular/router';
 })
 export class StartComponent {
 
-    private router = inject(Router);
+    /**
+    * Component dependencies
+    */
     private modalService = inject(ModalService);
+    private routerService = inject(Router);
+
     modalType: string = '';
 
-    playGame() {
-        this.router.navigate(['/play-game']);
+    /**
+     * Redirect to the game page
+     * @returns void
+     */
+    playGame(): void {
+        this.routerService.navigate(['/play-game']);
     }
 
-    exitGame() {
-        this.router.navigate(['/goodbye']);
+    /**
+     * Redirect to the goodbye page
+     * @returns void
+     */
+    exitGame(): void {
+        this.routerService.navigate(['/goodbye']);
     }
 
+    /**
+     * Open modal and pass the title of the modal to the modal service
+     * @param {string} title The title of the modal to open
+     * @returns void
+     */
     openModal(title: string): void {
         this.modalType = title;
         this.modalService.openModal(title);
     }
 
+    /**
+     * Open the modal and display the configuration component
+     * @param {string} title The title of the modal to open
+     * @returns void
+     */
     openConfig(title: string): void {
         this.modalType = title;
         this.modalService.openModal(title);
