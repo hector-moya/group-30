@@ -13,26 +13,34 @@ import { CommonModule } from '@angular/common';
 })
 export class ScoreComponent implements OnInit {
 
-    private scoreService = inject(ScoreService);
-
     gameStats!: IGameStats;
+
+    /**
+     * Component dependencies
+     */
+    private scoreService = inject(ScoreService);
 
     ngOnInit(): void {
         this.subscribeToScore();
     }
 
+    /**
+     * Subscribe to the score updates from the ScoreService which is
+     * responsible for maintain the game statistics.
+     */
     subscribeToScore(): void {
         this.scoreService.observeScore().subscribe((stats: IGameStats) => {
             this.gameStats = stats;
         })
     }
 
+    /**
+     * This is a development function and can be removed.
+     * @param {number} linesCleared The number of lines cleared.
+     */
     clear(linesCleared: number): void {
         this.scoreService.updateGameStats(linesCleared);
     }
-
-    
-
 }
 
 
