@@ -9,6 +9,7 @@ import { IConfig } from 'src/app/interfaces/Config';
 import { CommonModule } from '@angular/common';
 import { Canvas } from 'src/app/models/Canvas';
 import { Piece } from 'src/app/models/Piece';
+import { ConfigService } from 'src/app/services/config.service';
 
 @Component({
     selector: 'app-board',
@@ -48,25 +49,29 @@ export class BoardComponent {
     private pieceService = inject(PieceService);
     private modalService = inject(ModalService);
     private gameService = inject(GameService);
+    private configService = inject(ConfigService);
 
     ngOnInit(): void {
         this.subscribeToPiece();
         this.initBoard();
-        this.subscribeToGrid();
         // this.startInterval();
+        console.log(this.configService.getConfig());
+
     }
 
     /**
-     * Initialise the game board and set the context. Then, get a Piece from
-     * the PieceService and set to the piece property for for rendering and
-     * easy access to the current Piece.
-    */
+     * Initialise the game board, first piece, set the context and initialise
+     * the empty grid.
+     * @returns {void}
+     */
     private initBoard(): void {
         const { rows, columns, blockSize: scale } = this.config;
         const board = new Canvas(columns, rows, this.boardRef.nativeElement, scale);
         this.ctx = board.getContext();
         // Retrieve the initial piece for rendering
         this.piece = this.pieceService.getPiece(this.ctx!, this.config.extended);
+        // Initialise the grid with the initial values
+        this.gameService.initGrid(this.ctx!, rows, columns);
     }
 
     /**
@@ -77,16 +82,6 @@ export class BoardComponent {
         this.pieceService.observePiece().subscribe((piece: Piece | null) => {
             this.piece = piece;
         })
-    }
-
-    /**
-   * Subscribe to the grid updates from the GameService which is
-   * responsible for rendering the grid.
-   */
-    private subscribeToGrid(): void {
-        this.gameService.observeGrid().subscribe((grid: Matrix | null) => {
-            this.gameService.renderGrid(this.ctx!);
-        });
     }
 
     /**

@@ -9,9 +9,15 @@ import { DEFAULT_CONFIG } from '../data';
 export class ConfigService {
 
     /**
-     * BehaviorSubject to hold and broadcast the configuration
+     * Config BehaviorSubject to notify subscribers of changes
      */
-    private configSubject$: BehaviorSubject<IConfig> = new BehaviorSubject<IConfig>(DEFAULT_CONFIG);
+    private configSubject$: BehaviorSubject<IConfig> = new BehaviorSubject<IConfig>(this.getConfig() || DEFAULT_CONFIG);
+
+    constructor() {
+        if (!this.getConfig()) {
+            this.setConfig(DEFAULT_CONFIG);
+        }
+    }
 
     /**
       * Get the observable that emits the current game configuration.
@@ -23,10 +29,29 @@ export class ConfigService {
 
     /**
      * Update the game configuration and notify subscribers.
-     * @param config The new configuration to update to.
+     * @param {IConfig} config The new configuration
      */
     updateConfig(config: IConfig): void {
         this.configSubject$.next(config);
+        this.setConfig(config);
+    }
+
+    /**
+     * Save the configuration to local storage for persistent state
+     * @param {IConfig} config The configuration to save
+     */
+    private setConfig(config: IConfig): void {
+        const configJson = JSON.stringify(config);
+        localStorage.setItem('config', configJson);
+    }
+
+    /**
+     * Get the configuration from local storage
+     * @returns The configuration from local storage or null if not found
+     */
+    getConfig(): IConfig | null {
+        const configJson = localStorage.getItem('config');
+        return configJson ? JSON.parse(configJson) : null;
     }
 
 }

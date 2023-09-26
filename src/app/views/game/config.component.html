@@ -1,37 +1,37 @@
-<form class="bx-content">
+<form class="bx-content minw-400">
     <div class="space-y-1">
         <div class="frm-row">
             <div class="flex space-between">
-                <label for="columns">Columns</label>
+                <label for="columns">Columns x {{ config.columns }} </label>
             </div>
-            <input [(ngModel)]="config.columns" name="columns" type="range" min="8" max="12" value="10">
+            <input [(ngModel)]="config.columns" name="columns" class="fg1" type="range" min="6" max="14" value="10" step="2">
         </div>
         <div class="frm-row">
             <div class="flex space-between">
-                <label for="rows">Rows</label>
+                <label for="rows">Rows x {{ config.rows }}</label>
             </div>
-            <input [(ngModel)]="config.rows" name="rows" type="range" min="16" max="24" value="20">
+            <input [(ngModel)]="config.rows" name="rows" type="range" min="16" max="24" value="20" step="2">
         </div>
         <div class="frm-row">
             <div class="flex space-between">
-                <label for="rows">Level</label>
+                <label for="rows">Start Level {{ config.startLevel }}</label>
             </div>
             <input [(ngModel)]="config.startLevel" name="startLevel" type="range" min="1" max="50" value="1">
         </div>
+        <hr>
         <div class="frm-row">
             <div class="flex space-between">
                 <label for="extended-game">Game Mode</label>
-            </div>
-            <div class="grid cols-2 mt-05">
                 <label> <input [(ngModel)]="config.extended" type="radio" [value]="false"
                         name="extended-game"> Normal </label>
                 <label> <input [(ngModel)]="config.extended" type="radio" [value]="true"
                         name="extended-game"> Extended </label>
             </div>
+
         </div>
     </div>
     <hr>
-    <div class="grid cols-3 mt">
+    <!-- <div class="grid cols-3 mt">
         <div class="frm-row">
             <label for="columns">Columns</label>
             <input [(ngModel)]="config.columns" name="columns" class="sm">
@@ -44,11 +44,11 @@
             <label for="startLevel">Level</label>
             <input [(ngModel)]="config.startLevel" name="startLevel" class="sm">
         </div>
-    </div>
+    </div> -->
 </form>
 
 <div class="grid cols-2">
+    <button class="btn blue" (click)="updateConfig()">Update</button>
     <button class="btn blue" disabled>Play</button>
     <button class="btn red" disabled>AI Demo</button>
 </div>
-

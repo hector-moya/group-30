@@ -1,6 +1,5 @@
 import { EXT_TETROMINOS, GRID, TETROMINOS } from '../data';
 import { IPosition } from '../interfaces/Position';
-import { BehaviorSubject, Observable } from 'rxjs';
 import { ConfigService } from './config.service';
 import { IConfig } from '../interfaces/Config';
 import { Injectable } from '@angular/core';
@@ -10,11 +9,7 @@ import { Injectable } from '@angular/core';
 })
 export class GameService {
 
-    /**
-     * Next Piece BehaviorSubjects to notify subscribers of changes
-     */
-    private gridSubject$: BehaviorSubject<Matrix | null> = new BehaviorSubject<Matrix | null>(GRID)
-
+    grid: Matrix = [];
     private config!: IConfig;
 
     constructor(private configService: ConfigService) {
@@ -22,11 +17,15 @@ export class GameService {
     }
 
     /**
-     * Get the observable that emits the game grid.
-     * @returns An observable of the game grid.
+     * Initialises the game grid with the specified number of rows and columns.
+     * @param ctx The canvas rendering context.
+     * @param rows The number of rows for the grid.
+     * @param columns The number of columns for the grid.
      */
-    observeGrid(): Observable<Matrix | null> {
-        return this.gridSubject$.asObservable();
+    initGrid(ctx: CanvasRenderingContext2D, rows: number, columns: number) {
+        // this.grid = this.getEmptyGrid(rows, columns);
+        this.grid = GRID;
+        this.renderGrid(ctx);
     }
 
     /**
@@ -35,10 +34,13 @@ export class GameService {
      * @returns {void}
      */
     renderGrid(ctx: CanvasRenderingContext2D): void {
-        const grid = this.gridSubject$.value;
-        grid!.forEach((row, y) => {
+        this.grid!.forEach((row, y) => {
             // tetVal represents the tetromino value. I = 1, J=2 ... Z=7
             row.forEach((tetVal, x) => {
+                ctx.strokeStyle = '#ccc';
+                ctx.lineWidth = 0.005;
+                ctx.strokeRect(x, y, 1, 1);
+                ctx.stroke();
                 if (tetVal > 0) {
                     // fetch the tetromino object from either the TETROMINOS or EXT_TETROMINOS object
                     const tetromino = Object.values({ ...TETROMINOS, ...EXT_TETROMINOS }).find(t => t.id === tetVal);
@@ -75,13 +77,12 @@ export class GameService {
      * @param position
      */
     lock(matrix: Matrix, position: IPosition): void {
-        const currentGrid = this.gridSubject$.value;
         matrix.forEach((row, rowIndex) => {
             row.forEach((tetVal, columnIndex) => {
                 if (tetVal > 0) {
                     let x = position.x + columnIndex;
                     let y = position.y + rowIndex;
-                    currentGrid![y][x] = tetVal;
+                    this.grid![y][x] = tetVal;
                 }
             });
         });
@@ -91,11 +92,10 @@ export class GameService {
      * Clear the rows that are filled
      */
     clearRows(): void {
-        const grid = this.gridSubject$.value;
-        grid!.forEach((row, y) => {
+        this.grid!.forEach((row, y) => {
             if (row.every(cell => cell > 0)) {
-                grid!.splice(y, 1);
-                grid!.unshift(Array(this.config.columns).fill(0));
+                this.grid!.splice(y, 1);
+                this.grid!.unshift(Array(this.config.columns).fill(0));
             }
         });
     }
@@ -117,9 +117,8 @@ export class GameService {
      * @returns {boolean} Whether the position is vacant
      */
     private isVacant(position: IPosition): boolean {
-        const grid = this.gridSubject$.value;
         const { x, y } = position;
-        return grid![x] && grid![y][x] === 0;
+        return this.grid![x] && this.grid![y][x] === 0;
     }
 
     /**

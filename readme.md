@@ -4,92 +4,155 @@
 
 - [Priority List](#priority-list)
 - [Bugs](#bugs)
-- [Before release](#before-release)
-- [Other Tasks](#other-tasks)
-- [If time permits](#if-time-permits)
-- [Files and directories](#files-and-directories)
-- [Directory Overview](#directory-overview)
-    - [controllers](#controllers)
-    - [Interfaces](#interfaces)
-    - [Models](#models)
-    - [Services](#services)
-    - [Views](#views)
+- [Low Priority](#low-priority)
+- [Naming conventions](#naming-conventions)
+- [Directory structure and files](#directory-structure-and-files)
+- [src](#src)
+    - [app](#app)
+        - [controllers](#controllers)
+        - [Interfaces](#interfaces)
+        - [Models](#models)
+        - [Services](#services)
+        - [Views](#views)
+    - [Assets](#assets)
+- [Source code line count](#source-code-line-count)
 
 <!-- /TOC -->
 
-- [ ] update sequence diagram to reflect changes
+- [ ] finish off config modal to make AI and Play buttons work
 
 <a id="markdown-priority-list" name="priority-list"></a>
 
 ## Priority List
 
-- [ ] Hook up play and pause to the interval, and the P key
-- [ ] Disable keystrokes when interval is stopped to prevent unwanted behavior
-- [ ] wire up scoring function to the clear line method
-- [ ] wire up level to interval time. What is the math between time and interval?
+- [ ] when cancelling out of the escape (end game), the loop needs to restart. Emit an event to
+  the parent component to restart the game loop
 - [ ] handle switch current and next tetromino (after locked method)
-- [ ] handle game over (when the current tetromino hits the top of the grid)
 - [ ] Wire up the configuration so it affects the game
     - [ ] Game level needs to work with the interval
     - [ ] remember state
-- [ ] add grid scale
+- [ ] Remember state for high scores
 
+- the config is wired but there are problems with the grid
+    - save/cancel?
+    - changes are automatic and final (offer reset button)
 
 <a id="markdown-bugs" name="bugs"></a>
 
 ## Bugs
 
 - [ ] there is a bug when the piece is rotated against the wall it triggers the lock method
-- [ ] default config is not updating, why? does it matter? (this prevents extended from working)
+- [ ] Top collision is working but it needs to fire earlier
 
-<a id="markdown-before-release" name="before-release"></a>
+<a id="markdown-low-priority" name="low-priority"></a>
 
-## Before release
+## Low Priority
 
-- [ ] initialize grid with out data
-
-
-<a id="markdown-other-tasks" name="other-tasks"></a>
-
-## Other Tasks
-- [ ] Key press
-    - [ ] M for music
-- [ ] Add music and sound effects
-- [ ] Add high score
-- [ ] Remember state for high scores
-- [ ] center the next piece in it's canvas
-
-<a id="markdown-if-time-permits" name="if-time-permits"></a>
-
-## If time permits
-
+- [ ] add comments to the ui for controls
 - [ ] hard drop???
 - [ ] Change the randomize tetromino method to reduce the change of getting the same shape twice in a row
+ - [ ] center the next piece in it's canvas
 
-<a id="markdown-files-and-directories" name="files-and-directories"></a>
+<a id="markdown-naming-conventions" name="naming-conventions"></a>
 
-## Files and directories
+## Naming conventions
 
-```bash
-# count directories excluding node_modules, .angular, .git, .vscode
-find . -type d -not -path "./node_modules/*" -not -path "./.angular/*" -not -path "./.git/*" -not -path "./.vscode/*"| wc -l
-# list all files excluding directories node_modules, .angular, .git, .vscode
-find . -type d \( -path './node_modules' -o -path './.angular' -o -path './.git' -o -path './.vscode' \) -prune -o -type f -print
-# list all files excluding directories node_modules, .angular, .git, .vscode, excluding files .gitignore, .editorconfig
-find . -type d \( -path './node_modules' -o -path './.angular' -o -path './.git' -o -path './.vscode' \) -prune -o -type f -not -name .gitignore -not -name .editorconfig -print
+1. **Class Naming Convention**:
+   - Classes are named using PascalCase, where each word in the class name starts with an uppercase letter.
+   - Example: `BoardComponent`, `GameService`
+2. **Object Naming Convention**:
+   - Objects and instances of classes are typically named using camelCase, starting with a lowercase letter.
+   - Example: `intervalId`, `piece`, `ctx`, `moves`
+3. **Function Naming Convention**:
+   - Function names are using camelCase, starting with a lowercase letter.
+   - Descriptive names are used to indicate the purpose of the function.
+   - Example: `initBoard()`, `subscribeToPiece()`, `startInterval()`, `stopInterval()`, `handleEscape()`, `handleGameOver()`
+4. **Variable Naming Convention**:
+   - Variables follow camelCase and have descriptive names to convey their purpose.
+   - Example: `pieceService`, `modalService`, `gameService`, `modalType`, `linesCleared`
+5. **Private Members Convention**:
+   - Private members (variables and functions) are declared using the `private` keyword to indicate their private nature.
+   - Example: `private intervalId`, `private piece`, `private ctx`, `private moves`
+6. **Interface Naming Convention**:
+   - Interfaces are named using PascalCase and often represent contracts or data structures.
+   - Example: `IConfig`, `IPosition`
+7. **Parameter Naming Convention**:
+   - Function parameters are named using camelCase.
+   - Descriptive names are used to indicate the purpose of each parameter.
+   - Example: `initBoard()`, `onKeydown(event)`, `moveAndRenderGrid(shape, position)`
+8. **Constants Naming Convention**:
+   - Constants are typically named in UPPERCASE_WITH_UNDERSCORES to distinguish them from variables.
+   - Example: `GRID`, `TETROMINOS`, `EXT_TETROMINOS`
+9. **Type Naming Convention**:
+   - Types are named using PascalCase and are often used to define custom data types.
+   - Example: `Matrix`
 
-# count all files excluding the root directory
-find . -type d \( -path './node_modules' -o -path './.angular' -o -path './.git' -o -path './.vscode' \) -prune -o -type f -not -name .gitignore -not -name .editorconfig -print | wc -l
+<a id="markdown-directory-structure-and-files" name="directory-structure-and-files"></a>
+
+## Directory structure and files
+
+```
+src
+|-- app
+|   |-- controllers
+|   |   |-- components
+|   |   |-- game
+|   |   |-- pages
+|   |-- interfaces
+|   |-- models
+|   |-- services
+|   |-- views
+|   |   |-- game
+|   |   |-- layouts
+|   |   |-- pages
+|   assets
+|   |-- music
 ```
 
+<a id="markdown-src" name="src"></a>
 
-<a id="markdown-directory-overview" name="directory-overview"></a>
+## src
 
-## Directory Overview
+`src` is the root directory of the Angular project. It contains all the source code for the application.
+
+The `index.html` file is the starting point of an Angular application. It serves as the main HTML
+file and provides the basic structure for the web page. Inside the `<body>` tag, you find a
+`<app-root>` tag, which acts as a placeholder for the root component of the Angular application.
+
+The `main.ts` file is the main entry point of the application. It is a TypeScript file that
+contains the code responsible for bootstrapping the application. It imports the `AppModule` from
+`app.module.ts` and uses the `platformBrowserDynamic` function to bootstrap the application.
+
+The `styles.scss` file is the main stylesheet for the application. It is a Sass file that contains
+global styles for the application. It is imported into the `app.component.ts` file, which ensures
+that the styles are applied to the entire application.
+
+<a id="markdown-app" name="app"></a>
+
+### app
+
+The `src/app` directory is the main application directory containing various Angular components.
+
+Certainly, here are brief and concise descriptions for each of the provided files:
+
+The `app.component.ts` file is the main component of the Angular application, responsible for
+defining the application's root component and its behavior.
+
+The `app.config.ts` file contains configuration settings and parameters that can be used to
+customize and set up the application.
+
+The `app.routes.ts` file defines the routing configuration for the application, specifying how
+different URLs map to specific components and views.
+
+The `data.ts` file serves as a source for storing and managing data used within the Angular
+application.
+
+The `defs.d.ts` file contains TypeScript type definitions or declarations that help in specifying
+custom types or interfaces used throughout the application.
 
 <a id="markdown-controllers" name="controllers"></a>
 
-### controllers
+#### controllers
 
 The `src/app/controllers` directory contains the components that are responsible for the application's business logic. The directory is broken into three subdirectories: `components`, `game`, and `pages`. <br>
 
@@ -97,7 +160,6 @@ The `controllers/components` directory contains the components that are used to 
 
 `src/app/controllers/components/logo.component.ts`: UI component responsible for displaying the application's logo. <br>
 `src/app/controllers/components/modal.component.ts`: UI component responsible for displaying pop-up modals and dialogs. <br>
-`src/app/controllers/components/tool-tip.component.ts`: This file probably contains the tooltip component, which provides interactive tooltips or hints to player. <br>
 
 The `controllers/game` directory contains the components that are central to the game's functionality <br>
 
@@ -115,7 +177,7 @@ The `/controllers/pages/` directory contains components representing different U
 
 <a id="markdown-interfaces" name="interfaces"></a>
 
-### Interfaces
+#### Interfaces
 
 The `src/app/interfaces` directory contains the interfaces that are used to define the structure of the application's data. <br>
 
@@ -128,7 +190,7 @@ The `src/app/interfaces` directory contains the interfaces that are used to defi
 
 <a id="markdown-models" name="models"></a>
 
-### Models
+#### Models
 
 The `src/app/models` directory contains the models that are used to define the structure of the
 application's data. <br>
@@ -138,7 +200,7 @@ application's data. <br>
 
 <a id="markdown-services" name="services"></a>
 
-### Services
+#### Services
 
 The `src/app/services` directory contains the services that are used to manage the application's
 data. These services often utilise observables to handle data and communicate across different
@@ -148,6 +210,10 @@ parts of the application. <br>
 configuration settings. It ensures that the game's parameters, such as board size, block size and
 start level, can be easily customised and that these changes are reflected throughout the
 application. <br>
+
+`src/app/services/GameService.ts`: The `GameService` is responsible for managing the game state
+and functionality including collision detection, grid management, piece locking, and various other
+functions related to the game. <br>
 
 `src/app/services/modal.service.ts`: The `ModalService` handles the display of pop-up modals and
 dialogs within the application. It provides a convenient way for creating and displaying user
@@ -165,7 +231,7 @@ handles the game's high scores, ensuring that they are recorded and displayed co
 
 <a id="markdown-views" name="views"></a>
 
-### Views
+#### Views
 
 The `src/app/views` directory contains views responsible for displaying the application's
 components and content. It's divided into subdirectories, such as `components`, `game`, `pages`,
@@ -184,23 +250,66 @@ the structure of pages or sections, ensuring a consistent visual design across t
 
 
 
-???? Maybe
 
-**index.html**: The `index.html` file is the starting point of an Angular application. It serves
-as the main HTML file and provides the basic structure for the web page. Inside the `<body>` tag,
-you find a `<app-root>` tag, which acts as a placeholder for the root component of the Angular
-application.
+<a id="markdown-assets" name="assets"></a>
 
-**app.component.ts**: The `app.component.ts` file defines the root component of the Angular
-application. It is a TypeScript file that contains a class representing the component. This class
-is decorated with `@Component` metadata, which includes information about the component, such as
-its template and styles.
+### Assets
 
-**app.component.html**: The `app.component.html` file is the template associated with the root
-component. It defines the structure and layout of the root component's view. This HTML template
-can include dynamic data binding, conditional rendering, and event handling, making it a crucial
-part of building the user interface for the application.
+The `src/assets` directory contains the static assets used by the application, such as images,
+icons, and music.
 
-These files work together to create a single-page application in Angular, with `index.html` as the
-entry point, `app.component.ts` defining the root component, and `app.component.html` specifying
-the layout and structure of the root component's view.
+`/src/assets/favicon.svg` application logo
+`/src/assets/music/title_music.mp3` start screen music
+`/src/assets/music/game_music.mp3` game screen music
+
+<a id="markdown-source-code-line-count" name="source-code-line-count"></a>
+
+## Source code line count
+
+Total lines 1810
+
+```
+109 ./src/app/app.component.ts
+8 ./src/app/app.config.ts
+21 ./src/app/app.routes.ts
+14 ./src/app/controllers/components/logo.component.ts
+84 ./src/app/controllers/components/modal.component.ts
+209 ./src/app/controllers/game/board.component.ts
+35 ./src/app/controllers/game/config.component.ts
+101 ./src/app/controllers/game/high-score.component.ts
+63 ./src/app/controllers/game/next-piece.component.ts
+46 ./src/app/controllers/game/score.component.ts
+43 ./src/app/controllers/pages/game.component.ts
+23 ./src/app/controllers/pages/goodbye.component.ts
+62 ./src/app/controllers/pages/start.component.ts
+111 ./src/app/data.ts
+2 ./src/app/defs.d.ts
+8 ./src/app/interfaces/Config.ts
+6 ./src/app/interfaces/DrawingContext.ts
+6 ./src/app/interfaces/Piece.ts
+4 ./src/app/interfaces/Position.ts
+25 ./src/app/interfaces/Score.ts
+5 ./src/app/interfaces/Tetromino.ts
+32 ./src/app/models/Canvas.ts
+99 ./src/app/models/Piece.ts
+58 ./src/app/services/config.service.ts
+174 ./src/app/services/game.service.ts
+22 ./src/app/services/modal.service.ts
+165 ./src/app/services/piece.service.ts
+73 ./src/app/services/score.service.ts
+1 ./src/app/views/app.component.html
+55 ./src/app/views/game/config.component.html
+34 ./src/app/views/game/score.component.html
+26 ./src/app/views/layouts/app-layout.component.ts
+28 ./src/app/views/pages/game.component.html
+36 ./src/app/views/pages/start.component.html
+16 ./src/index.html
+6 ./src/main.ts
+```
+
+```bash
+# Get the total number of lines in each file excluding node_modules
+find . -type d -name "node_modules" -prune -o -type f \( -name "*.ts" -o -name "*.js" -o -name "*.html" \) -exec wc -l {} \;
+# Get the total lines of code for the project
+find . -type d -name "node_modules" -prune -o -type f \( -name "*.ts" -o -name "*.js" -o -name "*.html" \) -exec cat {} \; | wc -l
+```
