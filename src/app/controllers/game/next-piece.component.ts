@@ -9,7 +9,7 @@ import { Piece } from 'src/app/models/Piece';
     selector: 'app-next-piece',
     standalone: true,
     imports: [CommonModule],
-    template: `<canvas #canvas class="bdr bdr-red"></canvas>`,
+    template: `<canvas #canvas class="bdr bdr-green"></canvas>`,
     styles: [
     ]
 })
@@ -21,33 +21,28 @@ export class NextPieceComponent {
     ctx!: CanvasRenderingContext2D | null;
     private nextPiece!: Piece | null;
 
+    /**
+     * Component dependencies
+     */
     private pieceService = inject(PieceService);
 
     ngOnInit(): void {
-        this.init();
+        this.initNextPiece();
         this.subscribeToNextPiece();
     }
 
     /**
-      * Subscribe to the configuration updates from the ConfigService and
-      * initialize the canvas.
-      */
-    private init(): void {
+     * Initialise the nextPiece canvas, set the rendering context, and obtain
+     * the initial nextPiece from the PieceService.
+     */
+    private initNextPiece(): void {
         const { nextGridSize, blockSize } = this.config;
         const board = new Canvas(nextGridSize, nextGridSize, this.nextPieceRef.nativeElement, blockSize);
         this.ctx = board.getContext();
         this.pieceService.setRenderingContext(this.ctx!, 'next');
-        this.getPiece();
-    }
-
-    /**
-     * Get a Piece from the PieceService and set it to the nextPiece
-     * property. Then, run the setPiece() method of the PieceService
-     * which will notify the subscribers of the current Piece.
-     */
-    private getPiece(): void {
         this.nextPiece = this.pieceService.getPiece(this.ctx!, this.config.extended, 'next');
     }
+
 
     /**
      * Subscribe to the Piece updates from the PieceService which is
