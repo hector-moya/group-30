@@ -36,6 +36,7 @@ export class NextPieceComponent {
         const { nextGridSize, blockSize } = this.config;
         const board = new Canvas(nextGridSize, nextGridSize, this.nextPieceRef.nativeElement, blockSize);
         this.ctx = board.getContext();
+        this.pieceService.setRenderingContext(this.ctx!, 'next');
         this.getPiece();
     }
 

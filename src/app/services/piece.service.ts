@@ -17,12 +17,15 @@ export class PieceService {
     /**
      * Current Piece BehaviorSubjects to notify subscribers of changes
      */
-    private pieceSubject$: BehaviorSubject<Piece | null> = new BehaviorSubject<Piece | null>(null)
+    pieceSubject$: BehaviorSubject<Piece | null> = new BehaviorSubject<Piece | null>(null)
 
     /**
      * Next Piece BehaviorSubjects to notify subscribers of changes
      */
-    private nextPieceSubject$: BehaviorSubject<Piece | null> = new BehaviorSubject<Piece | null>(null);
+    nextPieceSubject$: BehaviorSubject<Piece | null> = new BehaviorSubject<Piece | null>(null);
+
+    ctx!: CanvasRenderingContext2D | null;
+    nextCtx!: CanvasRenderingContext2D | null;
 
     private config!: IConfig;
 
@@ -44,6 +47,17 @@ export class PieceService {
      */
     observeNextPiece(): Observable<Piece | null> {
         return this.nextPieceSubject$.asObservable();
+    }
+
+    /**
+     * Set the drawing context locally for the board and next piece canvas
+     * elements for easy access.
+     * @param {CanvasRenderingContext2D} ctx The 2D rendering context for the
+     * canvas.
+     * @param {string} type The type of piece to generate (current or next)
+     */
+    setRenderingContext(ctx: CanvasRenderingContext2D, type: string = 'current') {
+        type === 'current' ? this.ctx = ctx : this.nextCtx = ctx;
     }
 
     /**
@@ -102,16 +116,16 @@ export class PieceService {
     }
 
     /**
-    * Transpose a shape by rotating it clockwise
-    *
-    * original         transposed
-    * [a, b, c]   =>   [a, d, g]
-    * [d, e, f]   =>   [b, e, h]
-    * [g, h, i]   =>   [c, f, i]
-    *
-    * @param shape The original shape to be transposed
-    * @returns The transposed shape (rotated clockwise)
-    */
+     * Transpose a shape by rotating it clockwise
+     *
+     * original         transposed
+     * [a, b, c]   =>   [a, d, g]
+     * [d, e, f]   =>   [b, e, h]
+     * [g, h, i]   =>   [c, f, i]
+     *
+     * @param shape The original shape to be transposed
+     * @returns The transposed shape (rotated clockwise)
+     */
     private transposeMatrix(shape: Matrix): Matrix {
         const numRows = shape.length;
         const numCols = shape[0].length;
@@ -153,9 +167,9 @@ export class PieceService {
     }
 
     /**
-    * Subscribe to the configuration updates from the ConfigService.
-    * When the configuration changes, the callback function is triggered.
-    */
+     * Subscribe to the configuration updates from the ConfigService.
+     * When the configuration changes, the callback function is triggered.
+     */
     private subscribeToConfig(): void {
         this.configService.observeConfig().subscribe((config: IConfig) => {
             this.config = config;

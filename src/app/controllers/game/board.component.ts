@@ -9,7 +9,6 @@ import { IConfig } from 'src/app/interfaces/Config';
 import { CommonModule } from '@angular/common';
 import { Canvas } from 'src/app/models/Canvas';
 import { Piece } from 'src/app/models/Piece';
-import { ConfigService } from 'src/app/services/config.service';
 
 @Component({
     selector: 'app-board',
@@ -17,6 +16,7 @@ import { ConfigService } from 'src/app/services/config.service';
     imports: [CommonModule, AppLayout, ModalComponent],
     template: `
         <canvas #canvas class="bdr bdr-red"></canvas>
+        <button (click)="test()" class="btn">Test</button>
         <modal [endGame]="true"></modal>
     `,
 })
@@ -49,14 +49,11 @@ export class BoardComponent {
     private pieceService = inject(PieceService);
     private modalService = inject(ModalService);
     private gameService = inject(GameService);
-    private configService = inject(ConfigService);
 
     ngOnInit(): void {
         this.subscribeToPiece();
         this.initBoard();
         // this.startInterval();
-        console.log(this.configService.getConfig());
-
     }
 
     /**
@@ -68,6 +65,7 @@ export class BoardComponent {
         const { rows, columns, blockSize: scale } = this.config;
         const board = new Canvas(columns, rows, this.boardRef.nativeElement, scale);
         this.ctx = board.getContext();
+        this.pieceService.setRenderingContext(this.ctx!, 'current');
         // Retrieve the initial piece for rendering
         this.piece = this.pieceService.getPiece(this.ctx!, this.config.extended);
         // Initialise the grid with the initial values
@@ -117,6 +115,11 @@ export class BoardComponent {
         }
 
         if (event.key === 'Escape') this.handleEscape();
+
+        if (event.key === 'P' || event.key === 'p') {
+            event.preventDefault();
+            this.intervalId ? this.stopInterval() : this.startInterval();
+        }
     }
 
     handleEscape(): void {
@@ -174,5 +177,9 @@ export class BoardComponent {
             // rows needs to happen at the same time
             this.gameService.clearRows();
         }
+    }
+
+    test(){
+
     }
 }
