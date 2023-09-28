@@ -3,10 +3,10 @@ import { ITetromino } from '../interfaces/Tetromino';
 import { TETROMINOS, EXT_TETROMINOS } from '../data';
 import { IPosition } from '../interfaces/Position';
 import { ConfigService } from './config.service';
+import { Observable, Subscription } from 'rxjs';
 import { IConfig } from '../interfaces/Config';
 import { Injectable } from '@angular/core';
 import { Piece } from '../models/Piece';
-import { Observable } from 'rxjs';
 
 @Injectable({
     providedIn: 'root'
@@ -24,14 +24,17 @@ export class PieceService {
      */
     nextPieceSubject$: BehaviorSubject<Piece | null> = new BehaviorSubject<Piece | null>(null);
 
-    ctx!: CanvasRenderingContext2D | null;
-    nextCtx!: CanvasRenderingContext2D | null;
-
+    /**
+     * Local reference to the current configuration
+     */
     private config!: IConfig;
 
-    constructor(private configService: ConfigService) {
-        this.subscribeToConfig();
-    }
+    /**
+     * Subscription to the configuration observable
+     */
+    private configSubscription: Subscription | undefined;
+
+    constructor(private configService: ConfigService) { }
 
     /**
      * Get the observable that emits the current Piece
@@ -50,27 +53,15 @@ export class PieceService {
     }
 
     /**
-     * Set the drawing context locally for the board and next piece canvas
-     * elements for easy access.
-     * @param {CanvasRenderingContext2D} ctx The 2D rendering context for the
-     * canvas.
-     * @param {string} type The type of piece to generate (current or next)
-     */
-    setRenderingContext(ctx: CanvasRenderingContext2D, type: string = 'current') {
-        type === 'current' ? this.ctx = ctx : this.nextCtx = ctx;
-    }
-
-    /**
-     *
+     * Get a new Piece instance and notify subscribers
      * @param {CanvasRenderingContext2D} ctx The 2D rendering context for the canvas.
-     * @param {boolean} isExtended Determine the available game pieces
      * @param {string} type The type of piece to generate (current or next)
      * @returns {Piece} A newly generated Piece instance.
      */
-    getPiece(ctx: CanvasRenderingContext2D, isExtended: boolean, type: string = 'current'): Piece {
-        const randomTetromino = this.getRandomTetromino(isExtended);
+    getPiece(ctx: CanvasRenderingContext2D, type: string = 'current'): Piece {
+        this.initConfig(); // will only run once
+        const randomTetromino = this.getRandomTetromino(this.config.extended);
         const piece = new Piece(ctx, randomTetromino, this.config, type);
-        // Update the current or next piece subject
         this.setPiece(piece, type);
         return piece;
     }
@@ -96,8 +87,7 @@ export class PieceService {
     move(shape: Matrix, position: IPosition) {
         const currentPiece = this.pieceSubject$.value;
         currentPiece?.move(shape, position);
-        // hardcode as `current` because it is the only option
-        this.setPiece(currentPiece!, 'current');
+        this.pieceSubject$.next(currentPiece);
     }
 
     /**
@@ -129,10 +119,8 @@ export class PieceService {
     private transposeMatrix(shape: Matrix): Matrix {
         const numRows = shape.length;
         const numCols = shape[0].length;
-
         // Create a new shape for the rotated values
         const rotatedMatrix = new Array(numCols).fill(null).map(() => new Array(numRows));
-
         // Loop through rows and columns to perform rotation
         for (let row = 0; row < numRows; row++) {
             for (let col = 0; col < numCols; col++) {
@@ -140,7 +128,6 @@ export class PieceService {
                 rotatedMatrix[col][numRows - 1 - row] = shape[row][col];
             }
         }
-
         return rotatedMatrix;
     }
 
@@ -167,13 +154,22 @@ export class PieceService {
     }
 
     /**
-     * Subscribe to the configuration updates from the ConfigService.
-     * When the configuration changes, the callback function is triggered.
+     * Initialise the configuration and subscribe to changes
      */
-    private subscribeToConfig(): void {
-        this.configService.observeConfig().subscribe((config: IConfig) => {
-            this.config = config;
-        });
+    private initConfig(): void {
+        if (!this.configSubscription) {
+            this.configSubscription = this.configService.observeConfig().subscribe({
+                next: (config: IConfig) => {
+                    this.config = config;
+                    // Unsubscribe after the first emission because the
+                    // configuration is not expected to change during the
+                    // subsequent calls to getPiece.
+                    this.configSubscription?.unsubscribe();
+                },
+                error: (error: any) => {
+                    console.error('Failed to fetch configuration:', error);
+                },
+            });
+        }
     }
-
 }

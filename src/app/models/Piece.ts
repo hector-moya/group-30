@@ -36,16 +36,16 @@ export class Piece implements IPiece {
     }
 
     /**
-     * Clear the entire canvas (only clears the current piece)
+     * Clear the entire canvas
      */
-    private clear() {
+    clear() {
         this.ctx.clearRect(0, 0, this.ctx.canvas.width, this.ctx.canvas.height)
     }
 
     /**
      * Render the piece on the canvas
      */
-    private render() {
+    render() {
         this.ctx!.fillStyle = this.color;
         this.shape.forEach((row, rowIndex) => {
             // tetVal represents the tetromino value. I=1, J=2, ... Z=7

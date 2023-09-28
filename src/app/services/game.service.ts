@@ -3,6 +3,7 @@ import { IPosition } from '../interfaces/Position';
 import { ConfigService } from './config.service';
 import { IConfig } from '../interfaces/Config';
 import { Injectable } from '@angular/core';
+import { Subscription } from 'rxjs';
 
 @Injectable({
     providedIn: 'root'
@@ -10,22 +11,38 @@ import { Injectable } from '@angular/core';
 export class GameService {
 
     grid: Matrix = [];
-    private config!: IConfig;
-
-    constructor(private configService: ConfigService) {
-        this.subscribeToConfig();
-    }
 
     /**
-     * Initialises the game grid with the specified number of rows and columns.
-     * @param ctx The canvas rendering context.
-     * @param rows The number of rows for the grid.
-     * @param columns The number of columns for the grid.
+     * Local reference to the current configuration
      */
-    initGrid(ctx: CanvasRenderingContext2D, rows: number, columns: number) {
-        // this.grid = this.getEmptyGrid(rows, columns);
-        this.grid = GRID;
-        this.renderGrid(ctx);
+    private config!: IConfig;
+
+    /**
+     * Subscription to the configuration observable
+     */
+    private configSubscription: Subscription | undefined;
+
+    constructor(private configService: ConfigService) { }
+
+    /**
+     * Initialises the configuration and the game grid
+     * @param ctx The canvas rendering context.
+     */
+    initGrid(ctx: CanvasRenderingContext2D): void {
+        if (!this.configSubscription) {
+            this.configSubscription = this.configService.observeConfig().subscribe({
+                next: (config: IConfig) => {
+                    // this.grid = this.getEmptyGrid(config.rows, config.columns);
+                    // this.resetGrid(config.rows, config.columns);
+                    this.grid = GRID;
+                    this.renderGrid(ctx);
+                    this.config = config;
+                },
+                error: (error: any) => {
+                    console.error('Failed to fetch configuration:', error);
+                },
+            });
+        }
     }
 
     /**
@@ -101,6 +118,24 @@ export class GameService {
     }
 
     /**
+     * Reset the game grid
+     * @returns {void}
+     */
+    resetGrid(rows: number, columns: number): void {
+        this.grid = this.getEmptyGrid(rows, columns);
+    }
+
+    /**
+     * Create an empty grid to store the game state
+     * @returns {matrix} An empty grid
+     */
+    getEmptyGrid(rows: number, columns: number): Matrix {
+        return Array.from(
+            { length: rows }, () => Array(columns).fill(0)
+        );
+    }
+
+    /**
      * Check if the position is within the grid boundaries
      * @param {IPosition} position The position to check
      * @returns {boolean} Whether the position is within the grid boundaries
@@ -119,15 +154,5 @@ export class GameService {
     private isVacant(position: IPosition): boolean {
         const { x, y } = position;
         return this.grid![x] && this.grid![y][x] === 0;
-    }
-
-    /**
-     * Subscribe to the configuration updates from the ConfigService.
-     * When the configuration changes, the callback function is triggered.
-     */
-    private subscribeToConfig(): void {
-        this.configService.observeConfig().subscribe((config: IConfig) => {
-            this.config = config;
-        });
     }
 }

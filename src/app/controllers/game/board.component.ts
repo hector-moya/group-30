@@ -51,9 +51,9 @@ export class BoardComponent {
     private gameService = inject(GameService);
 
     ngOnInit(): void {
-        this.subscribeToPiece();
         this.initBoard();
-        // this.startInterval();
+        this.subscribeToPiece();
+        this.play();
     }
 
     /**
@@ -65,11 +65,13 @@ export class BoardComponent {
         const { rows, columns, blockSize: scale } = this.config;
         const board = new Canvas(columns, rows, this.boardRef.nativeElement, scale);
         this.ctx = board.getContext();
-        this.pieceService.setRenderingContext(this.ctx!, 'current');
+
+        // this.pieceService.setRenderingContext(this.ctx!, 'current');
+
         // Retrieve the initial piece for rendering
-        this.piece = this.pieceService.getPiece(this.ctx!, this.config.extended);
-        // Initialise the grid with the initial values
-        this.gameService.initGrid(this.ctx!, rows, columns);
+        this.piece = this.pieceService.getPiece(this.ctx!);
+        // Initialise the grid and render it to the canvas
+        this.gameService.initGrid(this.ctx!);
     }
 
     /**
@@ -114,7 +116,7 @@ export class BoardComponent {
             }
         }
 
-        if (event.key === 'Escape') this.handleEscape();
+        // if (event.key === 'Escape') this.handleEscape();
 
         if (event.key === 'P' || event.key === 'p') {
             event.preventDefault();
@@ -122,10 +124,15 @@ export class BoardComponent {
         }
     }
 
-    handleEscape(): void {
-        this.stopInterval();
-        this.modalService.openModal('Do you want to end the game?');
+    // handleEscape(): void {
+    //     this.stopInterval();
+    //     this.modalService.openModal('Do you want to end the game?');
+    // }
+
+    play() {
+        this.startInterval();
     }
+
 
     /**
       * Start a periodic interval with a specified time interval. The time is
@@ -152,15 +159,14 @@ export class BoardComponent {
     }
 
     /**
-     * Move the piece to the new position and render the grid
-     * @param {Matrix} shape The shape of the piece
-     * @param {IPosition} position The new position of the piece
-     */
+      * Move the piece to the new position and render the grid
+      * @param {Matrix} shape The shape of the piece
+      * @param {IPosition} position The new position of the piece
+      */
     private moveAndRenderGrid(shape: Matrix, position: IPosition): void {
         this.pieceService.move(shape, { x: position.x, y: position.y });
         this.gameService.renderGrid(this.ctx!);
     }
-
     /**
      * Drop the piece down one row if it can move. If it can't move, lock the
      * piece in place.
@@ -172,14 +178,16 @@ export class BoardComponent {
         } else {
             // make sure you pass in the 'current' position to be locked in!
             this.gameService.lock(shape, { x: this.piece?.x || 0, y: this.piece?.y || 0 });
-            this.piece = this.pieceService.getPiece(this.ctx!, this.config.extended, 'current');
-            // this is jittery, but it works. The new piece and clearing of
-            // rows needs to happen at the same time
             this.gameService.clearRows();
+
+            // the order matters to prevent lag when clearing and re-rendering the piece
+            this.piece!.clear(); // for clear to prevent lag
+            this.piece = this.pieceService.getPiece(this.ctx!);
+            this.gameService.renderGrid(this.ctx!);
         }
     }
 
-    test(){
+    test() {
 
     }
 }
