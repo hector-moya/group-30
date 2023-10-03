@@ -1,6 +1,7 @@
 import { EXT_TETROMINOS, GRID, TETROMINOS } from '../data';
 import { IPosition } from '../interfaces/Position';
 import { ConfigService } from './config.service';
+import { ScoreService } from './score.service';
 import { IConfig } from '../interfaces/Config';
 import { Injectable } from '@angular/core';
 import { Subscription } from 'rxjs';
@@ -23,26 +24,26 @@ export class GameService {
      */
     private configSubscription: Subscription | undefined;
 
-    constructor(private configService: ConfigService) { }
+    constructor(private configService: ConfigService, private scoreService: ScoreService) { }
 
     /**
-     * Initialises the configuration and the game grid
-     * @param ctx The canvas rendering context.
+     * Initialize the game grid.
+     * @param {CanvasRenderingContext2D} ctx The canvas context
      */
     initGrid(ctx: CanvasRenderingContext2D): void {
+        // Check for existing subscription and create one if it doesn't exist
+        // This is to ensure there is a configuration to work with
         if (!this.configSubscription) {
-            this.configSubscription = this.configService.observeConfig().subscribe({
-                next: (config: IConfig) => {
-                    // this.grid = this.getEmptyGrid(config.rows, config.columns);
-                    // this.resetGrid(config.rows, config.columns);
-                    this.grid = GRID;
-                    this.renderGrid(ctx);
-                    this.config = config;
-                },
-                error: (error: any) => {
-                    console.error('Failed to fetch configuration:', error);
-                },
+            this.configSubscription = this.configService.observeConfig().subscribe((config: IConfig) => {
+                this.config = config;
+
+                this.grid = GRID; // for testing only
+                this.renderGrid(ctx); // for testing only
+
+                // this.resetGrid(ctx);
             });
+        } else {
+            this.resetGrid(ctx);
         }
     }
 
@@ -110,20 +111,27 @@ export class GameService {
      * Clear the rows that are filled
      */
     clearRows(): void {
+        let linesCleared = 0;
         this.grid!.forEach((row, y) => {
             if (row.every(cell => cell > 0)) {
                 this.grid!.splice(y, 1);
                 this.grid!.unshift(Array(this.config.columns).fill(0));
+                linesCleared++;
             }
         });
+
+        if (linesCleared > 0) {
+            this.scoreService.updateGameStats(linesCleared);
+        }
     }
 
     /**
      * Reset the game grid
      * @returns {void}
      */
-    resetGrid(rows: number, columns: number): void {
-        this.grid = this.getEmptyGrid(rows, columns);
+    resetGrid(ctx: CanvasRenderingContext2D): void {
+        this.grid = this.getEmptyGrid(this.config.rows, this.config.columns);
+        this.renderGrid(ctx);
     }
 
     /**
