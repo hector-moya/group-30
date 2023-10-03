@@ -4,17 +4,19 @@ import { ModalComponent } from '../components/modal.component';
 import { PieceService } from 'src/app/services/piece.service';
 import { ModalService } from 'src/app/services/modal.service';
 import { GameService } from 'src/app/services/game.service';
+import { HighScoreComponent } from './high-score.component';
 import { IPosition } from 'src/app/interfaces/Position';
 import { IConfig } from 'src/app/interfaces/Config';
 import { CommonModule } from '@angular/common';
 import { Canvas } from 'src/app/models/Canvas';
 import { Piece } from 'src/app/models/Piece';
+import { FormsModule } from '@angular/forms';
 import { Matrix } from 'src/app/defs';
 
 @Component({
     selector: 'app-board',
     standalone: true,
-    imports: [CommonModule, AppLayout, ModalComponent],
+    imports: [CommonModule, AppLayout, ModalComponent, HighScoreComponent, FormsModule],
     template: `
         <canvas #canvas class="bdr bdr-red"></canvas>
         <div class="flex space-x mt">
@@ -25,13 +27,25 @@ import { Matrix } from 'src/app/defs';
 
         <pre class="pxy-05"><small>{{ devData | json }}</small></pre>
 
-        <modal [endGame]="true"></modal>
+        <modal>
+            <ng-container *ngIf="modalType === 'highScore'">
+                <div class="frm-row">
+                    <input [(ngModel)]="playerName" id="name" name="name" placeholder="Enter your name...">
+                </div>
+            </ng-container>
+            <ng-container *ngIf="modalType === 'displayHighScores'">
+                <app-high-score></app-high-score>
+            </ng-container>
+        </modal>
     `,
 })
 export class BoardComponent {
 
     @ViewChild('canvas', { static: true }) boardRef!: ElementRef;
     @Input() config!: IConfig;
+
+    modalType: string = '';
+    playerName: string = '';
 
     /**
      * Set an interval to move the piece down every. This is
