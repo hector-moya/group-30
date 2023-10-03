@@ -1,4 +1,4 @@
-import { Component, ElementRef, HostListener, Input, ViewChild, inject } from '@angular/core';
+import { Component, ElementRef, EventEmitter, HostListener, Input, Output, ViewChild, inject } from '@angular/core';
 import { AppLayout } from 'src/app/views/layouts/app-layout.component';
 import { ModalComponent } from '../components/modal.component';
 import { PieceService } from 'src/app/services/piece.service';
@@ -43,6 +43,11 @@ export class BoardComponent {
 
     @ViewChild('canvas', { static: true }) boardRef!: ElementRef;
     @Input() config!: IConfig;
+
+    /**
+     * Emit event to tell the NextPieceComponent to create a new piece
+     */
+    @Output() newNextPieceEvent = new EventEmitter<string>();
 
     modalType: string = '';
     playerName: string = '';
@@ -177,6 +182,8 @@ export class BoardComponent {
      * piece in place.
      */
     private drop(): void {
+        if (!this.ctx) throw new Error('The canvas context is null in the board component')
+
         const { shape, x, y } = this.moves["ArrowDown"](this.piece);
         if (this.gameService.canMove(shape, { x, y })) {
             this.moveAndRenderGrid(shape, { x, y });
@@ -185,14 +192,12 @@ export class BoardComponent {
             // make sure you pass in the 'current' position to be locked in!
             this.gameService.lock(shape, { x: this.piece?.x || 0, y: this.piece?.y || 0 });
             this.gameService.clearRows();
-
-            // the order matters to prevent lag when clearing and re-rendering the piece
+            // the order matters to prevent lag when clearing and re-rendering
             this.piece!.clear(); // for clear to prevent lag
-            this.piece = this.pieceService.getPiece(this.ctx!);
-            this.gameService.renderGrid(this.ctx!);
-
+            this.pieceService.swapNextToCurrent(this.ctx);
+            this.gameService.renderGrid(this.ctx);
+            this.newNextPieceEvent.emit();
             this.setDevData();
-
         }
     }
 
@@ -206,6 +211,9 @@ export class BoardComponent {
     }
 
     test() {
-        this.setDevData();
+        if (!this.ctx) throw new Error('The canvas context is null in the board component')
+        this.pieceService.swapNextToCurrent(this.ctx);
+        // emit event to tell the NextPieceComponent to create a new piece
+        this.newNextPieceEvent.emit();
     }
 }

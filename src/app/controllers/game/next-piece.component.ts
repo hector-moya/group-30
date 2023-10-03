@@ -9,9 +9,7 @@ import { Piece } from 'src/app/models/Piece';
     selector: 'app-next-piece',
     standalone: true,
     imports: [CommonModule],
-    template: `<canvas #canvas class="bdr bdr-green"></canvas>`,
-    styles: [
-    ]
+    template: ` <canvas #canvas class="bdr bdr-green"></canvas> `
 })
 export class NextPieceComponent {
 
@@ -39,9 +37,28 @@ export class NextPieceComponent {
         const { nextGridSize, blockSize } = this.config;
         const board = new Canvas(nextGridSize, nextGridSize, this.nextPieceRef.nativeElement, blockSize);
         this.ctx = board.getContext();
-        this.nextPiece = this.pieceService.getPiece(this.ctx!, 'next');
+        this.nextPiece = this.getPiece();
     }
 
+    /**
+    * Set a new next Piece instance and clear the current one.
+    * @throws {Error} Throws an error if there is a problem with the next piece.
+    */
+    setPiece() {
+        if (!this.nextPiece) {
+            throw new Error("There is a problem with next piece");
+        }
+        this.nextPiece.clear();
+        this.nextPiece = this.getPiece();
+    }
+
+    /**
+     * Get a new next Piece instance and notify subscribers
+     * @returns {Piece} The next Piece
+     */
+    private getPiece(): Piece {
+        return this.pieceService.getPiece(this.ctx!, 'next')
+    }
 
     /**
      * Subscribe to the Piece updates from the PieceService which is

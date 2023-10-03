@@ -93,6 +93,26 @@ export class PieceService {
     }
 
     /**
+      * Swap the current piece with the next piece and render the grid.
+      */
+    swapNextToCurrent(ctx: CanvasRenderingContext2D): void {
+        const currentPiece = this.pieceSubject$.value;
+        const nextPiece = this.nextPieceSubject$.value;
+
+        if (!currentPiece || !nextPiece) {
+            throw new TypeError('Piece or next piece is null, this is likely due to the observable not being subscribed to or updated');
+        }
+
+        currentPiece!.clear(); // clear the current piece
+        currentPiece.shape = nextPiece.shape;
+        currentPiece.color = nextPiece.color;
+        currentPiece.y = 0;
+        currentPiece.x = currentPiece.centerXPosition(currentPiece.shape);
+        currentPiece.render();
+        // handle the  the grid re-rendering in the board component
+    }
+
+    /**
      * Get a rotated version of the given piece. Note: This method does not
      * update the piece subject, that is handled by the move() method.
      *
