@@ -1,23 +1,20 @@
-import { ITetromino } from "../interfaces/Tetromino";
 import { IPosition } from "../interfaces/Position";
 import { IConfig } from "../interfaces/Config";
 import { IPiece } from "../interfaces/Piece";
+import { Matrix } from "../defs";
 
 export class Piece implements IPiece {
 
     public x: number;
     public y: number = 0;
-    public shape: Matrix;
-    public color: string;
 
     constructor(
         private ctx: CanvasRenderingContext2D,
-        public tetromino: ITetromino,
+        public shape: Matrix,
+        public color: string,
         private config: IConfig,
         public type: string = 'current'
     ) {
-        this.shape = tetromino.shape;
-        this.color = tetromino.color;
         this.x = this.centerXPosition(this.shape);
         this.render();
     }
@@ -64,7 +61,7 @@ export class Piece implements IPiece {
      * @param {Matrix} shape - The shape to be checked
      * @returns {number} The center x position of the shape
      */
-    private centerXPosition(shape: Matrix): number {
+    centerXPosition(shape: Matrix): number {
         const columns = this.type === 'next'
             ? this.config.nextGridSize
             : this.config.columns;
@@ -76,7 +73,7 @@ export class Piece implements IPiece {
      * @param {Matrix} shape - The shape to be checked
      * @returns {number} The maximum width of the shape
      */
-    private calculateMaxWidth(shape: Matrix): number {
+    calculateMaxWidth(shape: Matrix): number {
         let maxWidth = 0;
 
         for (let row = 0; row < shape.length; row++) {

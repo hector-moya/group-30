@@ -4,6 +4,7 @@ import { ConfigService } from './config.service';
 import { IConfig } from '../interfaces/Config';
 import { Injectable } from '@angular/core';
 import { Subscription } from 'rxjs';
+import { Matrix } from '../defs';
 
 @Injectable({
     providedIn: 'root'
@@ -133,6 +134,14 @@ export class GameService {
         return Array.from(
             { length: rows }, () => Array(columns).fill(0)
         );
+    }
+
+    pauseMessage(ctx: CanvasRenderingContext2D): void {
+        ctx.fillStyle = 'white';
+        ctx.fillRect(1, 1, 8, 1.4);
+        ctx.font = '1px courier';
+        ctx.fillStyle = 'red';
+        ctx.fillText('GAME PAUSED', 1.4, 2);
     }
 
     /**

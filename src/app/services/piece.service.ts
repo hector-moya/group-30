@@ -5,8 +5,10 @@ import { IPosition } from '../interfaces/Position';
 import { ConfigService } from './config.service';
 import { Observable, Subscription } from 'rxjs';
 import { IConfig } from '../interfaces/Config';
+import { GameService } from './game.service';
 import { Injectable } from '@angular/core';
 import { Piece } from '../models/Piece';
+import { Matrix } from '../defs';
 
 @Injectable({
     providedIn: 'root'
@@ -34,7 +36,7 @@ export class PieceService {
      */
     private configSubscription: Subscription | undefined;
 
-    constructor(private configService: ConfigService) { }
+    constructor(private configService: ConfigService, private gameService: GameService) { }
 
     /**
      * Get the observable that emits the current Piece
@@ -60,8 +62,8 @@ export class PieceService {
      */
     getPiece(ctx: CanvasRenderingContext2D, type: string = 'current'): Piece {
         this.initConfig(); // will only run once
-        const randomTetromino = this.getRandomTetromino(this.config.extended);
-        const piece = new Piece(ctx, randomTetromino, this.config, type);
+        const { shape, color } = this.getRandomTetromino(this.config.extended);
+        const piece = new Piece(ctx, shape, color, this.config, type);
         this.setPiece(piece, type);
         return piece;
     }
@@ -100,9 +102,15 @@ export class PieceService {
     getRotatedPiece(piece: Piece): Piece {
         const currentMatrix = piece.shape;
         const transposedMatrix = this.transposeMatrix(currentMatrix);
-        // Replace existing piece shape with the rotated transposed shape
-        piece.shape = transposedMatrix;
-        return piece;
+        // Check if the rotated piece can be moved to the new position, if
+        // false return the original piece, otherwise return the rotated piece
+        if (!this.gameService.canMove(transposedMatrix, { x: piece.x, y: piece.y })) {
+            return piece;
+        } else {
+            // Replace existing piece shape with the rotated transposed shape
+            piece.shape = transposedMatrix;
+            return piece;
+        }
     }
 
     /**

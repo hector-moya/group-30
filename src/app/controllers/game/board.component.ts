@@ -9,6 +9,7 @@ import { IConfig } from 'src/app/interfaces/Config';
 import { CommonModule } from '@angular/common';
 import { Canvas } from 'src/app/models/Canvas';
 import { Piece } from 'src/app/models/Piece';
+import { Matrix } from 'src/app/defs';
 
 @Component({
     selector: 'app-board',
@@ -16,7 +17,14 @@ import { Piece } from 'src/app/models/Piece';
     imports: [CommonModule, AppLayout, ModalComponent],
     template: `
         <canvas #canvas class="bdr bdr-red"></canvas>
-        <button (click)="test()" class="btn">Test</button>
+        <div class="flex space-x mt">
+            <button (click)="test()" class="btn">Test</button>
+            <!-- <button (click)="reload()" class="btn dark">Reload</button> -->
+            <!-- <button (click)="resetGame()" class="btn dark">Reset</button> -->
+        </div>
+
+        <pre class="pxy-05"><small>{{ devData | json }}</small></pre>
+
         <modal [endGame]="true"></modal>
     `,
 })
@@ -50,10 +58,11 @@ export class BoardComponent {
     private modalService = inject(ModalService);
     private gameService = inject(GameService);
 
+    devData: any = {}; // NK::TD remove
+
     ngOnInit(): void {
         this.initBoard();
-        this.subscribeToPiece();
-        this.play();
+        this.startAnimation();
     }
 
     /**
@@ -65,23 +74,10 @@ export class BoardComponent {
         const { rows, columns, blockSize: scale } = this.config;
         const board = new Canvas(columns, rows, this.boardRef.nativeElement, scale);
         this.ctx = board.getContext();
-
-        // this.pieceService.setRenderingContext(this.ctx!, 'current');
-
         // Retrieve the initial piece for rendering
         this.piece = this.pieceService.getPiece(this.ctx!);
         // Initialise the grid and render it to the canvas
         this.gameService.initGrid(this.ctx!);
-    }
-
-    /**
-     * Subscribe to the Piece updates from the PieceService which is
-     * responsible for creating and moving the Piece.
-     */
-    private subscribeToPiece(): void {
-        this.pieceService.observePiece().subscribe((piece: Piece | null) => {
-            this.piece = piece;
-        })
     }
 
     /**
@@ -90,7 +86,6 @@ export class BoardComponent {
      * These are called from the onKeydown event handler. The moves object
      * accepts the current Piece and uses a callback to return the updated
      * position in the selected direction or rotation.
-     *
      */
     private moves: any = {
         ArrowLeft: (piece: Piece) => ({ ...piece, x: piece.x - 1 }),
@@ -120,17 +115,11 @@ export class BoardComponent {
 
         if (event.key === 'P' || event.key === 'p') {
             event.preventDefault();
-            this.intervalId ? this.stopInterval() : this.startInterval();
+            this.intervalId ? this.cancelAnimation() : this.startAnimation();
+
+            if (!this.ctx) throw new Error('The canvas context is null');
+            this.gameService.pauseMessage(this.ctx);
         }
-    }
-
-    // handleEscape(): void {
-    //     this.stopInterval();
-    //     this.modalService.openModal('Do you want to end the game?');
-    // }
-
-    play() {
-        this.startInterval();
     }
 
 
@@ -140,10 +129,12 @@ export class BoardComponent {
       * interval.
       * @param {number} time The time interval in milliseconds
       */
-    startInterval(time: number = 400) {
+    startAnimation(time: number = 1000) {
         if (!this.intervalId) {
             this.intervalId = setInterval(() => {
                 this.drop();
+                this.setDevData();
+                // this.setDevData();
             }, time);
         }
     }
@@ -151,7 +142,7 @@ export class BoardComponent {
     /**
      * Stop the periodic interval by clearing the interval ID
      */
-    stopInterval() {
+    cancelAnimation() {
         if (this.intervalId) {
             clearInterval(this.intervalId);
             this.intervalId = undefined; // Reset the interval ID
@@ -175,6 +166,7 @@ export class BoardComponent {
         const { shape, x, y } = this.moves["ArrowDown"](this.piece);
         if (this.gameService.canMove(shape, { x, y })) {
             this.moveAndRenderGrid(shape, { x, y });
+            this.setDevData();
         } else {
             // make sure you pass in the 'current' position to be locked in!
             this.gameService.lock(shape, { x: this.piece?.x || 0, y: this.piece?.y || 0 });
@@ -184,10 +176,22 @@ export class BoardComponent {
             this.piece!.clear(); // for clear to prevent lag
             this.piece = this.pieceService.getPiece(this.ctx!);
             this.gameService.renderGrid(this.ctx!);
+
+            this.setDevData();
+
         }
     }
 
-    test() {
+    /**
+    * Set data for development purposes
+    */
+    setDevData(): void {
+        // this.devData.score = this.scoreService.getScore();
+        // this.devData.isHighScore = this.scoreService.isTopScore(this.scoreService.getScore());
+        this.devData.pieceY = this.piece!.y;
+    }
 
+    test() {
+        this.setDevData();
     }
 }
