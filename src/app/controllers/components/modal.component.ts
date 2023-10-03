@@ -33,9 +33,14 @@ import { Router } from '@angular/router';
 
 export class ModalComponent {
 
+    private modalService = inject(ModalService);
+    private router = inject(Router);
+
+    showModal: boolean = false;
+
     /**
-        * Custom buttons to display in the modal footer
-        */
+     * Custom buttons to display in the modal footer
+     */
     @Input() customButtons?: { label: string, class: string, action: () => void }[];
 
     /**
@@ -43,17 +48,10 @@ export class ModalComponent {
      */
     props: any = {};
 
-    showModal: boolean = false;
-
     /**
      * Custom buttons to display in the modal footer
      */
-    buttons: IModalButton[] = [{
-        label: 'confirm', class: 'primary', action: () => this.closeModal('close'),
-    }];
-
-    private modalService = inject(ModalService);
-    private router = inject(Router);
+    buttons: IModalButton[] = [];
 
     /**
      * Map the action to perform when the modal is closed
@@ -65,12 +63,13 @@ export class ModalComponent {
         saveConfig: () => this.closeModal('saveConfig'),
     };
 
+
     ngOnInit() {
         this.modalService.observeModal().subscribe(modal => {
             this.showModal = modal.isOpen;
             this.props = modal.props;
             this.buttons = modal.props.buttons
-                ?? [{ label: 'Close', class: 'primary', action: () => this.closeModal('close') }];
+                ?? [{ label: 'Close', class: 'primary', action: 'close' }];
         });
     }
 
@@ -88,7 +87,7 @@ export class ModalComponent {
         if (action) {
             action();
         } else {
-            throw new Error(`Invalid button action. ${actionName} is not defined in thee button actions array`);
+            throw new Error(`Invalid button action. ${actionName} is not defined in button actions array`);
         }
     }
 }
