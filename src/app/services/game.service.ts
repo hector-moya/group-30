@@ -37,10 +37,10 @@ export class GameService {
             this.configSubscription = this.configService.observeConfig().subscribe((config: IConfig) => {
                 this.config = config;
 
-                this.grid = GRID; // for testing only
-                this.renderGrid(ctx); // for testing only
+                // this.grid = GRID; // for testing only
+                // this.renderGrid(ctx); // for testing only
 
-                // this.resetGrid(ctx);
+                this.resetGrid(ctx);
             });
         } else {
             this.resetGrid(ctx);

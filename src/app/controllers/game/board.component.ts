@@ -12,6 +12,8 @@ import { Canvas } from 'src/app/models/Canvas';
 import { Piece } from 'src/app/models/Piece';
 import { FormsModule } from '@angular/forms';
 import { Matrix } from 'src/app/defs';
+import { IGameStats } from 'src/app/interfaces/Score';
+import { ScoreService } from 'src/app/services/score.service';
 
 @Component({
     selector: 'app-board',
@@ -19,7 +21,7 @@ import { Matrix } from 'src/app/defs';
     imports: [CommonModule, AppLayout, ModalComponent, HighScoreComponent, FormsModule],
     template: `
         <canvas #canvas class="bdr bdr-red"></canvas>
-        <div class="flex space-x mt">
+        <div class="flex space-x mt w-16">
             <button (click)="test()" class="btn">Test</button>
             <!-- <button (click)="reload()" class="btn dark">Reload</button> -->
             <!-- <button (click)="resetGame()" class="btn dark">Reset</button> -->
@@ -57,7 +59,7 @@ export class BoardComponent {
      * cleared when the game is paused or the piece can no longer
      * move down.
      */
-    private intervalId?: any;
+    private requestId?: any;
 
     /**
      * The canvas context which gives access to the canvas API
@@ -71,10 +73,12 @@ export class BoardComponent {
     private piece!: Piece | null;
 
     /**
-     * Flag to indicate if the game has started. This is used to prevent
-     * certain behaviours when the game is paused or stopped.
+     * Game state and scoring variables
      */
+    time?: { start: number, elapsed: number, speed: number };
     gameStarted: Boolean = true;
+    gameStats?: IGameStats;
+    // dropSpeed?: number;
 
     /**
      * Component dependencies
@@ -82,6 +86,7 @@ export class BoardComponent {
     private pieceService = inject(PieceService);
     private modalService = inject(ModalService);
     private gameService = inject(GameService);
+    private scoreService = inject(ScoreService);
 
     devData: any = {}; // NK::TD can remove
 
@@ -95,7 +100,13 @@ export class BoardComponent {
 
     ngOnInit(): void {
         this.initBoard();
-        this.startAnimation();
+        this.initGameStats();
+        this.animate();
+
+        // this may not be necessary but it is good for debugging
+        this.scoreService.observeScore().subscribe((gameStats: IGameStats) => {
+            this.gameStats = gameStats;
+        });
     }
 
     /**
@@ -112,6 +123,16 @@ export class BoardComponent {
         // Initialise the grid and render it to the canvas
         this.gameService.initGrid(this.ctx!);
     }
+
+    /**
+     * Initialise the game stats and set the initial drop speed.
+     */
+    initGameStats() {
+        const startingValues: IGameStats = { score: 0, lines: 0, level: this.config.startLevel, levelUp: 1 };
+        this.scoreService.setGameStats(startingValues); // set the initial game stats in the score service
+        this.time = { start: 0, elapsed: 0, speed: this.scoreService.getLevelSpeed() };
+    }
+
 
     /**
      * Possible moves for the current Piece.
@@ -151,7 +172,7 @@ export class BoardComponent {
 
         if (event.key === 'P' || event.key === 'p') {
             event.preventDefault();
-            this.intervalId ? this.cancelAnimation() : this.startAnimation();
+            this.requestId ? this.stopAnimation() : this.animate();
 
             if (!this.ctx) throw new Error('The canvas context is null');
             this.gameService.pauseMessage(this.ctx);
@@ -162,7 +183,7 @@ export class BoardComponent {
      * Handle the escape key event by pausing the game and opening the modal
      */
     handleEscape(): void {
-        this.cancelAnimation();
+        this.stopAnimation();
 
         this.modalService.openModal({
             title: 'Do you want to end the game?',
@@ -172,7 +193,7 @@ export class BoardComponent {
             ]
         }, (action?: string) => {
             if (action === 'cancel' || action === 'close') {
-                this.startAnimation();
+                this.animate();
             }
         });
     }
@@ -183,8 +204,8 @@ export class BoardComponent {
     */
     handleGameOver() {
 
-        this.cancelAnimation();
-        alert('Game Over');
+        this.stopAnimation();
+        // alert('Game Over');
 
         // if (this.scoreService.isTopScore(this.scoreService.getScore())) {
         //     this.modalType = 'highScore';
@@ -219,31 +240,35 @@ export class BoardComponent {
     }
 
     /**
-      * Start a periodic interval with a specified time interval. The time is
-      * based on the level of the game. The higher the level, the faster the
-      * interval.
-      * @param {number} time The time interval in milliseconds
-      */
-    startAnimation(time: number = 300) {
+    * Animate method for managing the dropping piece using requestAnimationFrame.
+    * @param {number} now The current timestamp provided by requestAnimationFrame.
+    */
+    private animate(now: number = 0): void {
         this.gameStarted = true;
-        if (!this.intervalId) {
-            this.intervalId = setInterval(() => {
-                if (!this.drop()) {
-                    this.handleGameOver();
-                    return;
-                }
-            }, time);
+        // Calculate the elapsed time since the animation started
+        this.time!.elapsed = now - this.time!.start;
+        // Check if the elapsed time exceeds the current level's time interval
+        if (this.time!.elapsed > this.time!.speed) {
+            // Reset the start time to the current time
+            this.time!.start = now;
+            // Call the "drop" method to move the piece down
+            if (!this.drop()) {
+                this.handleGameOver();
+                return;
+            }
         }
+        // Request the next animation frame and bind it to the current instance of "this"
+        this.requestId = requestAnimationFrame(this.animate.bind(this));
     }
 
     /**
      * Stop the periodic interval by clearing the interval ID
      */
-    cancelAnimation() {
-        this.gameStarted = false;
-        if (this.intervalId) {
-            clearInterval(this.intervalId);
-            this.intervalId = undefined; // Reset the interval ID
+    stopAnimation() {
+        if (this.requestId) {
+            cancelAnimationFrame(this.requestId);
+            this.gameStarted = false;
+            this.requestId = undefined;
         }
     }
 
@@ -270,8 +295,8 @@ export class BoardComponent {
         } else {
             // make sure you pass in the 'current' position to be locked in!
             this.gameService.lock(shape, { x: this.piece?.x || 0, y: this.piece?.y || 0 });
+            this.time!.speed = this.scoreService.getLevelSpeed();
             this.gameService.clearRows();
-
 
             if (this.piece!.y === 0) {
                 return false;
@@ -294,6 +319,8 @@ export class BoardComponent {
         // this.devData.isHighScore = this.scoreService.isTopScore(this.scoreService.getScore());
         this.devData.pieceY = this.piece!.y;
         this.devData.gameStarted = this.gameStarted;
+        this.devData.time = this.time;
+        this.devData.gameStats = this.gameStats;
     }
 
     test() {
