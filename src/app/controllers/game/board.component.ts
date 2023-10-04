@@ -32,6 +32,7 @@ import { ScoreService } from 'src/app/services/score.service';
 
         <modal>
             <ng-container *ngIf="modalType === 'highScore'">
+                <p>Congratulations! Your score has landed you among the top 10 players</p>
                 <div class="frm-row">
                     <input [(ngModel)]="playerName" name="name" placeholder="Enter your name..." required>
                     <!-- <input [(ngModel)]="playerName" name="name" placeholder="Enter your name..." required minlength="4" appForbiddenName="bob" #nameInput="ngModel"> -->
@@ -42,6 +43,11 @@ import { ScoreService } from 'src/app/services/score.service';
                     </div> -->
                 </div>
             </ng-container>
+
+            <ng-container *ngIf="modalType === 'gameOver'">
+                <p>You did not make it to the top 10. Better luck next time!</p>
+            </ng-container>
+
             <ng-container *ngIf="modalType === 'saveAndDisplayHighScore'">
                 <app-high-score></app-high-score>
             </ng-container>
@@ -221,10 +227,11 @@ export class BoardComponent {
             var title = 'New High Score';
             var buttons = [{ label: 'Continue', class: 'primary', action: 'saveAndDisplayHighScore' }]
         } else {
-            this.modalType = '';
-            var title = 'Game Over';
+            this.modalType = 'gameOver';
+            var title = `Game Over, your final score is: ${this.scoreService.getScore()}`;
             var buttons = playHomeButtons
         }
+
 
         this.modalService.openModal({ title, buttons, },
             (action?: string) => {
