@@ -5,6 +5,7 @@
 - [Priority List](#priority-list)
 - [Bugs](#bugs)
 - [Low Priority](#low-priority)
+- [Testing](#testing)
 - [Naming conventions](#naming-conventions)
 - [Directory structure and files](#directory-structure-and-files)
 - [src](#src)
@@ -52,6 +53,22 @@
 - [ ] hard drop???
 - [ ] Change the randomize tetromino method to reduce the change of getting the same shape twice in a row
  - [ ] center the next piece in it's canvas
+
+<a id="markdown-testing" name="testing"></a>
+
+## Testing
+| Criteria                | Video Length | Points |
+| ----------------------- | ------------ | ------ |
+| Video Length            | < 7 minutes  | 5      |
+| Normal Game Functions   | Yes          | 15     |
+| Game Completion         | Two ways     | 5      |
+| Top Score Page          | Yes          | 5      |
+| Sound and Music         | Yes          | 5      |
+| Extended Game           | Yes          | 5      |
+| AI Game                 | Yes          | 10     |
+| Different Levels        | Yes          | 5      |
+| Different Size of Field | Yes          | 5      |
+
 
 <a id="markdown-naming-conventions" name="naming-conventions"></a>
 

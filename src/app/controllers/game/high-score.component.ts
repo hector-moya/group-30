@@ -1,34 +1,38 @@
-import { CommonModule } from '@angular/common';
+import { ScoreService } from 'src/app/services/score.service';
 import { HighScore } from '../../interfaces/Score';
-import { Component } from '@angular/core';
-import { HIGH_SCORES } from '../../data';
+import { Component, inject } from '@angular/core';
+import { CommonModule } from '@angular/common';
 
 @Component({
     selector: 'app-high-score',
     standalone: true,
     imports: [CommonModule],
     template: `
-    <div *ngFor="let hs of highScores">
-        <div class="flex space-between">
-            <span> {{hs.playerName}}</span>
-            <span> {{hs.score}}</span>
+        <div *ngFor="let hs of highScores; let i = index ">
+            <div class="flex space-between">
+                <div class="flex">
+                <div class="w-2">{{ i + 1 }}.</div>
+                <p> {{hs.playerName}}</p>
+                </div>
+                <span> {{hs.score}}</span>
+            </div>
         </div>
-    </div>
     `,
 })
 export class HighScoreComponent {
 
-    highScores: HighScore[] = HIGH_SCORES;
+    highScores: HighScore[] = [];
 
-    constructor() {
-        this.init();
+    private scoreService = inject(ScoreService)
+
+    ngOnInit() {
+        this.highScores = this.scoreService.getHighScores()
     }
 
-    init() {
-        this.sortHighScores();
-    }
+    ngDoCheck(): void {
+        console.log(this.highScores);
 
-    sortHighScores() {
-        this.highScores.sort((a, b) => b.score - a.score);
     }
 }
+
+

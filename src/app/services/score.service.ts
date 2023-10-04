@@ -87,7 +87,7 @@ export class ScoreService {
             hs.splice(9);
             hs.push({ playerName: name, score: score });
         }
-
+        this.sortedHighScores(hs);
         // update the high scores in storage
         localStorage.setItem('highScores', JSON.stringify(hs));
     }
@@ -100,8 +100,16 @@ export class ScoreService {
         const hsJson = localStorage.getItem('highScores');
         if (!hsJson) throw new Error('No high scores found in storage');
         const hs = JSON.parse(hsJson);
-        hs.sort((a: any, b: any) => b.score - a.score);
-        return hs;
+        return this.sortedHighScores(hs);
+    }
+
+    /**
+     * Sort the high scores in descending order.
+     * @param {HighScore[]} scores The high scores to sort.
+     * @returns {HighScore[]} The sorted high scores.
+     */
+    sortedHighScores(scores: HighScore[]): HighScore[] {
+        return scores.sort((a: any, b: any) => b.score - a.score);
     }
 
     /**

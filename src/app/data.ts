@@ -61,17 +61,16 @@ export const POINTS: Point = {
  * Dummy high scores
  */
 export const HIGH_SCORES: HighScore[] = [
-    { playerName: 'Luna', score: 48000 },
-    { playerName: 'Nova', score: 52000 },
-    { playerName: 'Aria', score: 45000 },
-    { playerName: 'Finn', score: 43000 },
-    { playerName: 'Ella', score: 47000 },
-    { playerName: 'Leo', score: 49000 },
-    { playerName: 'Mia', score: 44000 },
-    { playerName: 'Owen', score: 51000 },
-    { playerName: 'Zoe', score: 46000 },
-    { playerName: 'Aiden', score: 50000 },
-    { playerName: 'Eli', score: 47000 },
+    { playerName: 'Luna', score: 480 },
+    { playerName: 'Nova', score: 5200 },
+    { playerName: 'Aria', score: 450 },
+    { playerName: 'Finn', score: 300 },
+    { playerName: 'Ella', score: 3470 },
+    { playerName: 'Leo', score: 600 },
+    { playerName: 'Owen', score: 1510 },
+    { playerName: 'Zoe', score: 460 },
+    { playerName: 'Aiden', score: 500 },
+    { playerName: 'Eli', score: 200 },
 ];
 
 

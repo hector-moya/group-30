@@ -60,6 +60,7 @@ export class ModalComponent {
         close: () => this.closeModal('close'),
         playAgain: () => this.closeModal('playAgain'),
         redirect: () => this.closeRedirect('redirect'),
+        saveAndDisplayHighScore: () => this.closeModal('saveAndDisplayHighScore'),
         saveConfig: () => this.closeModal('saveConfig'),
     };
 

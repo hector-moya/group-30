@@ -23,8 +23,9 @@ import { ScoreService } from 'src/app/services/score.service';
         <canvas #canvas class="bdr bdr-red"></canvas>
         <div class="flex space-x mt w-16">
             <button (click)="test()" class="btn">Test</button>
-            <!-- <button (click)="reload()" class="btn dark">Reload</button> -->
+            <button (click)="reload()" class="btn dark">Reload</button>
             <!-- <button (click)="resetGame()" class="btn dark">Reset</button> -->
+            <button (click)="handleGameOver()" class="btn dark">Game Over</button>
         </div>
 
         <pre class="pxy-05"><small>{{ devData | json }}</small></pre>
@@ -32,10 +33,16 @@ import { ScoreService } from 'src/app/services/score.service';
         <modal>
             <ng-container *ngIf="modalType === 'highScore'">
                 <div class="frm-row">
-                    <input [(ngModel)]="playerName" id="name" name="name" placeholder="Enter your name...">
+                    <input [(ngModel)]="playerName" name="name" placeholder="Enter your name..." required>
+                    <!-- <input [(ngModel)]="playerName" name="name" placeholder="Enter your name..." required minlength="4" appForbiddenName="bob" #nameInput="ngModel"> -->
+                    <!-- <div *ngIf="nameInput.invalid && (nameInput.dirty || nameInput.touched)" class="alert">
+                        <div *ngIf="nameInput.errors?.['required']"> Name is required. </div>
+                        <div *ngIf="nameInput.errors?.['minlength']"> Name must be at least 4 characters long. </div>
+                        <div *ngIf="nameInput.errors?.['forbiddenName']"> Name cannot be Bob. </div>
+                    </div> -->
                 </div>
             </ng-container>
-            <ng-container *ngIf="modalType === 'displayHighScores'">
+            <ng-container *ngIf="modalType === 'saveAndDisplayHighScore'">
                 <app-high-score></app-high-score>
             </ng-container>
         </modal>
@@ -52,7 +59,7 @@ export class BoardComponent {
     @Output() newNextPieceEvent = new EventEmitter<string>();
 
     modalType: string = '';
-    playerName: string = '';
+    playerName: string = 'Player 1';
 
     /**
      * Set an interval to move the piece down every. This is
@@ -133,7 +140,6 @@ export class BoardComponent {
         this.time = { start: 0, elapsed: 0, speed: this.scoreService.getLevelSpeed() };
     }
 
-
     /**
      * Possible moves for the current Piece.
      *
@@ -167,7 +173,6 @@ export class BoardComponent {
             }
 
             if (event.key === 'Escape') this.handleEscape();
-
         }
 
         if (event.key === 'P' || event.key === 'p') {
@@ -205,38 +210,48 @@ export class BoardComponent {
     handleGameOver() {
 
         this.stopAnimation();
-        // alert('Game Over');
 
-        // if (this.scoreService.isTopScore(this.scoreService.getScore())) {
-        //     this.modalType = 'highScore';
-        //     var title = 'New High Score';
-        //     var buttons = [{ label: 'Continue', class: 'primary', action: 'setScore' }]
-        // } else {
-        //     this.modalType = '';
-        //     var title = 'Game Over';
-        //     var buttons = [
-        //         { label: 'Return Home', class: '', action: 'redirect' },
-        //         { label: 'Play Again', class: 'primary', action: 'close' },
-        //     ]
-        // }
+        const playHomeButtons = [
+            { label: 'Return Home', class: '', action: 'redirect' },
+            { label: 'Play Again', class: 'primary', action: 'playAgain' },
+        ]
 
-        // this.modalService.openModal({ title, buttons, },
-        //     (action?: string) => {
-        //         this.scoreService.addHighScore(this.playerName, this.scoreService.getScore());
+        if (this.scoreService.isTopScore(this.scoreService.getScore())) {
+            this.modalType = 'highScore';
+            var title = 'New High Score';
+            var buttons = [{ label: 'Continue', class: 'primary', action: 'saveAndDisplayHighScore' }]
+        } else {
+            this.modalType = '';
+            var title = 'Game Over';
+            var buttons = playHomeButtons
+        }
 
-        //         // display the high scores modal when the input closes
-        //         if (action === 'displayHighScores') {
-        //             this.modalType = 'displayHighScores';
-        //             this.modalService.openModal({
-        //                 title: 'Top 10 High Scores',
-        //                 buttons: [{ label: 'Close', class: 'primary', action: 'close' },]
-        //             });
-        //         }
+        this.modalService.openModal({ title, buttons, },
+            (action?: string) => {
+                this.scoreService.addHighScore(this.playerName, this.scoreService.getScore());
+                // display the high scores modal when the input closes
+                if (action === 'saveAndDisplayHighScore') {
+                    this.modalType = 'saveAndDisplayHighScore';
+                    this.modalService.openModal(
+                        { title: 'Top 10 High Scores', buttons: playHomeButtons },
+                        (action?: string) => {
+                            if (action === 'playAgain') this.reload(); // replay the game
+                        }
+                    );
+                }
+                if (action === 'playAgain') this.reload(); // replay the game
+            });
+    }
 
-        //         if (action === 'close') {
-        //             this.reload();
-        //         }
-        //     });
+    /**
+     * Reset/start the game.
+     * @returns {void}
+     * @refactor This is the easiest way to reset the game, but it is not the
+     * most efficient. It is better to reset the game by clearing the grid and
+     * resetting the game stats.
+     */
+    reload(): void {
+        window.location.reload();
     }
 
     /**
@@ -321,10 +336,18 @@ export class BoardComponent {
         this.devData.gameStarted = this.gameStarted;
         this.devData.time = this.time;
         this.devData.gameStats = this.gameStats;
+        this.devData.gameStats = this.gameStats;
+        this.devData.score = this.scoreService.getScore();
+        this.devData.isHighScore = this.scoreService.isTopScore(this.scoreService.getScore());
     }
 
     test() {
-        this.resetGrid();
+        // this.resetGrid();
+        this.modalService.openModal({
+            title: 'Top 10 High Scores',
+            buttons: [{ label: 'Close', class: 'primary', action: 'close' },]
+
+        });
     }
 
     resetGrid() {
