@@ -72,7 +72,7 @@ export class BoardComponent {
      * cleared when the game is paused or the piece can no longer
      * move down.
      */
-    private requestId?: any;
+    public requestId?: any;
 
     /**
      * The canvas context which gives access to the canvas API
@@ -83,7 +83,7 @@ export class BoardComponent {
      * Local reference to the current Piece for rendering and easy access to
      * the current Piece.
      */
-    private piece!: Piece | null;
+    public piece!: Piece | null;
 
     /**
      * Game state and scoring variables
@@ -98,8 +98,8 @@ export class BoardComponent {
      */
     private pieceService = inject(PieceService);
     private modalService = inject(ModalService);
-    private gameService = inject(GameService);
-    private scoreService = inject(ScoreService);
+    public gameService = inject(GameService);
+    public scoreService = inject(ScoreService);
 
     devData: any = {}; // NK::TD can remove
 
@@ -153,7 +153,7 @@ export class BoardComponent {
      * accepts the current Piece and uses a callback to return the updated
      * position in the selected direction or rotation.
      */
-    private moves: any = {
+    public moves: any = {
         ArrowLeft: (piece: Piece) => ({ ...piece, x: piece.x - 1 }),
         ArrowRight: (piece: Piece) => ({ ...piece, x: piece.x + 1 }),
         ArrowDown: (piece: Piece) => ({ ...piece, y: piece.y + 1 }),
@@ -265,7 +265,7 @@ export class BoardComponent {
     * Animate method for managing the dropping piece using requestAnimationFrame.
     * @param {number} now The current timestamp provided by requestAnimationFrame.
     */
-    private animate(now: number = 0): void {
+    public animate(now: number = 0): void {
         this.gameStarted = true;
         // Calculate the elapsed time since the animation started
         this.time!.elapsed = now - this.time!.start;
@@ -299,7 +299,7 @@ export class BoardComponent {
       * @param {Matrix} shape The shape of the piece
       * @param {IPosition} position The new position of the piece
       */
-    private moveAndRenderGrid(shape: Matrix, position: IPosition): void {
+    public moveAndRenderGrid(shape: Matrix, position: IPosition): void {
         this.pieceService.move(shape, { x: position.x, y: position.y });
         this.gameService.renderGrid(this.ctx!);
     }
@@ -308,7 +308,7 @@ export class BoardComponent {
      * piece in place.
      * @returns {boolean} Returns true if the piece can move down, false if it cannot
      */
-    private drop(): boolean {
+    public drop(): boolean {
         if (!this.ctx) throw new Error('The canvas context is null in the board component')
 
         const { shape, x, y } = this.moves["ArrowDown"](this.piece);
@@ -362,3 +362,5 @@ export class BoardComponent {
         this.gameService.initGrid(this.ctx!);
     }
 }
+
+
