@@ -14,9 +14,7 @@ import { Router } from '@angular/router';
     selector: 'app-start',
     standalone: true,
     imports: [CommonModule, LogoComponent, ModalComponent, HighScoreComponent, ConfigComponent],
-    templateUrl: '../../views/pages/start.component.html',
-    styles: [
-    ]
+    templateUrl: '../../views/pages/start.component.html'
 })
 export class StartComponent {
 
@@ -30,16 +28,45 @@ export class StartComponent {
     modalType: string = '';
     config!: IConfig;
     hasSound!: boolean;
+    private titleMusic: HTMLAudioElement | null = new Audio('/assets/music/title_music.mp3');
 
     ngOnInit() {
+        this.titleMusic!.loop = true;
+
         this.configService.observeConfig().subscribe((config: IConfig) => {
             this.config = config;
             this.hasSound = config.hasSound!;
+            this.playMusic();
         });
     }
 
+    /**
+     * Toggle the music and sound on and off
+     */
     toggleSound() {
         this.configService.toggleSound();
+    }
+
+    /**
+     * Play the title music
+     */
+    playMusic(): void {
+        if (this.hasSound) {
+            this.titleMusic!.muted = false; // Unmute the audio
+            this.titleMusic!.play(); // Play the audio
+        } else {
+            this.titleMusic!.muted = true; // Mute the audio
+            this.titleMusic!.pause(); // Pause the audio
+        }
+    }
+
+    ngOnDestroy(): void {
+        console.log('start component ngOnDestroy');
+        if (this.titleMusic) {
+            this.titleMusic.pause(); // Stop the music
+            // reinitialize the audio element to clear
+            this.titleMusic = new Audio('/assets/music/title_music.mp3');
+        }
     }
 
     playGame() {

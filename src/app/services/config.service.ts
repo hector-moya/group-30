@@ -39,10 +39,16 @@ export class ConfigService {
     /**
      * Toggle the sound on and off
      */
+    // toggleSound(): void {
+    //     const currentValue = this.configSubject$.value.hasSound;
+    //     this.configSubject$.next({ ...this.configSubject$.value, hasSound: !currentValue });
+    // }
+
     toggleSound(): void {
         const currentValue = this.configSubject$.value.hasSound;
-        // console.log('toggleSound', currentValue);
         this.configSubject$.next({ ...this.configSubject$.value, hasSound: !currentValue });
+        const updatedConfig = { ...this.configSubject$.value, hasSound: !currentValue };
+        this.setConfig(updatedConfig);
     }
 
     /**

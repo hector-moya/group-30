@@ -3,6 +3,14 @@
     <app-board [config]="config" (newNextPieceEvent)="nextPiece.setPiece()" />
 
     <div>
+        <button (click)="toggleSound()">
+            <svg class="icon wh-3" *ngIf="hasSound">
+                <use xlink:href="/assets/icons.svg#sound"></use>
+            </svg>
+            <svg class="icon wh-3" *ngIf="!hasSound">
+                <use xlink:href="/assets/icons.svg#mute"></use>
+            </svg>
+        </button>
 
         <div class="space-y">
             <logo class="wh-8" />

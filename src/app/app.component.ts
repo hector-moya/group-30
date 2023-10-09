@@ -16,7 +16,6 @@ export class AppComponent {
 
     ngOnInit() {
         this.subscribeToConfig();
-        this.configService.toggleSound();
     }
 
     /**

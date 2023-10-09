@@ -1,37 +1,65 @@
-import { Component, ElementRef, ViewChild, inject } from '@angular/core';
 import { NextPieceComponent } from '../game/next-piece.component';
 import { ConfigService } from '../../services/config.service';
 import { LogoComponent } from '../components/logo.component';
 import { BoardComponent } from '../game/board.component';
 import { ScoreComponent } from '../game/score.component';
 import { IConfig } from 'src/app/interfaces/Config';
+import { Component, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 
 @Component({
     selector: 'app-game',
     standalone: true,
     imports: [CommonModule, LogoComponent, BoardComponent, NextPieceComponent, ScoreComponent],
-    templateUrl: '../../views/pages/game.component.html',
-    styles: [
-    ]
+    templateUrl: '../../views/pages/game.component.html'
 })
 export class GameComponent {
 
-    public config!: IConfig;
-
+    /**
+     * Component dependencies
+     */
     private configService = inject(ConfigService);
 
+    config!: IConfig;
+    hasSound!: boolean;
+    private gamePlayMusic: HTMLAudioElement | null = new Audio('/assets/music/game_music.mp3');
+
     ngOnInit(): void {
-        this.subscribeToConfig();
+        this.gamePlayMusic!.loop = true;
+
+        this.configService.observeConfig().subscribe((config: IConfig) => {
+            this.config = config;
+            this.hasSound = config.hasSound!;
+            this.playMusic();
+        });
     }
 
     /**
-     * Subscribe to the configuration updates from the ConfigService.
-     * When the configuration changes, the callback function is triggered.
+     * Toggle the music and sound on and off
      */
-    subscribeToConfig(): void {
-        this.configService.observeConfig().subscribe((config: IConfig) => {
-            this.config = config;
-        });
+    toggleSound() {
+        this.configService.toggleSound();
+    }
+
+    /**
+     * Play the title music
+     */
+    playMusic(): void {
+        if (this.hasSound) {
+            this.gamePlayMusic!.muted = false; // Unmute the audio
+            this.gamePlayMusic!.play(); // Play the audio
+        } else {
+            this.gamePlayMusic!.muted = true; // Mute the audio
+            this.gamePlayMusic!.pause(); // Pause the audio
+        }
+    }
+
+    ngOnDestroy(): void {
+        console.log('game component ngOnDestroy');
+        if (this.gamePlayMusic) {
+            this.gamePlayMusic.pause(); // Stop the music
+            // reinitialize the audio element to clear
+            this.gamePlayMusic = new Audio('/assets/music/game_music.mp3');
+        }
     }
 }
