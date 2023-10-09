@@ -37,6 +37,15 @@ export class ConfigService {
     }
 
     /**
+     * Toggle the sound on and off
+     */
+    toggleSound(): void {
+        const currentValue = this.configSubject$.value.hasSound;
+        // console.log('toggleSound', currentValue);
+        this.configSubject$.next({ ...this.configSubject$.value, hasSound: !currentValue });
+    }
+
+    /**
      * Save the configuration to local storage for persistent state
      * @param {IConfig} config The configuration to save
      */

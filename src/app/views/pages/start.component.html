@@ -15,11 +15,19 @@
             <logo />
         </div>
 
-        <div class="space-x mt-5">
+        <div class="flex space-x mt-5">
             <button (click)="playGame()" class="btn blue w-8">Play</button>
             <button (click)="exitGame()" class="btn danger outline w-8">Exit</button>
             <button (click)="openConfig()" class="btn warning outline w-8">Configuration</button>
             <button (click)="openHighScores()" class="btn success outline w-8">High Scores</button>
+            <button (click)="toggleSound()">
+                <svg class="icon wh-3" *ngIf="hasSound">
+                    <use xlink:href="/assets/icons.svg#sound"></use>
+                </svg>
+                <svg class="icon wh-3" *ngIf="!hasSound">
+                    <use xlink:href="/assets/icons.svg#mute"></use>
+                </svg>
+            </button>
         </div>
 
         <modal>

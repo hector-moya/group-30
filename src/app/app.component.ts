@@ -1,5 +1,5 @@
+import { Component, HostListener, inject } from '@angular/core';
 import { ConfigService } from './services/config.service';
-import { Component, inject } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
 import { CommonModule } from '@angular/common';
 
@@ -16,6 +16,7 @@ export class AppComponent {
 
     ngOnInit() {
         this.subscribeToConfig();
+        this.configService.toggleSound();
     }
 
     /**
@@ -24,6 +25,17 @@ export class AppComponent {
      */
     subscribeToConfig(): void {
         this.configService.observeConfig().subscribe();
+    }
+
+    /**
+     * Toggle the music and sound on and off
+     * @param event
+     */
+    @HostListener('document:keydown', ['$event'])
+    handleKeyDown(event: KeyboardEvent) {
+        if (event.key === 'm' || event.key === 'M') {
+            this.configService.toggleSound();
+        }
     }
 
 }

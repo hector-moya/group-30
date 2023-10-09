@@ -5,4 +5,5 @@ export interface IConfig {
     extended: boolean;
     startLevel: number;
     nextGridSize?: number;
+    hasSound?: boolean;
 }

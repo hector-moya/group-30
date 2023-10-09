@@ -20,9 +20,6 @@ import { Router } from '@angular/router';
 })
 export class StartComponent {
 
-    modalType: string = '';
-    config!: IConfig;
-
     /**
      * Component dependencies
      */
@@ -30,10 +27,19 @@ export class StartComponent {
     private modalService = inject(ModalService);
     private router = inject(Router);
 
+    modalType: string = '';
+    config!: IConfig;
+    hasSound!: boolean;
+
     ngOnInit() {
         this.configService.observeConfig().subscribe((config: IConfig) => {
             this.config = config;
+            this.hasSound = config.hasSound!;
         });
+    }
+
+    toggleSound() {
+        this.configService.toggleSound();
     }
 
     playGame() {

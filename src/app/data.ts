@@ -9,7 +9,8 @@ export const DEFAULT_CONFIG: IConfig = {
     blockSize: 20,
     extended: true,
     startLevel: 1,
-    nextGridSize: 4
+    nextGridSize: 4,
+    hasSound: true,
 }
 
 export const GAME_STATS: IGameStats = {

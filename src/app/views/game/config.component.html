@@ -22,12 +22,24 @@
         <div class="frm-row">
             <div class="flex space-between">
                 <label for="extended-game">Game Mode</label>
-                <label> <input [(ngModel)]="config.extended" type="radio" [value]="false"
-                        name="extended-game"> Normal </label>
-                <label> <input [(ngModel)]="config.extended" type="radio" [value]="true"
-                        name="extended-game"> Extended </label>
+                <div class="flex">
+                    <label class="w-6"> <input [(ngModel)]="config.extended" type="radio" [value]="false"
+                            name="extended-game"> Normal </label>
+                    <label class="w-6"> <input [(ngModel)]="config.extended" type="radio" [value]="true"
+                            name="extended-game"> Extended </label>
+                </div>
             </div>
-
+        </div>
+        <div class="frm-row">
+            <div class="flex space-between">
+                <label for="has-sound">Sound</label>
+                <div class="flex">
+                    <label class="w-6"> <input [(ngModel)]="config.hasSound" type="radio" [value]="false"
+                            name="has-sound"> Disabled </label>
+                    <label class="w-6"> <input [(ngModel)]="config.hasSound" type="radio" [value]="true"
+                            name="has-sound"> Enabled </label>
+                </div>
+            </div>
         </div>
     </div>
 </form>
