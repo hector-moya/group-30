@@ -308,13 +308,12 @@ export class BoardComponent {
     setDevData(): void {
         // this.devData.score = this.scoreService.getScore();
         // this.devData.isHighScore = this.scoreService.isTopScore(this.scoreService.getScore());
+        this.devData.gameStarted = this.gameStarted;
         this.devData.pieceY = this.piece!.y;
         this.devData.config = this.config;
-        this.devData.gameStarted = this.gameStarted;
-        this.devData.time = this.time;
+        // this.devData.time = this.time;
         this.devData.gameStats = this.gameStats;
-        this.devData.gameStats = this.gameStats;
-        this.devData.score = this.scoreService.getScore();
+        this.devData.speed = this.time?.speed;
         this.devData.isHighScore = this.scoreService.isTopScore(this.scoreService.getScore());
     }
 

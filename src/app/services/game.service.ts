@@ -6,6 +6,7 @@ import { IConfig } from '../interfaces/Config';
 import { Injectable } from '@angular/core';
 import { Subscription } from 'rxjs';
 import { Matrix } from '../defs';
+import { ENV } from '../env';
 
 @Injectable({
     providedIn: 'root'
@@ -13,6 +14,8 @@ import { Matrix } from '../defs';
 export class GameService {
 
     grid: Matrix = [];
+
+    devMode: boolean = ENV.DEV_MODE;
 
     /**
      * Local reference to the current configuration
@@ -36,11 +39,11 @@ export class GameService {
         if (!this.configSubscription) {
             this.configSubscription = this.configService.observeConfig().subscribe((config: IConfig) => {
                 this.config = config;
-
-                // this.grid = GRID; // for testing only
-                // this.renderGrid(ctx); // for testing only
-
                 this.resetGrid(ctx);
+                if (this.devMode) {
+                    this.grid = GRID; // for testing only
+                    this.renderGrid(ctx); // for testing only
+                }
             });
         } else {
             this.resetGrid(ctx);
@@ -57,7 +60,7 @@ export class GameService {
             // tetVal represents the tetromino value. I = 1, J=2 ... Z=7
             row.forEach((tetVal, x) => {
                 ctx.strokeStyle = '#ccc';
-                ctx.lineWidth = 0.005;
+                ctx.lineWidth = 0.002;
                 ctx.strokeRect(x, y, 1, 1);
                 ctx.stroke();
                 if (tetVal > 0) {

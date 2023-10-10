@@ -1,19 +1,21 @@
-<div class="container maxw-md">
-    <div class="tar my flex ha-r">
-        <button (click)="toggleSound()">
-            <svg class="icon wh-3 pxy-05" *ngIf="hasSound">
-                <use xlink:href="/assets/icons.svg#sound"></use>
-            </svg>
-            <svg class="icon wh-3 pxy-05" *ngIf="!hasSound">
-                <use xlink:href="/assets/icons.svg#mute"></use>
-            </svg>
-        </button>
-    </div>
+<div class="container maxw-md my-5">
     <div class="flex flex-start items-start ha-c gg-2">
         <app-board [config]="config" (newNextPieceEvent)="nextPiece.setPiece()" />
         <div>
             <app-next-piece [config]="config" #nextPiece />
             <app-score />
+
+            <div class="tar my flex space-between ha-r">
+                <logo class="wh-4" />
+                <button (click)="toggleSound()">
+                    <svg class="icon wh-3 pxy-05" *ngIf="hasSound">
+                        <use xlink:href="/assets/icons.svg#sound"></use>
+                    </svg>
+                    <svg class="icon wh-3 pxy-05" *ngIf="!hasSound">
+                        <use xlink:href="/assets/icons.svg#mute"></use>
+                    </svg>
+                </button>
+            </div>
         </div>
     </div>
 </div>

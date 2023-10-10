@@ -3,18 +3,16 @@
     <div>
         <ng-container *ngIf="devMode">
             <div class="flex space-x mt w-16">
-                <button (click)="test()" class="btn xs">Test</button>
+                <!-- <button (click)="test()" class="btn xs">Test</button> -->
                 <button (click)="reload()" class="btn xs dark">Reload</button>
                 <button (click)="handleGameOver()" class="btn xs dark">Game Over</button>
             </div>
             <pre class="pxy-05"><small>{{ devData | json }}</small></pre>
         </ng-container>
     </div>
-
-
-    <canvas #canvas class="bdr bdr-red"></canvas>
-
-
+    <div>
+        <canvas #canvas class="bdrr stats board"></canvas>
+    </div>
     <modal>
         <ng-container *ngIf="modalType === 'highScore'">
             <p>Congratulations! Your score has landed you among the top 10 players</p>

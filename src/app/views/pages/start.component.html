@@ -58,7 +58,7 @@
             </ng-container>
         </modal>
 
-        <pre class="pxy-1">{{config|json}}</pre>
+        <pre class="pxy-1" *ngIf="devMode">{{config|json}}</pre>
 
 
 

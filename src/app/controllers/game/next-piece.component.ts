@@ -11,7 +11,7 @@ import { Piece } from 'src/app/models/Piece';
     imports: [CommonModule],
     template: `
 
-    <div class="flex va-c ha-c w-10">
+    <div class="flex va-c ha-c w-10 mb-1">
         <canvas #canvas></canvas>
     </div>
 

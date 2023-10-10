@@ -1,3 +1,3 @@
 export const ENV = {
-    DEV_MODE: true
+    DEV_MODE: false
 }
