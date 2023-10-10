@@ -6,7 +6,7 @@ import { Matrix } from "./defs";
 export const DEFAULT_CONFIG: IConfig = {
     rows: 20,
     columns: 10,
-    blockSize: 20,
+    blockSize: 25,
     extended: true,
     startLevel: 1,
     nextGridSize: 4,
@@ -20,25 +20,25 @@ export const GAME_STATS: IGameStats = {
     levelUp: 10
 }
 
-// export const TETROMINOS: { [key: string]: ITetromino } = {
-//     I: { id: 1, shape: [[1, 0, 0, 0], [1, 0, 0, 0], [1, 0, 0, 0], [1, 0, 0, 0]], color: 'rgba(0, 128, 128, 1)' },
-//     J: { id: 2, shape: [[2, 0, 0], [2, 2, 2], [0, 0, 0]], color: 'rgba(0, 0, 255, 1)' },
-//     L: { id: 3, shape: [[0, 0, 3], [3, 3, 3], [0, 0, 0]], color: 'rgba(255, 165, 0, 1)' },
-//     O: { id: 4, shape: [[4, 4], [4, 4]], color: 'rgba(255, 255, 0, 1)' },
-//     S: { id: 5, shape: [[0, 5, 5], [5, 5, 0], [0, 0, 0]], color: 'rgba(0, 128, 0, 1)' },
-//     T: { id: 6, shape: [[0, 6, 0], [6, 6, 6], [0, 0, 0]], color: 'rgba(128, 0, 128, 1)' },
-//     Z: { id: 7, shape: [[7, 7, 0], [0, 7, 7], [0, 0, 0]], color: 'rgba(255, 0, 0, 1)' },
-// };
-
 export const TETROMINOS: { [key: string]: ITetromino } = {
-    I: { id: 1, shape: [[1, 1, 1, 1]], color: 'rgba(0, 128, 128, 1)' },
-    J: { id: 2, shape: [[2, 2, 2, 2]], color: 'rgba(0, 0, 255, 1)' },
-    L: { id: 3, shape: [[3, 3, 3, 3]], color: 'rgba(255, 165, 0, 1)' },
-    O: { id: 4, shape: [[4, 4, 4, 4]], color: 'rgba(255, 255, 0, 1)' },
-    S: { id: 5, shape: [[5, 5, 5]], color: 'rgba(0, 128, 0, 1)' },
-    T: { id: 6, shape: [[6, 6, 6]], color: 'rgba(128, 0, 128, 1)' },
-    Z: { id: 7, shape: [[7, 7, 7]], color: 'rgba(255, 0, 0, 1)' },
+    I: { id: 1, shape: [[1, 0, 0, 0], [1, 0, 0, 0], [1, 0, 0, 0], [1, 0, 0, 0]], color: 'rgba(0, 128, 128, 1)' },
+    J: { id: 2, shape: [[2, 0, 0], [2, 2, 2], [0, 0, 0]], color: 'rgba(0, 0, 255, 1)' },
+    L: { id: 3, shape: [[0, 0, 3], [3, 3, 3], [0, 0, 0]], color: 'rgba(255, 165, 0, 1)' },
+    O: { id: 4, shape: [[4, 4], [4, 4]], color: 'rgba(255, 255, 0, 1)' },
+    S: { id: 5, shape: [[0, 5, 5], [5, 5, 0], [0, 0, 0]], color: 'rgba(0, 128, 0, 1)' },
+    T: { id: 6, shape: [[0, 6, 0], [6, 6, 6], [0, 0, 0]], color: 'rgba(128, 0, 128, 1)' },
+    Z: { id: 7, shape: [[7, 7, 0], [0, 7, 7], [0, 0, 0]], color: 'rgba(255, 0, 0, 1)' },
 };
+
+// export const TETROMINOS: { [key: string]: ITetromino } = {
+//     I: { id: 1, shape: [[1, 1, 1, 1]], color: 'rgba(0, 128, 128, 1)' },
+//     J: { id: 2, shape: [[2, 2, 2, 2]], color: 'rgba(0, 0, 255, 1)' },
+//     L: { id: 3, shape: [[3, 3, 3, 3]], color: 'rgba(255, 165, 0, 1)' },
+//     O: { id: 4, shape: [[4, 4, 4, 4]], color: 'rgba(255, 255, 0, 1)' },
+//     S: { id: 5, shape: [[5, 5, 5]], color: 'rgba(0, 128, 0, 1)' },
+//     T: { id: 6, shape: [[6, 6, 6]], color: 'rgba(128, 0, 128, 1)' },
+//     Z: { id: 7, shape: [[7, 7, 7]], color: 'rgba(255, 0, 0, 1)' },
+// };
 
 /**
  * extended tetrominos each with 3 squares for 'extended' game

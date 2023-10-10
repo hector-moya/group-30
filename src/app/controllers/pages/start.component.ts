@@ -9,6 +9,7 @@ import { IConfig } from 'src/app/interfaces/Config';
 import { Component, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
+import { ENV } from 'src/app/env';
 
 @Component({
     selector: 'app-start',
@@ -17,6 +18,8 @@ import { Router } from '@angular/router';
     templateUrl: '../../views/pages/start.component.html'
 })
 export class StartComponent {
+
+    devMode: boolean = ENV.DEV_MODE;
 
     /**
      * Component dependencies
@@ -93,5 +96,11 @@ export class StartComponent {
         }, (action?: string) => {
             this.configService.updateConfig(this.config);
         });
+    }
+
+    displayControls(){
+        this.modalType = 'controls';
+        this.modalService.openModal({ });
+
     }
 }

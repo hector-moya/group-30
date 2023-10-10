@@ -1,34 +1,33 @@
-<div class="bx dark maxw-300">
-
-    <div class="flex">
-        <span class="fg1">Game Mode:</span> <span>Extended</span>
+<div class="tac w-10 space-y-1">
+    <div class="bdr stats">
+        <div class="txt-lg fw7">Game Mode</div>
+        <div>Extended</div>
     </div>
-    <div class="flex">
-        <span class="fg1">Player Mode:</span> <span>Player</span>
+    <div class="bdr stats">
+        <div class="txt-lg fw7">Player Mode</div>
+        <div>Player</div>
     </div>
-    <div class="flex">
-        <span class="fg1">Score:</span> <span>{{ gameStats.score }}</span>
+    <div class="bdr stats">
+        <div class="txt-lg fw7">Level</div>
+        <div>{{ gameStats.level }}</div>
     </div>
-
-    <div class="flex">
-        <span class="fg1">Lines:</span> <span>{{ gameStats.lines }}</span>
+    <div class="bdr stats">
+        <div class="txt-lg fw7">Score</div>
+        <div>{{ gameStats.score }}</div>
     </div>
-
-    <div class="flex">
-        <span class="fg1">Level:</span> <span>{{ gameStats.level }}</span>
+    <div class="bdr stats">
+        <div class="txt-lg fw7">Lines Cleared</div>
+        <div>{{ gameStats.lines }}</div>
     </div>
-
-    <hr>
-
-    <div class="txt-sm tac">
-        <small>Click button to increment score and line count</small>
+    <div *ngIf="devMode">
+        <div class="pxy-05 dark mt">
+            Clear Line(s)
+            <div class="flex space-between mt-05">
+                <button (click)="clear(1)" class="btn xs wh-1 pxy-075 teal">1</button>
+                <button (click)="clear(2)" class="btn xs wh-1 pxy-075 teal">2</button>
+                <button (click)="clear(3)" class="btn xs wh-1 pxy-075 teal">3</button>
+                <button (click)="clear(4)" class="btn xs wh-1 pxy-075 teal">4</button>
+            </div>
+        </div>
     </div>
-
-    <div class="grid cols-4 mt">
-        <button (click)="clear(1)" class="btn xs pxy-075 teal">1</button>
-        <button (click)="clear(2)" class="btn xs pxy-075 teal">2</button>
-        <button (click)="clear(3)" class="btn xs pxy-075 teal">3</button>
-        <button (click)="clear(4)" class="btn xs pxy-075 teal">4</button>
-    </div>
-
 </div>

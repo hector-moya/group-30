@@ -9,7 +9,13 @@ import { Piece } from 'src/app/models/Piece';
     selector: 'app-next-piece',
     standalone: true,
     imports: [CommonModule],
-    template: ` <canvas #canvas class="bdr bdr-green"></canvas> `
+    template: `
+
+    <div class="flex va-c ha-c w-10">
+        <canvas #canvas></canvas>
+    </div>
+
+    `
 })
 export class NextPieceComponent {
 

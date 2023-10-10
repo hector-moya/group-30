@@ -1,28 +1,20 @@
-<div class="container flex flex-start items-start ha-c gg-2 py-5">
-
-    <app-board [config]="config" (newNextPieceEvent)="nextPiece.setPiece()" />
-
-    <div>
+<div class="container maxw-md">
+    <div class="tar my flex ha-r">
         <button (click)="toggleSound()">
-            <svg class="icon wh-3" *ngIf="hasSound">
+            <svg class="icon wh-3 pxy-05" *ngIf="hasSound">
                 <use xlink:href="/assets/icons.svg#sound"></use>
             </svg>
-            <svg class="icon wh-3" *ngIf="!hasSound">
+            <svg class="icon wh-3 pxy-05" *ngIf="!hasSound">
                 <use xlink:href="/assets/icons.svg#mute"></use>
             </svg>
         </button>
-
-        <div class="space-y">
-            <logo class="wh-8" />
-            <div>
-                <app-next-piece [config]="config" #nextPiece />
-            </div>
-        </div>
-
-        <div class="w-24">
+    </div>
+    <div class="flex flex-start items-start ha-c gg-2">
+        <app-board [config]="config" (newNextPieceEvent)="nextPiece.setPiece()" />
+        <div>
+            <app-next-piece [config]="config" #nextPiece />
             <app-score />
         </div>
-
     </div>
-
 </div>
+

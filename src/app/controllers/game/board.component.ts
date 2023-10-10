@@ -2,57 +2,25 @@ import { Component, ElementRef, EventEmitter, HostListener, Input, Output, ViewC
 import { AppLayout } from 'src/app/views/layouts/app-layout.component';
 import { ModalComponent } from '../components/modal.component';
 import { PieceService } from 'src/app/services/piece.service';
+import { ScoreService } from 'src/app/services/score.service';
 import { ModalService } from 'src/app/services/modal.service';
 import { GameService } from 'src/app/services/game.service';
 import { HighScoreComponent } from './high-score.component';
 import { IPosition } from 'src/app/interfaces/Position';
+import { IGameStats } from 'src/app/interfaces/Score';
 import { IConfig } from 'src/app/interfaces/Config';
 import { CommonModule } from '@angular/common';
 import { Canvas } from 'src/app/models/Canvas';
 import { Piece } from 'src/app/models/Piece';
 import { FormsModule } from '@angular/forms';
 import { Matrix } from 'src/app/defs';
-import { IGameStats } from 'src/app/interfaces/Score';
-import { ScoreService } from 'src/app/services/score.service';
+import { ENV } from 'src/app/env';
 
 @Component({
     selector: 'app-board',
     standalone: true,
     imports: [CommonModule, AppLayout, ModalComponent, HighScoreComponent, FormsModule],
-    template: `
-        <canvas #canvas class="bdr bdr-red"></canvas>
-        <div class="flex space-x mt w-16">
-            <button (click)="test()" class="btn">Test</button>
-            <button (click)="reload()" class="btn dark">Reload</button>
-            <!-- <button (click)="resetGame()" class="btn dark">Reset</button> -->
-            <button (click)="handleGameOver()" class="btn dark">Game Over</button>
-        </div>
-
-        <pre class="pxy-05"><small>{{ devData | json }}</small></pre>
-
-        <modal>
-            <ng-container *ngIf="modalType === 'highScore'">
-                <p>Congratulations! Your score has landed you among the top 10 players</p>
-                <div class="frm-row">
-                    <input [(ngModel)]="playerName" name="name" placeholder="Enter your name..." required>
-                    <!-- <input [(ngModel)]="playerName" name="name" placeholder="Enter your name..." required minlength="4" appForbiddenName="bob" #nameInput="ngModel"> -->
-                    <!-- <div *ngIf="nameInput.invalid && (nameInput.dirty || nameInput.touched)" class="alert">
-                        <div *ngIf="nameInput.errors?.['required']"> Name is required. </div>
-                        <div *ngIf="nameInput.errors?.['minlength']"> Name must be at least 4 characters long. </div>
-                        <div *ngIf="nameInput.errors?.['forbiddenName']"> Name cannot be Bob. </div>
-                    </div> -->
-                </div>
-            </ng-container>
-
-            <ng-container *ngIf="modalType === 'gameOver'">
-                <p>You did not make it to the top 10. Better luck next time!</p>
-            </ng-container>
-
-            <ng-container *ngIf="modalType === 'saveAndDisplayHighScore'">
-                <app-high-score></app-high-score>
-            </ng-container>
-        </modal>
-    `,
+    templateUrl: '../../views/game/board.component.html',
 })
 export class BoardComponent {
 
@@ -66,6 +34,7 @@ export class BoardComponent {
 
     modalType: string = '';
     playerName: string = 'Player 1';
+    devMode: boolean = ENV.DEV_MODE;
 
     /**
      * Set an interval to move the piece down every. This is
@@ -340,6 +309,7 @@ export class BoardComponent {
         // this.devData.score = this.scoreService.getScore();
         // this.devData.isHighScore = this.scoreService.isTopScore(this.scoreService.getScore());
         this.devData.pieceY = this.piece!.y;
+        this.devData.config = this.config;
         this.devData.gameStarted = this.gameStarted;
         this.devData.time = this.time;
         this.devData.gameStats = this.gameStats;
@@ -350,11 +320,6 @@ export class BoardComponent {
 
     test() {
         // this.resetGrid();
-        this.modalService.openModal({
-            title: 'Top 10 High Scores',
-            buttons: [{ label: 'Close', class: 'primary', action: 'close' },]
-
-        });
     }
 
     resetGrid() {

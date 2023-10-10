@@ -1,4 +1,19 @@
 <div class="container maxw-md">
+    <div class="tar my flex ha-r">
+        <button (click)="toggleSound()">
+            <svg class="icon wh-3 pxy-05" *ngIf="hasSound">
+                <use xlink:href="/assets/icons.svg#sound"></use>
+            </svg>
+            <svg class="icon wh-3 pxy-05" *ngIf="!hasSound">
+                <use xlink:href="/assets/icons.svg#mute"></use>
+            </svg>
+        </button>
+        <button>
+            <svg class="icon wh-3 pxy-05" (click)="displayControls()">
+                <use xlink:href="/assets/icons.svg#controller"></use>
+            </svg>
+        </button>
+    </div>
 
     <div class="flex-col justify-center items-center mt-3">
 
@@ -7,12 +22,14 @@
         <h2>3815ICT Software Engineering - 2023</h2>
 
         <div class="flex gg va-c txt-lg">
+
             <div>
                 <p class="my-025">Hector Moya</p>
                 <p class="my-025">Nathan Watts</p>
             </div>
 
             <logo />
+
         </div>
 
         <div class="flex space-x mt-5">
@@ -20,14 +37,6 @@
             <button (click)="exitGame()" class="btn danger outline w-8">Exit</button>
             <button (click)="openConfig()" class="btn warning outline w-8">Configuration</button>
             <button (click)="openHighScores()" class="btn success outline w-8">High Scores</button>
-            <button (click)="toggleSound()">
-                <svg class="icon wh-3" *ngIf="hasSound">
-                    <use xlink:href="/assets/icons.svg#sound"></use>
-                </svg>
-                <svg class="icon wh-3" *ngIf="!hasSound">
-                    <use xlink:href="/assets/icons.svg#mute"></use>
-                </svg>
-            </button>
         </div>
 
         <modal>
@@ -37,10 +46,22 @@
             <ng-container *ngIf="modalType === 'config'">
                 <app-config></app-config>
             </ng-container>
+            <ng-container *ngIf="modalType === 'controls'">
+                <div class="flex space-between"><strong>Action</strong> <strong>Key</strong></div>
+                <div class="flex space-between">Move Left <span>Left Arrow</span></div>
+                <div class="flex space-between">Move Right <span>Right Arrow</span></div>
+                <div class="flex space-between">Drop <span>Down Arrow</span></div>
+                <div class="flex space-between">Rotate <span>Up Arrow</span></div>
+                <div class="flex space-between">Sound <span>M</span></div>
+                <div class="flex space-between">Pause <span>P</span></div>
+                <div class="flex space-between">Exit Game <span>Escape</span></div>
+            </ng-container>
         </modal>
+
+        <pre class="pxy-1">{{config|json}}</pre>
+
+
 
     </div>
 
-    <hr>
-    <pre class="pxy-1">{{config|json}}</pre>
 </div>

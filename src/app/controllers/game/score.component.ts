@@ -2,6 +2,7 @@ import { ScoreService } from 'src/app/services/score.service';
 import { Component, OnInit, inject } from '@angular/core';
 import { IGameStats } from 'src/app/interfaces/Score';
 import { CommonModule } from '@angular/common';
+import { ENV } from 'src/app/env';
 
 @Component({
     selector: 'app-score',
@@ -12,6 +13,8 @@ import { CommonModule } from '@angular/common';
     ]
 })
 export class ScoreComponent implements OnInit {
+
+    devMode: boolean = ENV.DEV_MODE;
 
     private scoreService = inject(ScoreService);
 
