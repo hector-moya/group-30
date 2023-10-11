@@ -2,6 +2,7 @@ import { HighScore, IGameStats } from '../interfaces/Score';
 import { BehaviorSubject, Observable } from 'rxjs';
 import { HIGH_SCORES, POINTS } from '../data';
 import { Injectable } from '@angular/core';
+import { LoggerService } from './logger.service';
 
 @Injectable({
     providedIn: 'root'
@@ -14,7 +15,7 @@ export class ScoreService {
      */
     private scoreSubject$ = new BehaviorSubject<IGameStats>({ score: 0, lines: 0, level: 1, levelUp: 1 });
 
-    constructor() {
+    constructor(private loggerService: LoggerService) {
         if (!localStorage.getItem('highScores')) {
             localStorage.setItem('highScores', JSON.stringify(HIGH_SCORES));
         }
@@ -130,7 +131,8 @@ export class ScoreService {
      * @param {number} linesCleared The number of lines cleared.
      * @returns {number} Points scored.
      */
-    private getPoints(linesCleared: number): number {
+    getPoints(linesCleared: number): number {
+        this.loggerService.log('Adding points for ' + linesCleared + ' lines cleared');
         return POINTS[linesCleared] ?? 0;
     }
 }

@@ -1,6 +1,7 @@
 
 import { HighScoreComponent } from 'src/app/controllers/game/high-score.component';
 import { ConfigService } from 'src/app/services/config.service';
+import { LoggerService } from 'src/app/services/logger.service';
 import { ModalComponent } from '../components/modal.component';
 import { ModalService } from 'src/app/services/modal.service';
 import { LogoComponent } from '../components/logo.component';
@@ -26,6 +27,7 @@ export class StartComponent {
      */
     private configService = inject(ConfigService);
     private modalService = inject(ModalService);
+    private loggerService = inject(LoggerService);
     private router = inject(Router);
 
     modalType: string = '';
@@ -70,6 +72,10 @@ export class StartComponent {
             // reinitialize the audio element to clear
             this.titleMusic = new Audio('/assets/music/title_music.mp3');
         }
+    }
+
+    demoGame() {
+        this.router.navigate(['/demo-game']);
     }
 
     playGame() {

@@ -1,10 +1,14 @@
 <div class="container maxw-md my-5">
     <div class="flex flex-start items-start ha-c gg-2">
-        <app-board [config]="config" (newNextPieceEvent)="nextPiece.setPiece()" />
+        <div *ngIf="gameType === 'play'">
+            <app-board [config]="config" (newNextPieceEvent)="nextPiece.setPiece()" />
+        </div>
+        <div *ngIf="gameType === 'ai'">
+            <app-ai-board [config]="config" (newNextPieceEvent)="nextPiece.setPiece()" />
+        </div>
         <div>
             <app-next-piece [config]="config" #nextPiece />
             <app-score />
-
             <div class="tar my flex space-between ha-r">
                 <logo class="wh-4" />
                 <button (click)="toggleSound()">
@@ -19,4 +23,3 @@
         </div>
     </div>
 </div>
-

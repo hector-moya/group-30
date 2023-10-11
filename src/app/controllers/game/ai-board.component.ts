@@ -18,12 +18,12 @@ import { Matrix } from 'src/app/defs';
 import { ENV } from 'src/app/env';
 
 @Component({
-    selector: 'app-board',
+    selector: 'app-ai-board',
     standalone: true,
     imports: [CommonModule, AppLayout, ModalComponent, HighScoreComponent, FormsModule],
     templateUrl: '../../views/game/board.component.html',
 })
-export class BoardComponent {
+export class AiBoardComponent {
 
     @ViewChild('canvas', { static: true }) boardRef!: ElementRef;
     @Input() config!: IConfig;
@@ -60,6 +60,7 @@ export class BoardComponent {
      */
     time?: { start: number, elapsed: number, speed: number };
     gameStarted: Boolean = true;
+    displayControls: Boolean = true;
     gameStats?: IGameStats;
 
     /**
@@ -77,17 +78,30 @@ export class BoardComponent {
         this.setDevData();
     }
 
+
     ngOnInit(): void {
         this.initBoard();
         this.initGameStats();
-        // Delay animation start to prevent the piece dropping too quickly
-        setTimeout(() => {
-            this.animate();
-        }, 500);
-        // this may not be necessary but it is good for debugging
+
         this.scoreService.observeScore().subscribe((gameStats: IGameStats) => {
             this.gameStats = gameStats;
         });
+
+        if (this.devMode) {
+            this.animate();
+        } else {
+            this.modalType = 'controls';
+            this.modalService.openModal({
+                title: 'Game Controls',
+                buttons: [
+                    { label: 'Begin Game', class: 'primary', action: 'close' }
+                ]
+            }, (action?: string) => {
+                if (action === 'close') {
+                    this.animate();
+                }
+            });
+        }
     }
 
     /**

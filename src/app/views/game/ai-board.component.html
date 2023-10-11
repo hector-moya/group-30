@@ -20,20 +20,10 @@
             </div>
         </ng-container>
         <ng-container *ngIf="modalType === 'gameOver'">
-            <p>You did not make it to the top 10. Better luck next time!</p>
+            <p>You did not make it to the top 10. Better luck next time!</p>ai-board.component
         </ng-container>
         <ng-container *ngIf="modalType === 'saveAndDisplayHighScore'">
             <app-high-score></app-high-score>
-        </ng-container>
-        <ng-container *ngIf="modalType === 'controls'">
-            <div class="flex space-between"><strong>Action</strong> <strong>Key</strong></div>
-            <div class="flex space-between">Move Left <span>Left Arrow</span></div>
-            <div class="flex space-between">Move Right <span>Right Arrow</span></div>
-            <div class="flex space-between">Drop <span>Down Arrow</span></div>
-            <div class="flex space-between">Rotate <span>Up Arrow</span></div>
-            <div class="flex space-between">Sound <span>M</span></div>
-            <div class="flex space-between">Pause <span>P</span></div>
-            <div class="flex space-between">Exit Game <span>Escape</span></div>
         </ng-container>
     </modal>
 </div>

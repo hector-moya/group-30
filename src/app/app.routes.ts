@@ -12,7 +12,13 @@ export const routes: Routes = [
     },
     {
         path: 'play-game', loadComponent: () => import('./controllers/pages/game.component')
-            .then(mod => mod.GameComponent)
+            .then(mod => mod.GameComponent),
+        data: { gameType: 'play' }
+    },
+    {
+        path: 'demo-game', loadComponent: () => import('./controllers/pages/game.component')
+            .then(mod => mod.GameComponent),
+        data: { gameType: 'ai' }
     },
     {
         path: 'goodbye', loadComponent: () => import('./controllers/pages/goodbye.component')
