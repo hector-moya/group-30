@@ -21,7 +21,7 @@ import { ENV } from 'src/app/env';
     selector: 'app-ai-board',
     standalone: true,
     imports: [CommonModule, AppLayout, ModalComponent, HighScoreComponent, FormsModule],
-    templateUrl: '../../views/game/board.component.html',
+    templateUrl: '../../views/game/ai-board.component.html',
 })
 export class AiBoardComponent {
 
@@ -190,37 +190,25 @@ export class AiBoardComponent {
 
         this.stopAnimation();
 
-        const playHomeButtons = [
-            { label: 'Return Home', class: '', action: 'redirect' },
-            { label: 'Play Again', class: 'primary', action: 'playAgain' },
-        ]
+        const isHighScore = this.scoreService.isTopScore(this.scoreService.getScore());
 
-        if (this.scoreService.isTopScore(this.scoreService.getScore())) {
+        if (isHighScore) {
             this.modalType = 'highScore';
             var title = 'New High Score';
-            var buttons = [{ label: 'Continue', class: 'primary', action: 'saveAndDisplayHighScore' }]
+            this.scoreService.addHighScore('AI', this.scoreService.getScore());
         } else {
-            this.modalType = 'gameOver';
-            var title = `Game Over, your final score is: ${this.scoreService.getScore()}`;
-            var buttons = playHomeButtons
+            var title = `Game Over`;
         }
 
-
-        this.modalService.openModal({ title, buttons, },
+        this.modalService.openModal({
+            title, buttons: [
+                { label: 'Return Home', class: '', action: 'redirect' },
+                { label: 'Restart Demo', class: 'primary', action: 'playAgain' },
+            ],
+        },
             (action?: string) => {
-                this.scoreService.addHighScore(this.playerName, this.scoreService.getScore());
-                // display the high scores modal when the input closes
-                if (action === 'saveAndDisplayHighScore') {
-                    this.modalType = 'saveAndDisplayHighScore';
-                    this.modalService.openModal(
-                        { title: 'Top 10 High Scores', buttons: playHomeButtons },
-                        (action?: string) => {
-                            if (action === 'playAgain') this.reload(); // replay the game
-                        }
-                    );
-                }
-                if (action === 'playAgain') this.reload(); // replay the game
-            });
+                if (action === 'playAgain') this.reload();
+            })
     }
 
     /**
@@ -242,19 +230,14 @@ export class AiBoardComponent {
         try {
             this.gameStarted = true;
             if (!this.time) throw new Error('The time object is null');
-            // Calculate the elapsed time since the animation started
             this.time.elapsed = now - this.time.start;
-            // Check if the elapsed time exceeds the current level's time interval
             if (this.time.elapsed > this.time.speed) {
-                // Reset the start time to the current time
                 this.time.start = now;
-                // Call the "drop" method to move the piece down
                 if (!this.drop()) {
                     this.handleGameOver();
                     return;
                 }
             }
-            // Request the next animation frame and bind it to the current instance of "this"
             this.requestId = requestAnimationFrame(this.animate.bind(this));
         } catch (error) {
             console.error('Error during animation:', error);

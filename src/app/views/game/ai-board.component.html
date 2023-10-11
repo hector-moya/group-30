@@ -14,15 +14,6 @@
     </div>
     <modal>
         <ng-container *ngIf="modalType === 'highScore'">
-            <p>Congratulations! Your score has landed you among the top 10 players</p>
-            <div class="frm-row">
-                <input [(ngModel)]="playerName" name="name" placeholder="Enter your name..." required>
-            </div>
-        </ng-container>
-        <ng-container *ngIf="modalType === 'gameOver'">
-            <p>You did not make it to the top 10. Better luck next time!</p>ai-board.component
-        </ng-container>
-        <ng-container *ngIf="modalType === 'saveAndDisplayHighScore'">
             <app-high-score></app-high-score>
         </ng-container>
     </modal>
