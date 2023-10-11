@@ -40,7 +40,7 @@ export class GameService {
             this.configSubscription = this.configService.observeConfig().subscribe((config: IConfig) => {
                 this.config = config;
                 this.resetGrid(ctx);
-                if (this.devMode) {
+                if (ENV.DEV_CANVAS) {
                     this.grid = GRID; // for testing only
                     this.renderGrid(ctx); // for testing only
                 }

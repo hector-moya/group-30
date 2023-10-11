@@ -90,6 +90,10 @@ export class BoardComponent {
         });
     }
 
+    ngOnDestroy(): void {
+        this.stopAnimation();
+    }
+
     /**
      * Initialise the game board, first piece, set the context and initialise
      * the empty grid.
@@ -113,7 +117,7 @@ export class BoardComponent {
      * Initialise the game stats and set the initial drop speed.
      */
     initGameStats() {
-        const startingValues: IGameStats = { score: 0, lines: 0, level: this.config.startLevel, levelUp: 1 };
+        const startingValues: IGameStats = { score: 0, lines: 0, level: this.config.startLevel, levelUp: 10 };
         this.scoreService.setGameStats(startingValues); // set the initial game stats in the score service
         this.time = { start: 0, elapsed: 0, speed: this.scoreService.getLevelSpeed() };
     }
@@ -195,9 +199,11 @@ export class BoardComponent {
             { label: 'Play Again', class: 'primary', action: 'playAgain' },
         ]
 
-        if (this.scoreService.isTopScore(this.scoreService.getScore())) {
-            this.modalType = 'highScore';
-            var title = 'New High Score';
+        const isHighScore = this.scoreService.isTopScore(this.scoreService.getScore())
+        // if (false) {
+        if (isHighScore) {
+            this.modalType = 'enterHighScoreName';
+            var title = `Your final score of ${this.scoreService.getScore()} is among the top 10 scores`;
             var buttons = [{ label: 'Continue', class: 'primary', action: 'saveAndDisplayHighScore' }]
         } else {
             this.modalType = 'gameOver';
@@ -205,10 +211,9 @@ export class BoardComponent {
             var buttons = playHomeButtons
         }
 
-
         this.modalService.openModal({ title, buttons, },
             (action?: string) => {
-                this.scoreService.addHighScore(this.playerName, this.scoreService.getScore());
+                if (isHighScore) this.scoreService.addHighScore(this.playerName, this.scoreService.getScore());
                 // display the high scores modal when the input closes
                 if (action === 'saveAndDisplayHighScore') {
                     this.modalType = 'saveAndDisplayHighScore';
